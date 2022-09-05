@@ -1,0 +1,30 @@
+ancestor: null
+releases:
+  1.0.0:
+    changes:
+      release_summary: This is the initial version of the ``sva.sentinelone`` collection
+    fragments:
+    - v1.0.0.yml
+    modules:
+    - description: Manage SentinelOne Config Overrides
+      name: sentinelone_config_overrides
+      namespace: ''
+    - description: Manage SentinelOne Filters
+      name: sentinelone_filters
+      namespace: ''
+    - description: Manage SentinelOne Groups
+      name: sentinelone_groups
+      namespace: ''
+    - description: Manage SentinelOne Path Exclusions
+      name: sentinelone_path_exclusions
+      namespace: ''
+    - description: Manage SentinelOne Policies
+      name: sentinelone_policies
+      namespace: ''
+    - description: Manage SentinelOne Sites
+      name: sentinelone_sites
+      namespace: ''
+    - description: Manage SentinelOne Upgrade Policies
+      name: sentinelone_upgrade_policies
+      namespace: ''
+    release_date: '2022-08-16'

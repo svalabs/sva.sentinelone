@@ -1,0 +1,56 @@
+---
+name: CI
+on:
+  # Run CI against all pushes (direct commits, also merged PRs), Pull Requests
+  push:
+  pull_request:
+  # Run CI once per day (at 06:00 UTC)
+  # This ensures that even if there haven't been commits that we are still testing against latest version of ansible-test for each ansible-base version
+  schedule:
+    - cron: '0 6 * * *'
+env:
+  NAMESPACE: sva
+  COLLECTION_NAME: sentinelone
+
+jobs:
+  sanity:
+    name: Sanity (Ⓐ${{ matrix.ansible }}+py${{ matrix.python }})
+    strategy:
+      matrix:
+        ansible:
+          - stable-2.10
+          - stable-2.11
+          - stable-2.12
+          - stable-2.13
+        python:
+          - '3.6'
+          - '3.7'
+          - '3.8'
+          - '3.9'
+          - '3.10'
+        exclude:
+          - ansible: stable-2.10
+            python: '3.10'
+          - ansible: stable-2.11
+            python: '3.10'
+          - ansible: stable-2.12
+            python: '3.6'
+          - ansible: stable-2.12
+            python: '3.7'
+          - ansible: stable-2.13
+            python: '3.6'
+          - ansible: stable-2.13
+            python: '3.7'
+
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Perform sanity testing with ansible-test
+        uses: ansible-community/ansible-test-gh-action@release/v1
+        with:
+          ansible-core-version: ${{ matrix.ansible }}
+          target-python-version: ${{ matrix.python }}
+          testing-type: sanity

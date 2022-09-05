@@ -1,0 +1,52 @@
+objects:
+  role: {}
+plugins:
+  become: {}
+  cache: {}
+  callback: {}
+  cliconf: {}
+  connection: {}
+  httpapi: {}
+  inventory: {}
+  lookup: {}
+  module:
+    sentinelone_config_overrides:
+      description: Manage SentinelOne Config Overrides
+      name: sentinelone_config_overrides
+      namespace: ''
+      version_added: 1.0.0
+    sentinelone_filters:
+      description: Manage SentinelOne Filters
+      name: sentinelone_filters
+      namespace: ''
+      version_added: 1.0.0
+    sentinelone_groups:
+      description: Manage SentinelOne Groups
+      name: sentinelone_groups
+      namespace: ''
+      version_added: 1.0.0
+    sentinelone_path_exclusions:
+      description: Manage SentinelOne Path Exclusions
+      name: sentinelone_path_exclusions
+      namespace: ''
+      version_added: 1.0.0
+    sentinelone_policies:
+      description: Manage SentinelOne Policies
+      name: sentinelone_policies
+      namespace: ''
+      version_added: 1.0.0
+    sentinelone_sites:
+      description: Manage SentinelOne Sites
+      name: sentinelone_sites
+      namespace: ''
+      version_added: 1.0.0
+    sentinelone_upgrade_policies:
+      description: Manage SentinelOne Upgrade Policies
+      name: sentinelone_upgrade_policies
+      namespace: ''
+      version_added: 1.0.0
+  netconf: {}
+  shell: {}
+  strategy: {}
+  vars: {}
+version: 1.0.0
