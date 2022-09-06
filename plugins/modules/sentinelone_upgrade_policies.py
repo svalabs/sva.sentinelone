@@ -63,18 +63,7 @@ options:
   maintenance_windows:
     description:
       - "Define the settings which should be set in policy. Available options can be referred in API documentation"
-      - "Usage:"
-      - >-
-          monday:
-            - from: "8:00 am"
-              to: "12:00 pm"
-          tuesday:
-            - from: "8:00 am"
-              to: "12:00 pm"
-            - from: "3:00 pm"
-              to: "6:00 pm"
-          wednesday:
-      - "Enables maintenance windows on monday and tuesday from 8:00am to 12:00pm and on wednesday all day"
+      - "Usage see examples section"
       - "Required if I(inherit_maintenance_windows=no)"
       - "Will be ignored if I(inherit_maintenance_windows=yes)"
     type: dict
