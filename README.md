@@ -15,9 +15,9 @@ It provides several modules which helps to configure and manage SentinelOne Mana
   - [sentinelone_filters](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_filters_module.html)
   - [sentinelone_groups](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_groups_module.html)
   - [sentinelone_sites](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_sites_module.html)
-  - [sentinelone_upgrade_policies](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_policies_module.html)
+  - [sentinelone_upgrade_policies](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_upgrade_policies_module.html)
   - [sentinelone_path_exclusions](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_path_exclusions_module.html)
-  - [sentinelone_policies](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_upgrade_policies_module.html)
+  - [sentinelone_policies](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_policies_module.html)
 
 ## Requirements
 ### Ansible
