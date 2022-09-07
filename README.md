@@ -11,13 +11,13 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 ## Included content
 
 - **Modules**:
-  - [sentinelone_config_overrides](docs/ansible-docs/markdown/sentinelone_config_overrides_module.md)
-  - [sentinelone_filters](docs/ansible-docs/markdown/sentinelone_config_overrides_module.md)
-  - [sentinelone_groups](docs/ansible-docs/markdown/sentinelone_config_overrides_module.md)
-  - [sentinelone_sites](docs/ansible-docs/markdown/sentinelone_sites_module.md)
-  - [sentinelone_upgrade_policies](docs/ansible-docs/markdown/sentinelone_upgrade_policies_module.md)
-  - [sentinelone_path_exclusions](docs/ansible-docs/markdown/sentinelone_config_overrides_module.md)
-  - [sentinelone_policies](docs/ansible-docs/markdown/sentinelone_config_overrides_module.md)
+  - [sentinelone_config_overrides](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_config_overrides_module.html)
+  - [sentinelone_filters](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_filters_module.html)
+  - [sentinelone_groups](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_groups_module.html)
+  - [sentinelone_sites](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_sites_module.html)
+  - [sentinelone_upgrade_policies](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_policies_module.html)
+  - [sentinelone_path_exclusions](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_path_exclusions_module.html)
+  - [sentinelone_policies](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_upgrade_policies_module.html)
 
 ## Requirements
 ### Ansible
@@ -74,14 +74,7 @@ See [Ansible Using collections](https://docs.ansible.com/ansible/devel/user_guid
 
 ## Documentation
 ### User documentation
-The module documentation is found in the [docs/ansible-docs](docs/ansible-docs/) folder.
-
-A HTML and Markdown rendered documentation is available.
-
-### Developer documentation
-The technical documentation (docstring documentation) can be found at [docs/python-docs](docs/python-docs).
-
-A HTML and Markdown rendered documentation is available.
+The module documentation can be found [here](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/index_module.html).
 
 ## Changelog
 **v1.0.0**: Initial release
