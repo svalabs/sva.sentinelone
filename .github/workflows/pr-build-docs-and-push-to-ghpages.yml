@@ -1,4 +1,4 @@
-name: Collection Docs
+name: Collection Docs on pull request
 concurrency:
   group: docs-pr-${{ github.head_ref }}
   cancel-in-progress: true
