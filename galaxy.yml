@@ -41,12 +41,6 @@ tags:
   - sentinelone_sites
   - sentinelone_upgrade_policies
 
-# Collections that this collection requires to be installed for it to be usable. The key of the dict is the
-# collection label 'namespace.name'. The value is a version range
-# L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
-# range specifiers can be set and are separated by ','
-dependencies: ""
-
 # The URL of the originating SCM repository
 repository: "https://github.com/svalabs/ansible-collection-sentinelone"
 
@@ -64,5 +58,5 @@ issues: "https://github.com/svalabs/ansible-collection-sentinelone/issues"
 # uses 'fnmatch' to match the files or directories. Some directories and files like 'galaxy.yml', '*.pyc', '*.retry',
 # and '.git' are always filtered
 build_ignore: 
-  - azure-pipelines.yml
-  - .idea
+  - .github/
+  - .gitignore
