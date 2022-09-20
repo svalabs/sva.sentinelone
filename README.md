@@ -1,5 +1,5 @@
 # Ansible Collection - sva.sentinelone
-[![CI](https://github.com/svalabs/ansible-collection-sva.sentinelone/workflows/Sanity checks/badge.svg)](https://github.com/svalabs/ansible-collection-sva.sentinelone/actions/workflows/ansible-test.yml)[![CI](https://github.com/svalabs/ansible-collection-sva.sentinelone/workflows/Collection Docs/badge.svg)](https://github.com/svalabs/ansible-collection-sva.sentinelone/actions/workflows/build-docs-and-push-to-ghpages.yml)
+[![Sanity checks](https://github.com/svalabs/ansible-collection-sva.sentinelone/workflows/Sanity checks/badge.svg)](https://github.com/svalabs/ansible-collection-sva.sentinelone/actions/workflows/ansible-test.yml) [![Collection Docs](https://github.com/svalabs/ansible-collection-sva.sentinelone/workflows/Collection Docs/badge.svg)](https://github.com/svalabs/ansible-collection-sva.sentinelone/actions/workflows/build-docs-and-push-to-ghpages.yml)
 
 ## Description
 This is the unofficial SentinelOne Collection provided by [SVA](https://www.sva.de)
