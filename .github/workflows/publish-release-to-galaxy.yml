@@ -1,4 +1,4 @@
-name: Build and Deploy Collection
+name: Deploy Collection to galaxy
 on:
   release:
     types:
@@ -6,6 +6,7 @@ on:
 
 jobs:
   build-and-deploy:
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
