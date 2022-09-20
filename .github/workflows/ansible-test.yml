@@ -1,5 +1,5 @@
 ---
-name: CI
+name: Sanity checks
 on:
   # Run CI against all pushes (direct commits, also merged PRs), Pull Requests
   push:

@@ -1,4 +1,4 @@
-name: Collection Docs
+name: Collection Docs on pull request
 concurrency:
   group: docs-pr-${{ github.head_ref }}
   cancel-in-progress: true
@@ -21,6 +21,7 @@ jobs:
       artifact-upload: false
       init-lenient: false
       init-fail-on-error: true
+      collection-name: sva.sentinelone
       build-ref: refs/pull/${{ github.event.number }}/merge
 
   # The build job runs with the most lenient settings to ensure the best chance of getting
@@ -33,6 +34,7 @@ jobs:
     with:
       init-lenient: true
       init-fail-on-error: false
+      collection-name: sva.sentinelone
       render-file-line: '> * `$<status>` [$<path_tail>](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr/${{ github.event.number }}/$<path_tail>)'
 
   publish-docs-gh-pages:
