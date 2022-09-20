@@ -8,7 +8,8 @@ jobs:
   build-and-deploy:
     permissions:
       contents: read
-    name: Build and Deploy Collection
-    uses: artis3n/ansible_galaxy_collection@v2
-    with:
-      api_key: '${{ secrets.GALAXY_API_TOKEN }}'
+    steps:
+      - name: Build and Deploy Collection
+        uses: artis3n/ansible_galaxy_collection@v2
+        with:
+          api_key: '${{ secrets.GALAXY_API_TOKEN }}'
