@@ -19,6 +19,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="sva.sentinelone.sentinelone_policies module – Manage SentinelOne Policies" href="sentinelone_policies_module.html" />
@@ -228,11 +229,11 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>Defines the exclusion mode for this exclusion. Required if <em>state=present</em></p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-choices-entry">suppress_alerts</span></p></li>
-<li><p><span class="ansible-option-choices-entry">interoperability</span></p></li>
-<li><p><span class="ansible-option-choices-entry">interoperability_extended</span></p></li>
-<li><p><span class="ansible-option-choices-entry">performance_focus</span></p></li>
-<li><p><span class="ansible-option-choices-entry">performance_focus_extended</span></p></li>
+<li><p><span class="ansible-option-choices-entry">“suppress_alerts”</span></p></li>
+<li><p><span class="ansible-option-choices-entry">“interoperability”</span></p></li>
+<li><p><span class="ansible-option-choices-entry">“interoperability_extended”</span></p></li>
+<li><p><span class="ansible-option-choices-entry">“performance_focus”</span></p></li>
+<li><p><span class="ansible-option-choices-entry">“performance_focus_extended”</span></p></li>
 </ul>
 </div></td>
 </tr>
@@ -251,8 +252,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>Define the operating system for the exclusion. Required if <em>state=present</em></p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-choices-entry">windows</span></p></li>
-<li><p><span class="ansible-option-choices-entry">linux</span></p></li>
+<li><p><span class="ansible-option-choices-entry">“windows”</span></p></li>
+<li><p><span class="ansible-option-choices-entry">“linux”</span></p></li>
 </ul>
 </div></td>
 </tr>
@@ -270,8 +271,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>Select the <em>state</em> of exclusion</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-default-bold">present</span> <span class="ansible-option-default">← (default)</span></p></li>
-<li><p><span class="ansible-option-choices-entry">absent</span></p></li>
+<li><p><span class="ansible-option-default-bold">“present”</span> <span class="ansible-option-default">← (default)</span></p></li>
+<li><p><span class="ansible-option-choices-entry">“absent”</span></p></li>
 </ul>
 </div></td>
 </tr>
