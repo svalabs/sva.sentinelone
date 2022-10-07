@@ -174,7 +174,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Optional: Set config override for a specific agent version.</p>
 <p>If not set the config override will apply on all agent versions</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <span class="ansible-option-default">“ALL”</span></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;ALL&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -184,7 +184,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>The config override data</p>
 <p>Required when <em>state=present</em> or <em>state=absent</em></p>
 <p>Will be ignored if <em>state=prune</em></p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <span class="ansible-option-default">{}</span></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">{}</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -200,7 +200,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Optional: Set a description for the config override</p>
 <p>Will be ignored if <em>state=absent</em> or <em>state=prune</em></p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <span class="ansible-option-default">“”</span></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -209,7 +209,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Enter group name here</p>
 <p>If this option is set the scope is set to group level. Otherwise scope is set to site level</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <span class="ansible-option-default">“”</span></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -219,7 +219,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>Name of the config override</p>
 <p>Will be ignored if <em>state=absent</em> or <em>state=prune</em></p>
 <p>Required if <em>state=present</em></p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <span class="ansible-option-default">“”</span></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -229,8 +229,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>The os type for which the config is set</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-choices-entry">“windows”</span></p></li>
-<li><p><span class="ansible-option-choices-entry">“linux”</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;windows&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;linux&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -254,9 +254,9 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <p><code class="docutils literal notranslate"><span class="pre">prune</span></code>: The whole config override object will be deleted.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-default-bold">“present”</span> <span class="ansible-option-default">← (default)</span></p></li>
-<li><p><span class="ansible-option-choices-entry">“absent”</span></p></li>
-<li><p><span class="ansible-option-choices-entry">“prune”</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">&quot;present&quot;</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;absent&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;prune&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -348,7 +348,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Get basic infos about the changes made</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> [“Creating non existing site config override: test”]</p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[&quot;Creating</span> <span class="pre">non</span> <span class="pre">existing</span> <span class="pre">site</span> <span class="pre">config</span> <span class="pre">override:</span> <span class="pre">test&quot;]</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -357,7 +357,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Get detailed infos about the changes made</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> “{‘changes’: ‘Creating non existing site level config override: test’, ‘siteId’: ‘99999999999999’}”</p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">&quot;{'changes':</span> <span class="pre">'Creating</span> <span class="pre">non</span> <span class="pre">existing</span> <span class="pre">site</span> <span class="pre">level</span> <span class="pre">config</span> <span class="pre">override:</span> <span class="pre">test',</span> <span class="pre">'siteId':</span> <span class="pre">'99999999999999'}&quot;</span></code></p>
 </div></td>
 </tr>
 </tbody>

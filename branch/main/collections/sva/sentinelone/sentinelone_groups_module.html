@@ -174,7 +174,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>If set this module creates a dynamic group based on the passed filter_name. If not set a static group is created</p>
 <p>Can only be used if you create a single group.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <span class="ansible-option-default">“”</span></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -198,8 +198,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>Select the <em>state</em> of the group</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-default-bold">“present”</span> <span class="ansible-option-default">← (default)</span></p></li>
-<li><p><span class="ansible-option-choices-entry">“absent”</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">&quot;present&quot;</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;absent&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -293,7 +293,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Get basic infos about the changes made</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> [“Group test123 created.”]</p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[&quot;Group</span> <span class="pre">test123</span> <span class="pre">created.&quot;]</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -302,7 +302,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Get detailed infos about the changes made</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> “[{‘changes’: {‘values_changed’: {\”root[‘filterId’]\”: {‘new_value’: ‘999999999999999999’, ‘old_value’: ‘888888888888888888’}}}, ‘groupName’: ‘test123’}]”</p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">&quot;[{'changes':</span> <span class="pre">{'values_changed':</span> <span class="pre">{\&quot;root['filterId']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">'999999999999999999',</span> <span class="pre">'old_value':</span> <span class="pre">'888888888888888888'}}},</span> <span class="pre">'groupName':</span> <span class="pre">'test123'}]&quot;</span></code></p>
 </div></td>
 </tr>
 </tbody>

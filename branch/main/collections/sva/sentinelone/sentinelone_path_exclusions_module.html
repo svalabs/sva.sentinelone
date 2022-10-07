@@ -182,8 +182,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>Exclusion Function to exclude <em>os_path</em> for alerts and mitigation</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-choices-entry">false</span></p></li>
-<li><p><span class="ansible-option-default-bold">true</span> <span class="ansible-option-default">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">true</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
@@ -194,8 +194,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>Exclusion Function to exclude <em>os_path</em> for Binary Vaults</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-default-bold">false</span> <span class="ansible-option-default">← (default)</span></p></li>
-<li><p><span class="ansible-option-choices-entry">true</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">false</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -205,7 +205,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Set this option to set the scope to group level</p>
 <p>A list with groupnames which the exclusions are to be attached</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <span class="ansible-option-default">[]</span></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">[]</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -215,8 +215,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>If yes, the exclusion will scope subfolders as well. Is ignored if <em>os_path</em> is not a folder (does not end with / (linux) or  (windows))</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-default-bold">false</span> <span class="ansible-option-default">← (default)</span></p></li>
-<li><p><span class="ansible-option-choices-entry">true</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">false</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -227,11 +227,11 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>Defines the exclusion mode for this exclusion. Required if <em>state=present</em></p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-choices-entry">“suppress_alerts”</span></p></li>
-<li><p><span class="ansible-option-choices-entry">“interoperability”</span></p></li>
-<li><p><span class="ansible-option-choices-entry">“interoperability_extended”</span></p></li>
-<li><p><span class="ansible-option-choices-entry">“performance_focus”</span></p></li>
-<li><p><span class="ansible-option-choices-entry">“performance_focus_extended”</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;suppress_alerts&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;interoperability&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;interoperability_extended&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;performance_focus&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;performance_focus_extended&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -250,8 +250,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>Define the operating system for the exclusion. Required if <em>state=present</em></p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-choices-entry">“windows”</span></p></li>
-<li><p><span class="ansible-option-choices-entry">“linux”</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;windows&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;linux&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -269,8 +269,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <td><div class="ansible-option-cell"><p>Select the <em>state</em> of exclusion</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-default-bold">“present”</span> <span class="ansible-option-default">← (default)</span></p></li>
-<li><p><span class="ansible-option-choices-entry">“absent”</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">&quot;present&quot;</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;absent&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -378,7 +378,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Get basic infos about the changes made</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> [“Exclusion is missing in a group. Creating exclusion.”]</p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[&quot;Exclusion</span> <span class="pre">is</span> <span class="pre">missing</span> <span class="pre">in</span> <span class="pre">a</span> <span class="pre">group.</span> <span class="pre">Creating</span> <span class="pre">exclusion.&quot;]</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -387,7 +387,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Get detailed infos about the changes made</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> “[{‘changes’: {‘values_changed’: {\”root[‘mode’]\”: {‘new_value’: ‘disable_all_monitors_deep’, ‘old_value’: ‘disable_all_monitors’}}}, ‘siteId’: [‘99999999999999999’]}]”</p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">&quot;[{'changes':</span> <span class="pre">{'values_changed':</span> <span class="pre">{\&quot;root['mode']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">'disable_all_monitors_deep',</span> <span class="pre">'old_value':</span> <span class="pre">'disable_all_monitors'}}},</span> <span class="pre">'siteId':</span> <span class="pre">['99999999999999999']}]&quot;</span></code></p>
 </div></td>
 </tr>
 </tbody>

@@ -174,7 +174,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Set this option to set the scope to group level</p>
 <p>A list with groupnames where the upgrade policy should be changed</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <span class="ansible-option-default">[]</span></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">[]</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -185,8 +185,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <p>If <em>inherit_maintenance_windows=yes</em> <em>maintenance_windows</em> will be ignored and the settings will be inherited from upper scope</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-default-bold">false</span> <span class="ansible-option-default">← (default)</span></p></li>
-<li><p><span class="ansible-option-choices-entry">true</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">false</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -199,8 +199,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <p>the settings will be inherited from upper scope</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
-<li><p><span class="ansible-option-default-bold">false</span> <span class="ansible-option-default">← (default)</span></p></li>
-<li><p><span class="ansible-option-choices-entry">true</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">false</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -212,7 +212,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <p>Usage see examples section</p>
 <p>Required if <em>inherit_maintenance_windows=no</em></p>
 <p>Will be ignored if <em>inherit_maintenance_windows=yes</em></p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <span class="ansible-option-default">{}</span></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">{}</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -237,7 +237,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Set the timezone</p>
 <p>Example value: +01:00</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <span class="ansible-option-default">“+00:00”</span></p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">&quot;+00:00&quot;</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -339,7 +339,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Get basic infos about the changes made</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> [“Updating upgrade policy for group group1”, “Updating upgrade policy for group group2”]</p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[&quot;Updating</span> <span class="pre">upgrade</span> <span class="pre">policy</span> <span class="pre">for</span> <span class="pre">group</span> <span class="pre">group1&quot;,</span> <span class="pre">&quot;Updating</span> <span class="pre">upgrade</span> <span class="pre">policy</span> <span class="pre">for</span> <span class="pre">group</span> <span class="pre">group2&quot;]</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -348,7 +348,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Get detailed infos about the changes made</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> “[{‘SiteId’: ‘9999999999999999999’, ‘changes’: {‘dictionary_item_removed’: [\”root[‘data’][‘maintenanceWindowsByDay’][‘Friday’]\”, \”root[‘data’][‘maintenanceWindowsByDay’][‘Saturday’]\”, \”root[‘data’][‘maintenanceWindowsByDay’][‘Sunday’]\”, \”root[‘data’][‘maintenanceWindowsByDay’][‘Thursday’]\”], ‘iterable_item_added’: {\”root[‘data’][‘maintenanceWindowsByDay’][‘Monday’][‘maintenanceHours’][0]\”: {‘fromTime’: ‘8:00 am’, ‘toTime’: ‘11:00 pm’}, \”root[‘data’][‘maintenanceWindowsByDay’][‘Tuesday’][‘maintenanceHours’][0]\”: {‘fromTime’: ‘8:00 am’, ‘toTime’: ‘12:00 pm’}, \”root[‘data’][‘maintenanceWindowsByDay’][‘Tuesday’][‘maintenanceHours’][1]\”: {‘fromTime’: ‘3:00 pm’, ‘toTime’: ‘7:00 pm’}}, ‘values_changed’: {\”root[‘data’][‘inheritParentMaintenanceConfig’]\”: {‘new_value’: False, ‘old_value’: True}, \”root[‘data’][‘maintenanceWindowsByDay’][‘Monday’][‘isMaintenanceAllDay’]\”: {‘new_value’: False, ‘old_value’: True}, \”root[‘data’][‘maintenanceWindowsByDay’][‘Tuesday’][‘isMaintenanceAllDay’]\”: {‘new_value’: False, ‘old_value’: True}}}}]”</p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">&quot;[{'SiteId':</span> <span class="pre">'9999999999999999999',</span> <span class="pre">'changes':</span> <span class="pre">{'dictionary_item_removed':</span> <span class="pre">[\&quot;root['data']['maintenanceWindowsByDay']['Friday']\&quot;,</span> <span class="pre">\&quot;root['data']['maintenanceWindowsByDay']['Saturday']\&quot;,</span> <span class="pre">\&quot;root['data']['maintenanceWindowsByDay']['Sunday']\&quot;,</span> <span class="pre">\&quot;root['data']['maintenanceWindowsByDay']['Thursday']\&quot;],</span> <span class="pre">'iterable_item_added':</span> <span class="pre">{\&quot;root['data']['maintenanceWindowsByDay']['Monday']['maintenanceHours'][0]\&quot;:</span> <span class="pre">{'fromTime':</span> <span class="pre">'8:00</span> <span class="pre">am',</span> <span class="pre">'toTime':</span> <span class="pre">'11:00</span> <span class="pre">pm'},</span> <span class="pre">\&quot;root['data']['maintenanceWindowsByDay']['Tuesday']['maintenanceHours'][0]\&quot;:</span> <span class="pre">{'fromTime':</span> <span class="pre">'8:00</span> <span class="pre">am',</span> <span class="pre">'toTime':</span> <span class="pre">'12:00</span> <span class="pre">pm'},</span> <span class="pre">\&quot;root['data']['maintenanceWindowsByDay']['Tuesday']['maintenanceHours'][1]\&quot;:</span> <span class="pre">{'fromTime':</span> <span class="pre">'3:00</span> <span class="pre">pm',</span> <span class="pre">'toTime':</span> <span class="pre">'7:00</span> <span class="pre">pm'}},</span> <span class="pre">'values_changed':</span> <span class="pre">{\&quot;root['data']['inheritParentMaintenanceConfig']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">False,</span> <span class="pre">'old_value':</span> <span class="pre">True},</span> <span class="pre">\&quot;root['data']['maintenanceWindowsByDay']['Monday']['isMaintenanceAllDay']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">False,</span> <span class="pre">'old_value':</span> <span class="pre">True},</span> <span class="pre">\&quot;root['data']['maintenanceWindowsByDay']['Tuesday']['isMaintenanceAllDay']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">False,</span> <span class="pre">'old_value':</span> <span class="pre">True}}}}]&quot;</span></code></p>
 </div></td>
 </tr>
 </tbody>
