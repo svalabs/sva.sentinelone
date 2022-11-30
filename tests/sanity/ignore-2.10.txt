@@ -5,3 +5,11 @@ plugins/modules/sentinelone_path_exclusions.py validate-modules:missing-gplv3-li
 plugins/modules/sentinelone_policies.py validate-modules:missing-gplv3-license # ignore license check
 plugins/modules/sentinelone_sites.py validate-modules:missing-gplv3-license # ignore license check
 plugins/modules/sentinelone_upgrade_policies.py validate-modules:missing-gplv3-license # ignore license check
+
+plugins/modules/sentinelone_config_overrides.py rstcheck-3.8!skip # skip rstcheck on python 3.8 because it will hang
+plugins/modules/sentinelone_filters.py rstcheck-3.8!skip # skip rstcheck on python 3.8 because it will hang
+plugins/modules/sentinelone_groups.py rstcheck-3.8!skip # skip rstcheck on python 3.8 because it will hang
+plugins/modules/sentinelone_path_exclusions.py rstcheck-3.8!skip # skip rstcheck on python 3.8 because it will hang
+plugins/modules/sentinelone_policies.py rstcheck-3.8!skip # skip rstcheck on python 3.8 because it will hang
+plugins/modules/sentinelone_sites.py rstcheck-3.8!skip # skip rstcheck on python 3.8 because it will hang
+plugins/modules/sentinelone_upgrade_policies.py rstcheck-3.8!skip # skip rstcheck on python 3.8 because it will hang
