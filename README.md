@@ -21,7 +21,7 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 
 ## Requirements
 ### Ansible
-- ansible >= 3 **or** ansible-core >= 2.10
+- ansible >= 4 **or** ansible-core >= 2.11
 
 ### Python
 - Python >= 3.6 (deepdiff requirement)
@@ -33,10 +33,10 @@ This collection needs the following Python modules:
 ## Tested with Ansible and the following Python versions
 
 Tested Ansible versions:
-- 2.10
 - 2.11
 - 2.12
 - 2.13
+- 2.14
 
 Tested Python versions:
 - 3.6
@@ -44,6 +44,7 @@ Tested Python versions:
 - 3.8
 - 3.9
 - 3.10
+- 3.11
 
 ## Using this collection
 ### Installing the collection from Ansible Galaxy
