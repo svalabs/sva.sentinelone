@@ -1,7 +1,0 @@
-plugins/modules/sentinelone_config_overrides.py validate-modules:missing-gplv3-license # ignore license check
-plugins/modules/sentinelone_filters.py validate-modules:missing-gplv3-license # ignore license check
-plugins/modules/sentinelone_groups.py validate-modules:missing-gplv3-license # ignore license check
-plugins/modules/sentinelone_path_exclusions.py validate-modules:missing-gplv3-license # ignore license check
-plugins/modules/sentinelone_policies.py validate-modules:missing-gplv3-license # ignore license check
-plugins/modules/sentinelone_sites.py validate-modules:missing-gplv3-license # ignore license check
-plugins/modules/sentinelone_upgrade_policies.py validate-modules:missing-gplv3-license # ignore license check
