@@ -270,21 +270,21 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </section>
 <section id="examples">
 <h2><a class="toc-backref" href="#id5">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create / update site</span><span class="w"></span>
-<span class="w">  </span><span class="nt">sentinelone_sites</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">license_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;control&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">expiration_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2022-06-01T12:00+01:00&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Testsite&quot;</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete site</span><span class="w"></span>
-<span class="w">  </span><span class="nt">sentinelone_sites</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;absent&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="w"></span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create / update site</span>
+<span class="w">  </span><span class="nt">sentinelone_sites</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
+<span class="w">    </span><span class="nt">license_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;control&quot;</span>
+<span class="w">    </span><span class="nt">expiration_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2022-06-01T12:00+01:00&quot;</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Testsite&quot;</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete site</span>
+<span class="w">  </span><span class="nt">sentinelone_sites</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;absent&quot;</span>
+<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
 </pre></div>
 </div>
 </section>
