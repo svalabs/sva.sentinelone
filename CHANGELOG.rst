@@ -5,6 +5,19 @@ Sva.Sentinelone Release Notes
 .. contents:: Topics
 
 
+v1.0.1
+======
+
+Release Summary
+---------------
+
+This is a bugfix release
+
+Bugfixes
+--------
+
+- sentinelone_policies module: When a group policy inherited from the site area was updated with a custom setting, all other settings were reset to the default values. Now the inherited settings are updated by the settings passed to the module and the other inherited settings are retained.
+
 v1.0.0
 ======
 
