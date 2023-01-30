@@ -248,28 +248,23 @@ class SentinelonePolicies(SentineloneBase):
         return response
 
     @staticmethod
-    def get_update_body(current_settings: dict, desired_state_settings: dict):
+    def get_update_body(policy_settings: dict):
         """
-        Create post object. Wrapping settings in data dictionary and check for autoMitigationAction
+        Prepare the merged object for post request
 
-        :param current_settings: current policy settings
-        :type current_settings: dict
-        :param desired_state_settings: settings which should be ensured
-        :type desired_state_settings: dict
+        :param policy_settings: desired state policy settings
+        :type policy_settings: dict
         :return: update body for API
         :rtype: dict
         """
 
-        desired_state_policy_body = {
-            "data": desired_state_settings
-        }
+        # Remove deprecated policy settings. The module would not work correctly in some circumstances
+        del policy_settings['agentNotification']
+        del policy_settings['agentUiOn']
 
-        # API call will fail if autoMitigationAction is not set in update body. So we make shure it is set. And use the
-        # current setting if neccessary
-        if desired_state_policy_body['data'].get('autoMitigationAction', None) is None:
-            desired_state_policy_body['data']['autoMitigationAction'] = current_settings['data']['autoMitigationAction']
+        policy_object = {'data': policy_settings}
 
-        return desired_state_policy_body
+        return policy_object
 
 
 def run_module():
@@ -311,13 +306,13 @@ def run_module():
                 # check if every group has the desired settings already
                 current_policy = policy_obj.get_current_policy(current_group_id, module)
                 desired_state_policy = policy_obj.desired_state_policy
-                diff = policy_obj.merge_compare(current_policy['data'], desired_state_policy)[0]
+                diff, merged_policy = policy_obj.merge_compare(current_policy['data'], desired_state_policy)
                 if diff:
                     # if group policy is different from desired state, update it
                     current_group_name = current_group_id_name[1]
                     diffs.append({'changes': dict(diff), 'groupId': current_group_id})
                     basic_message.append(f"Updating policy for group {current_group_name}")
-                    update_body = policy_obj.get_update_body(current_policy, desired_state_policy)
+                    update_body = policy_obj.get_update_body(merged_policy)
                     policy_obj.update_policy(current_group_id, update_body, module)
         else:
             # if scope is site level
@@ -326,12 +321,12 @@ def run_module():
             site_id = policy_obj.site_id
             current_policy = policy_obj.get_current_policy(site_id, module)
             desired_state_policy = policy_obj.desired_state_policy
-            diff = policy_obj.merge_compare(current_policy['data'], desired_state_policy)[0]
+            diff, merged_policy = policy_obj.merge_compare(current_policy['data'], desired_state_policy)
             if diff:
                 # if site policy is different from desired state, update it
                 diffs.append({'changes': dict(diff), 'SiteId': site_id})
                 basic_message.append(f"Updating policy for site {site_name}")
-                update_body = policy_obj.get_update_body(current_policy, desired_state_policy)
+                update_body = policy_obj.get_update_body(merged_policy)
                 policy_obj.update_policy(site_id, update_body, module)
     else:
         # if we want to enable inheritance

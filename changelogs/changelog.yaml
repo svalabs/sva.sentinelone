@@ -28,3 +28,14 @@ releases:
       name: sentinelone_upgrade_policies
       namespace: ''
     release_date: '2022-08-16'
+  1.0.1:
+    changes:
+      bugfixes:
+      - 'sentinelone_policies module: When a group policy inherited from the site
+        scope was updated with a custom setting, all other settings were reset to the
+        default values. Now the inherited settings are updated by the settings passed
+        to the module and the other inherited settings are retained.'
+      release_summary: 'This is a bugfix release'
+    fragments:
+    - v1.0.1.yaml
+    release_date: '2023-01-30'
