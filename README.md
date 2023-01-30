@@ -79,6 +79,7 @@ The module documentation can be found [here](https://svalabs.github.io/ansible-c
 
 ## Changelog
 **v1.0.0**: Initial release
+**v1.0.1**: Bugfix release
 
 Detailed Changelog can be found at [CHANGELOG](CHANGELOG.rst)
 
