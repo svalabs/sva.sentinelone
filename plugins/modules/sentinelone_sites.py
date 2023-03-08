@@ -134,7 +134,6 @@ message:
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, lib_imp_errors
-import ansible.module_utils.six.moves.urllib.error as urllib_error
 from datetime import datetime, timezone
 
 
@@ -222,15 +221,8 @@ class SentineloneSite(SentineloneBase):
         api_url = self.api_endpoint_sites
 
         create_body = {'data': create_body_raw}
-
-        try:
-            response = self.api_call(module, api_url, "POST", body=create_body)
-        except urllib_error.HTTPError as err:
-            if err.msg == "BAD REQUEST":
-                module.fail_json(msg=(f"Failed to create site. API response was {str(err)}. "
-                                      f"Check the parameters you passed to the module."))
-            else:
-                module.fail_json(msg=f"Failed to create site. API response was {str(err)}.")
+        error_msg = "Failed to create site."
+        response = self.api_call(module, api_url, "POST", body=create_body, error_msg=error_msg)
 
         if not response['data']:
             module.fail_json(msg=("Error in create_site: site should have been created via API "
@@ -249,10 +241,8 @@ class SentineloneSite(SentineloneBase):
         """
 
         api_url = f"{self.api_endpoint_sites}/{self.site_id}"
-        try:
-            response = self.api_call(module, api_url, "DELETE")
-        except urllib_error.HTTPError as err:
-            module.fail_json(msg=f"Failed to delete site. API response was {str(err)}.")
+        error_msg = "Failed to delete site."
+        response = self.api_call(module, api_url, "DELETE", error_msg=error_msg)
 
         if not response['data']['success']:
             module.fail_json(msg=("Error in delete_site: Site should have been deleted via API "
@@ -275,15 +265,8 @@ class SentineloneSite(SentineloneBase):
         api_url = f"{self.api_endpoint_sites}/{self.site_id}"
 
         update_body = {'data': update_body_raw}
-
-        try:
-            response = self.api_call(module, api_url, "PUT", body=update_body)
-        except urllib_error.HTTPError as err:
-            if err.msg == "BAD REQUEST":
-                module.fail_json(msg=(f"Failed to update site. API response was {str(err)}. "
-                                      f"Check the parameters you passed to the module."))
-            else:
-                module.fail_json(msg=f"Failed to update site. API response was {str(err)}.")
+        error_msg = "Failed to update site."
+        response = self.api_call(module, api_url, "PUT", body=update_body, error_msg=error_msg)
 
         if not response['data']:
             module.fail_json(msg=("Error in update_site: Site should have been updated via API "

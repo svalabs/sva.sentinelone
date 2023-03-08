@@ -78,6 +78,8 @@ See [Ansible Using collections](https://docs.ansible.com/ansible/devel/user_guid
 The module documentation can be found [here](https://svalabs.github.io/ansible-collection-sva.sentinelone/branch/main/collections/index_module.html).
 
 ## Changelog
+**v1.0.2**: Added detailed error message to module output if an API call fails
+
 **v1.0.1**: Bugfix release
 
 **v1.0.0**: Initial release

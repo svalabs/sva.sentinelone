@@ -19,10 +19,9 @@ import traceback
 import copy
 import time
 from ansible.module_utils.six.moves.urllib.parse import quote_plus
-from ansible.module_utils.six import wraps
 import ansible.module_utils.six.moves.urllib.error as urllib_error
 
-from ansible.module_utils.urls import open_url
+from ansible.module_utils.urls import fetch_url
 
 lib_imp_errors = {'lib_imp_err': None}
 try:
@@ -31,33 +30,6 @@ try:
 except ImportError:
     lib_imp_errors['has_lib'] = False
     lib_imp_errors['lib_imp_err'] = traceback.format_exc()
-
-
-def api_retry(func):
-    """Retry decorator"""
-
-    retries = 3
-    retry_pause = 3
-
-    @wraps(func)
-    def retried(*args, **kwargs):
-        retry_count = 0
-        ret = None
-        while True:
-            retry_count += 1
-            try:
-                ret = func(*args, **kwargs)
-            except Exception as err:
-                if retry_count == retries:
-                    raise err
-                else:
-                    pass
-            if ret:
-                break
-            time.sleep(retry_pause)
-        return ret
-
-    return retried
 
 
 class SentineloneBase:
@@ -113,7 +85,6 @@ class SentineloneBase:
 
         self.module = module
 
-    @api_retry
     def api_call(self, module: AnsibleModule, api_endpoint: str, http_method: str = "get", **kwargs):
         """
         Queries api_endpoint. if no http_method is passed a get request is performed. api_endpoint is mandatory
@@ -124,16 +95,23 @@ class SentineloneBase:
         :type api_endpoint: str
         :param http_method: HTTP query method. Default is GET but POST, PUT, DELETE, etc. is supported as well
         :type http_method: str
-        :param kwargs: You can pass custom headers or custom body.
-            If custom headers is not set default vaules will apply and should be sufficient.
-            If body is not passed body is empty
-        :type kwargs: dict
+        :param kwargs: See below
+        :Keyword Arguments:
+            * *headers* (dict) --
+              You can pass custom headers or custom body.
+              If custom headers is not set default vaules will apply and should be sufficient.
+            * *body* (dict) --
+              If body is not passed body is empty
+            * *error_msg* (str) --
+              Start of error message in case of a failed API call
         :return: Returnes parsed json response. Type of return value depends on the data returned by the API.
             Usually dictionary
         :rtype: dict
         """
 
-        validate_cert = True
+        retries = 3
+        retry_pause = 3
+
         headers = {}
 
         if not kwargs.get("headers", {}):
@@ -143,17 +121,38 @@ class SentineloneBase:
 
         body = kwargs.get("body", {})
 
-        if body:
-            body_json = json.dumps(body)
-            response_raw = open_url(api_endpoint, headers=headers, data=body_json, method=http_method,
-                                    validate_certs=validate_cert)
-        else:
-            response_raw = open_url(api_endpoint, headers=headers, method=http_method, validate_certs=validate_cert)
+        error_msg = kwargs.get("error_msg", "API call failed.")
 
+        retry_count = 0
         try:
-            response = json.loads(response_raw.read().decode('utf-8'))
+            while True:
+                retry_count += 1
+                try:
+                    if body:
+                        body_json = json.dumps(body)
+                        response_raw, response_info = fetch_url(module, api_endpoint, headers=headers, data=body_json,
+                                                                method=http_method)
+                    else:
+                        response_raw, response_info = fetch_url(module, api_endpoint, headers=headers,
+                                                                method=http_method)
+                    status_code = response_info['status']
+                    if status_code >= 400:
+                        response_unparsed = response_info['body'].decode('utf-8')
+                        response = json.loads(response_unparsed)
+                        raise response_raw
+                    else:
+                        response = json.loads(response_raw.read().decode('utf-8'))
+                        break
+                except Exception as err:
+                    if retry_count == retries:
+                        raise err
+
+                time.sleep(retry_pause)
         except json.decoder.JSONDecodeError as err:
             module.fail_json(msg=f"API response is no valid JSON. Error: {str(err)}")
+        except urllib_error.HTTPError as err:
+            module.fail_json(
+                msg=f"{error_msg} Status code: {err.code} {err.reason}. Response body: {response_unparsed}")
 
         return response
 
@@ -168,10 +167,8 @@ class SentineloneBase:
         """
 
         api_url = f"{self.api_endpoint_accounts}?states=active"
-        try:
-            response = self.api_call(module, api_url)
-        except urllib_error.HTTPError as err:
-            module.fail_json(msg=f"Failed to get account id. API response was {str(err)}.")
+        error_msg = "Failed to get account"
+        response = self.api_call(module, api_url, error_msg=error_msg)
 
         if response["pagination"]["totalItems"] == 1:
             return response["data"][0]
@@ -194,10 +191,8 @@ class SentineloneBase:
         """
 
         api_url = f"{self.api_endpoint_sites}?name={quote_plus(site_name)}&state=active"
-        try:
-            response = self.api_call(module, api_url)
-        except urllib_error.HTTPError as err:
-            module.fail_json(msg=f"Failed to get site. API response was {str(err)}.")
+        error_msg = "Failed to get site."
+        response = self.api_call(module, api_url, error_msg=error_msg)
 
         if response["pagination"]["totalItems"] == 1:
             site_obj = response["data"]["sites"][0]
@@ -222,10 +217,8 @@ class SentineloneBase:
         group_ids_names = []
         for group_name in group_names:
             api_url = f"{self.api_endpoint_groups}?name={quote_plus(group_name)}&siteIds={quote_plus(self.site_id)}"
-            try:
-                response = self.api_call(module, api_url)
-            except urllib_error.HTTPError as err:
-                module.fail_json(msg=f"Failed to get group id(s). API response was {str(err)}.")
+            error_msg = f"Failed to get group {group_name}."
+            response = self.api_call(module, api_url, error_msg=error_msg)
 
             if response["pagination"]["totalItems"] == 1:
                 group_id = response["data"][0]["id"]
@@ -248,10 +241,8 @@ class SentineloneBase:
         """
 
         api_url = f"{self.api_endpoint_filters}?siteIds={self.site_id}&query={quote_plus(filter_name)}"
-        try:
-            response = self.api_call(module, api_url)
-        except urllib_error.HTTPError as err:
-            module.fail_json(msg=f"Failed to get filters from API. API response was {str(err)}.")
+        error_msg = "Failed to get filters from API."
+        response = self.api_call(module, api_url, error_msg=error_msg)
 
         # API parameter "query" also matches substring. Making sure only the exactly matching element is returned
         filtered_response = list(filter(lambda filterobj: filterobj['name'] == filter_name, response['data']))

@@ -138,7 +138,6 @@ message:
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, lib_imp_errors
 from ansible.module_utils.six.moves.urllib.parse import quote_plus
-import ansible.module_utils.six.moves.urllib.error as urllib_error
 
 
 class SentineloneGroups(SentineloneBase):
@@ -161,7 +160,7 @@ class SentineloneGroups(SentineloneBase):
         # Do sanity checks
         self.check_sanity(self.state, self.group_names, self.filter_name, module)
 
-        self.current_groups = self.get_current_groups(self.group_names, module)
+        self.current_groups = self.get_groups(self.group_names, module)
         if self.filter_name:
             # check if given filter for dynamic group exists
             self.filter_obj = self.get_current_filter(self.filter_name, module)
@@ -169,7 +168,7 @@ class SentineloneGroups(SentineloneBase):
                 module.fail_json(msg=f"Error: Filter {self.filter_name} does not exist.")
             self.filter_id = self.filter_obj['id']
 
-    def get_current_groups(self, group_names: list, module: AnsibleModule):
+    def get_groups(self, group_names: list, module: AnsibleModule):
         """
         API call to get the existing group objects
 
@@ -185,10 +184,9 @@ class SentineloneGroups(SentineloneBase):
         for group_name in group_names:
             api_url = self.api_endpoint_groups + (f"?siteIds={self.site_id}&"
                                                   f"name={quote_plus(group_name)}")
-            try:
-                response = self.api_call(module, api_url)
-            except urllib_error.HTTPError as err:
-                module.fail_json(msg=f"Failed to query group {group_name} from API. API response was {str(err)}.")
+            error_msg = f"Failed to query group {group_name} from API"
+            response = self.api_call(module, api_url, error_msg=error_msg)
+
             if response['pagination']['totalItems'] > 0:
                 current_groups.append(response['data'][0])
 
@@ -230,18 +228,12 @@ class SentineloneGroups(SentineloneBase):
         """
 
         api_url = self.api_endpoint_groups
-        try:
-            response = self.api_call(module, api_url, "POST", body=create_body)
-        except urllib_error.HTTPError as err:
-            if err.msg == "BAD REQUEST":
-                module.fail_json(msg=(f"Failed to create group. API response was {str(err)}. "
-                                      f"Maybe the sent body was incorrect?"))
-            else:
-                module.fail_json(msg=f"Failed to create exclusions. API response was {str(err)}.")
+        error_msg = "Failed to create group."
+        response = self.api_call(module, api_url, "POST", body=create_body, error_msg=error_msg)
 
         if response['data']['name'] != create_body['data']['name']:
             module.fail_json(msg=(f"Group {create_body['data']['name']} should be created via API but "
-                                  f"API result was empty"))
+                                  f"result was empty"))
 
         return response
 
@@ -260,14 +252,8 @@ class SentineloneGroups(SentineloneBase):
         """
 
         api_url = f"{self.api_endpoint_groups}/{groupid}"
-        try:
-            response = self.api_call(module, api_url, "PUT", body=update_body)
-        except urllib_error.HTTPError as err:
-            if err.msg == "BAD REQUEST":
-                module.fail_json(msg=(f"Failed to update group. API response was {str(err)}. "
-                                      f"Maybe the sent body was incorrect?"))
-            else:
-                module.fail_json(msg=f"Failed to create exclusions. API response was {str(err)}.")
+        error_msg = "Failed to update group."
+        response = self.api_call(module, api_url, "PUT", body=update_body, error_msg=error_msg)
 
         if response['data']['name'] != update_body['data']['name']:
             module.fail_json(msg=(f"Group {update_body['data']['name']} should have been updated via API"
@@ -288,17 +274,11 @@ class SentineloneGroups(SentineloneBase):
         """
 
         api_url = f"{self.api_endpoint_groups}/{group_id}"
-        try:
-            response = self.api_call(module, api_url, "DELETE")
-        except urllib_error.HTTPError as err:
-            if err.msg == "BAD REQUEST":
-                module.fail_json(msg=(f"Failed to delete exclusions. API response was {str(err)}. "
-                                      f"Maybe the sent body was incorrect?"))
-            else:
-                module.fail_json(msg=f"Failed to delete exclusions. API response was {str(err)}.")
+        error_msg = "Failed to delete group."
+        response = self.api_call(module, api_url, "DELETE", error_msg=error_msg)
 
         if not response['data']['success']:
-            module.fail_json(msg="Exclusions should have been deleted via API but API result was empty")
+            module.fail_json(msg="Group should have been deleted via API but API result was empty")
 
         return response
 

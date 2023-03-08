@@ -181,7 +181,6 @@ message:
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, lib_imp_errors
 from ansible.module_utils.six.moves.urllib.parse import quote_plus
-import ansible.module_utils.six.moves.urllib.error as urllib_error
 import copy
 
 
@@ -289,10 +288,7 @@ class SentineloneConfigOverrides(SentineloneBase):
 
         query_uri = '&'.join(query_options)
         api_url = f"{self.api_endpoint_config_overrides}?{query_uri}"
-        try:
-            response = self.api_call(module, api_url)
-        except urllib_error.HTTPError as err:
-            module.fail_json(msg=f"{error_msg} API response was {str(err)}.")
+        response = self.api_call(module, api_url, error_msg=error_msg)
 
         response_data = response['data']
         count_config_overrides = len(response_data)
@@ -318,12 +314,10 @@ class SentineloneConfigOverrides(SentineloneBase):
         """
 
         if current_config_override_id:
-            # API call to delete the current config override which is currently set. Can be used on site or group level
+            # API call to delete the config override which is currently set. Can be used on site or group level
             api_url = f"{self.api_endpoint_config_overrides}/{current_config_override_id}"
-            try:
-                response = self.api_call(module, api_url, "DELETE")
-            except urllib_error.HTTPError as err:
-                module.fail_json(msg=f"Failed to delete config override. API response was {str(err)}.")
+            error_msg = "Failed to delete config override."
+            response = self.api_call(module, api_url, "DELETE", error_msg=error_msg)
 
             if not response['data']['success']:
                 module.fail_json(msg=("Error in delete_config_override: Config override should have been deleted via "
@@ -346,14 +340,8 @@ class SentineloneConfigOverrides(SentineloneBase):
         """
 
         api_url = self.api_endpoint_config_overrides
-        try:
-            response = self.api_call(module, api_url, "POST", body=create_body)
-        except urllib_error.HTTPError as err:
-            if err.msg == "BAD REQUEST":
-                module.fail_json(msg=(f"Failed to create config override. API response was {str(err)}. "
-                                      f"Check the config_override parameter you passed to the module."))
-            else:
-                module.fail_json(msg=f"Failed to create config override. API response was {str(err)}.")
+        error_msg = "Failed to create config override."
+        response = self.api_call(module, api_url, "POST", body=create_body, error_msg=error_msg)
 
         if not response['data']:
             module.fail_json(msg=("Error in create_config_override: config override should have been created via API "
