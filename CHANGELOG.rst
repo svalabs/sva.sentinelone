@@ -5,6 +5,14 @@ Sva.Sentinelone Release Notes
 .. contents:: Topics
 
 
+v1.0.2
+======
+
+Release Summary
+---------------
+
+Added detailed error message to module output if an API call fails
+
 v1.0.1
 ======
 

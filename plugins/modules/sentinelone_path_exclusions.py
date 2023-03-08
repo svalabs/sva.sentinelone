@@ -196,7 +196,6 @@ message:
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, lib_imp_errors
 from ansible.module_utils.six.moves.urllib.parse import quote_plus
-import ansible.module_utils.six.moves.urllib.error as urllib_error
 from ansible.module_utils.urls import re
 
 
@@ -285,9 +284,9 @@ class SentineloneExclusions(SentineloneBase):
         """
 
         # Get path type (folder or file)
-        if re.search(r"(/|\\)$", exclusion_path) and not include_subfolders:
+        if re.search(r"[/\\]$", exclusion_path) and not include_subfolders:
             path_exclusion_type = "folder"
-        elif re.search(r"(/|\\)$", exclusion_path) and include_subfolders:
+        elif re.search(r"[/\\]$", exclusion_path) and include_subfolders:
             path_exclusion_type = "subfolders"
         else:
             path_exclusion_type = "file"
@@ -384,10 +383,8 @@ class SentineloneExclusions(SentineloneBase):
             # Scope is group level
             api_url += f"&groupIds={quote_plus(','.join(current_group_ids))}"
 
-        try:
-            response = self.api_call(module, api_url)
-        except urllib_error.HTTPError as err:
-            module.fail_json(msg=f"Failed to get current exclusions. API response was {str(err)}.")
+        error_msg = "Failed to get current exclusions."
+        response = self.api_call(module, api_url, error_msg=error_msg)
 
         return response
 
@@ -404,14 +401,8 @@ class SentineloneExclusions(SentineloneBase):
         if self.current_exclusion_ids:
             api_url = self.api_endpoint_exclusions
             delete_body = self.get_delete_exclusion_body(self.current_exclusion_ids)
-            try:
-                response = self.api_call(module, api_url, "DELETE", body=delete_body)
-            except urllib_error.HTTPError as err:
-                if err.msg == "BAD REQUEST":
-                    module.fail_json(msg=(f"Failed to delete exclusions. API response was {str(err)}. "
-                                          f"Maybe the sent body was incorrect?"))
-                else:
-                    module.fail_json(msg=f"Failed to delete exclusions. API response was {str(err)}.")
+            error_msg = "Failed to delete exclusions."
+            response = self.api_call(module, api_url, "DELETE", body=delete_body, error_msg=error_msg)
 
             if response['data']['affected'] == 0:
                 module.fail_json(msg="Exclusions should have been deleted via API but API result was empty")
@@ -431,14 +422,8 @@ class SentineloneExclusions(SentineloneBase):
         """
         api_url = self.api_endpoint_exclusions
         create_body = self.get_desired_state_exclusion_body()
-        try:
-            response = self.api_call(module, api_url, "POST", body=create_body)
-        except urllib_error.HTTPError as err:
-            if err.msg == "BAD REQUEST":
-                module.fail_json(msg=(f"Failed to create exclusions. API response was {str(err)}. "
-                                      f"Maybe the sent body was incorrect?"))
-            else:
-                module.fail_json(msg=f"Failed to create exclusions. API response was {str(err)}.")
+        error_msg = "Failed to create exclusions."
+        response = self.api_call(module, api_url, "POST", body=create_body, error_msg=error_msg)
 
         if len(response['data']) == 0:
             module.fail_json(msg="Exclusions should have been deleted via API but API result was empty")
