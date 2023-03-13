@@ -109,6 +109,7 @@ class SentineloneBase:
         :rtype: dict
         """
 
+        request_timeout = 120
         retries = 3
         retry_pause = 3
 
@@ -131,12 +132,16 @@ class SentineloneBase:
                     if body:
                         body_json = json.dumps(body)
                         response_raw, response_info = fetch_url(module, api_endpoint, headers=headers, data=body_json,
-                                                                method=http_method)
+                                                                method=http_method, timeout=request_timeout)
                     else:
                         response_raw, response_info = fetch_url(module, api_endpoint, headers=headers,
-                                                                method=http_method)
+                                                                method=http_method, timeout=request_timeout)
+
                     status_code = response_info['status']
-                    if status_code >= 400:
+                    if status_code == -1:
+                        # If the request runtime exceeds the timout
+                        module.exit_json(msg=f"{error_msg} Error: {response_info['msg']} after {request_timeout}s.")
+                    elif status_code >= 400:
                         response_unparsed = response_info['body'].decode('utf-8')
                         response = json.loads(response_unparsed)
                         raise response_raw
@@ -152,7 +157,7 @@ class SentineloneBase:
             module.fail_json(msg=f"API response is no valid JSON. Error: {str(err)}")
         except urllib_error.HTTPError as err:
             module.fail_json(
-                msg=f"{error_msg} Status code: {err.code} {err.reason}. Response body: {response_unparsed}")
+                msg=f"{error_msg} Status code: {err.code} {err.reason}. Error: {response_unparsed}")
 
         return response
 

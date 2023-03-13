@@ -5,6 +5,14 @@ Sva.Sentinelone Release Notes
 .. contents:: Topics
 
 
+v1.0.3
+======
+
+Release Summary
+---------------
+
+Increased request timeout and implemented error handling for requests that timed out.
+
 v1.0.2
 ======
 
