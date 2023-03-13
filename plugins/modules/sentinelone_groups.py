@@ -215,12 +215,14 @@ class SentineloneGroups(SentineloneBase):
 
         return desired_state_groups
 
-    def create_group(self, create_body: dict, module: AnsibleModule):
+    def create_group(self, create_body: dict, error_msg: str, module: AnsibleModule):
         """
         API call to create a group
 
         :param create_body: Body for the create query
         :type create_body: dict
+        :param error_msg: Message used if an API request failes
+        :type error_msg: str
         :param module: Ansible module for error handling
         :type module: AnsibleModule
         :return: create query response object
@@ -228,7 +230,6 @@ class SentineloneGroups(SentineloneBase):
         """
 
         api_url = self.api_endpoint_groups
-        error_msg = "Failed to create group."
         response = self.api_call(module, api_url, "POST", body=create_body, error_msg=error_msg)
 
         if response['data']['name'] != create_body['data']['name']:
@@ -237,7 +238,7 @@ class SentineloneGroups(SentineloneBase):
 
         return response
 
-    def update_group(self, update_body: dict, groupid: str, module: AnsibleModule):
+    def update_group(self, update_body: dict, groupid: str, error_msg: str, module: AnsibleModule):
         """
         API call to update a group
 
@@ -245,6 +246,8 @@ class SentineloneGroups(SentineloneBase):
         :type update_body: dict
         :param groupid: ID of the group which should be updated
         :type groupid: str
+        :param error_msg: Message used if an API request failes
+        :type error_msg: str
         :param module: Ansible module for error handling
         :type module: AnsibleModule
         :return: API response of the update query
@@ -252,7 +255,6 @@ class SentineloneGroups(SentineloneBase):
         """
 
         api_url = f"{self.api_endpoint_groups}/{groupid}"
-        error_msg = "Failed to update group."
         response = self.api_call(module, api_url, "PUT", body=update_body, error_msg=error_msg)
 
         if response['data']['name'] != update_body['data']['name']:
@@ -261,12 +263,14 @@ class SentineloneGroups(SentineloneBase):
 
         return response
 
-    def delete_group(self, group_id: str, module: AnsibleModule):
+    def delete_group(self, group_id: str, error_msg: str, module: AnsibleModule):
         """
         API call to delete a group
 
         :param group_id: ID of the group which should be deleted
         :type group_id: str
+        :type error_msg: Message used if an API request failes
+        :type error_msg: str
         :param module: Ansible module for error handling
         :type module: AnsibleModule
         :return: API response of the delete-query
@@ -274,7 +278,6 @@ class SentineloneGroups(SentineloneBase):
         """
 
         api_url = f"{self.api_endpoint_groups}/{group_id}"
-        error_msg = "Failed to delete group."
         response = self.api_call(module, api_url, "DELETE", error_msg=error_msg)
 
         if not response['data']['success']:
@@ -349,14 +352,16 @@ def run_module():
                         # Inheritance and policy should not be maintained by this module.
                         # Removing the key because if not the module will update the inherintance property
                         del desired_state_group['data']['inherits']
-                        groups_obj.update_group(desired_state_group, group_id, module)
+                        error_msg = f"Failed to update group {group_name}."
+                        groups_obj.update_group(desired_state_group, group_id, error_msg, module)
                         basic_message.append(f"Group {group_name} updated")
                         diffs.append({'changes': dict(diff), 'groupName': group_name})
                     else:
                         basic_message.append("Can not convert dynamic to static group and vice versa. Nothing changed.")
             else:
                 # Group does not exist. Creating the group
-                groups_obj.create_group(desired_state_group, module)
+                error_msg = f"Failed to create group {group_name}."
+                groups_obj.create_group(desired_state_group, error_msg, module)
                 basic_message.append(f"Group {group_name} created.")
                 diffs.append({'changes': "Group created", 'groupName': group_name})
     else:
@@ -366,8 +371,9 @@ def run_module():
             current_group = list(filter(lambda filterobj: filterobj['name'] == group_name, current_groups))
             if current_group:
                 # if group exists delete it
+                error_msg = f"Failed to delete group {group_name}."
                 group_id = current_group[0]['id']
-                groups_obj.delete_group(group_id, module)
+                groups_obj.delete_group(group_id, error_msg, module)
                 basic_message.append(f"Group {group_name} deleted.")
                 diffs.append({'changes': 'Group deleted', 'groupName': group_name})
 
