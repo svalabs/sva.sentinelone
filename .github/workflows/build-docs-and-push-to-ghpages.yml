@@ -24,7 +24,7 @@ jobs:
 
   publish-docs-gh-pages:
     # use to prevent running on forks
-    if: github.repository == 'svalabs/ansible-collection-sva.sentinelone'
+    if: github.repository == 'svalabs/sva.sentinelone'
     permissions:
       contents: write
     needs: [build-docs]
