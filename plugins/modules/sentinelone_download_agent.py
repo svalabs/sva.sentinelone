@@ -16,17 +16,23 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: sentinelone_sites
-short_description: "Manage SentinelOne Sites"
-version_added: "1.0.0"
+module: sentinelone_download_agent
+short_description: "Download SentinelOne agent from Management Console"
+version_added: "1.1.0"
 description:
-  - "This module is able to create, update and delete sites in SentinelOne"
+  - "This module is able to download a SentinelOne agent from Management Console"
 options:
   console_url:
     description:
       - "Insert your management console URL"
     type: str
     required: true
+  site:
+    description:
+      - "Name of the site from which to download the agent"
+      - "If omitted the scope will be on account level"
+    type: str
+    required: false
   token:
     description:
       - "SentinelOne API auth token to authenticate at the management API"
@@ -34,69 +40,66 @@ options:
     required: true
   state:
     description:
-      - "Select the state of the site"
+      - "Choose between download and print info of the agent packages"
     type: str
     default: present
     required: false
     choices:
       - present
-      - absent
-  name:
+      - info
+  agent_version:
     description:
-      - "The name of the site"
+      - "Version of the agent to be downloaded."
+      - "B(latest) (default) - download latest GA (stable) release for the specified parameters"
+      - "B(latest_ea) - same as latest, but also includes EA packages"
+      - "B(<explicit agent version number>) - download an explicit version of the agent"
+    type: str
+    default: latest
+    required: false
+    choices:
+      - latest
+      - latest_ea
+      - custom
+  custom_version:
+    description:
+      - "Explicit version of the file to be downloaded"
+      - "Has to be set when agent_version=custom"
+    type: str
+    required: false
+  os_type:
+    description:
+      - "The type of the OS for which the agent should be downloaded"
     type: str
     required: true
-  site_type:
-    description:
-      - "The type of the site"
-    type: str
-    required: false
-    default: Paid
     choices:
-      - Trial
-      - Paid
-  license_type:
+      - Linux
+      - Windows
+  packet_format:
     description:
-      - "The SKU to use"
+      - "The format of the packet which should be downloaded"
     type: str
-    required: false
+    required: true
     choices:
-      - core
-      - control
-      - complete
-    default: core
-  total_agents:
+      - rpm
+      - deb
+      - msi
+      - exe
+  architecture:
     description:
-      - "Count of total agent licenses to be assigned to site"
-      - "Use B(-1) (default) to set to B(unlimited licenses) in site"
-    type: int
-    required: false
-    default: -1
-  expiration_date:
-    description:
-      - "Sets the expiration date"
-      - "Use B(-1) (default) to set to B(max expiration) available. This is either unlimited or account expiration date."
-      - "Format is ISO 8601 without microseconds"
-      - "Examples:"
-      - "2022-03-15T10:20+00:00"
-      - "2022-03-15T11:21+0100"
+      - "Architecture of the packet which should be downloaded"
     type: str
-    required: false
-    default: "-1"
-  description:
-    description:
-      - "Description for the site"
-    type: str
-    required: false
-    default: ""
+    required: true
+    choices:
+      - 32_bit
+      - 64_bit
 author:
   - "Marco Wester (@mwester117) <marco.wester@sva.de>"
+  - "Erik Scihndler (@mintalicious) <erik.schindler@sva.de>"
 requirements:
   - "deepdiff >= 5.6"
 notes:
   - "Python module deepdiff. Tested with version >=5.6. Lower version may work too"
   - "Currently only supported in single-account management consoles"
-  - "Policy is always inherited from Account scope. If you want to change the policy please use sentinelone_policies module"
 '''
 
 EXAMPLES = r'''
@@ -137,7 +140,7 @@ from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentin
 from datetime import datetime, timezone
 
 
-class SentineloneSite(SentineloneBase):
+class SentineloneDownloadAgent(SentineloneBase):
     def __init__(self, module: AnsibleModule):
         """
         Initialization of the site object
@@ -206,74 +209,6 @@ class SentineloneSite(SentineloneBase):
 
         return desired_state_site_body
 
-    def create_site(self, create_body_raw: dict, module: AnsibleModule):
-        """
-        API call to create the site
-
-        :param create_body_raw: Body which should be sent
-        :type create_body_raw: dict
-        :param module: Ansible module for error handling
-        :type module: AnsibleModule
-        :return: API response
-        :rtype: dict
-        """
-
-        api_url = self.api_endpoint_sites
-
-        create_body = {'data': create_body_raw}
-        error_msg = "Failed to create site."
-        response = self.api_call(module, api_url, "POST", body=create_body, error_msg=error_msg)
-
-        if not response['data']:
-            module.fail_json(msg=("Error in create_site: site should have been created via API "
-                                  "but API result was empty"))
-
-        return response
-
-    def delete_site(self, module: AnsibleModule):
-        """
-        API call to delete the site
-
-        :param module: Ansible module for error handling
-        :type module: AnsibleModule
-        :return: API response
-        :rtype: dict
-        """
-
-        api_url = f"{self.api_endpoint_sites}/{self.site_id}"
-        error_msg = "Failed to delete site."
-        response = self.api_call(module, api_url, "DELETE", error_msg=error_msg)
-
-        if not response['data']['success']:
-            module.fail_json(msg=("Error in delete_site: Site should have been deleted via API "
-                                  "but API result was not 'success'"))
-
-        return response
-
-    def update_site(self, update_body_raw: dict, module: AnsibleModule):
-        """
-        API call to update the site
-
-        :param update_body_raw: Body which should be sent
-        :type update_body_raw: dict
-        :param module: Ansible module for error handling
-        :type module: AnsibleModule
-        :return: API response
-        :rtype: dict
-        """
-
-        api_url = f"{self.api_endpoint_sites}/{self.site_id}"
-
-        update_body = {'data': update_body_raw}
-        error_msg = "Failed to update site."
-        response = self.api_call(module, api_url, "PUT", body=update_body, error_msg=error_msg)
-
-        if not response['data']:
-            module.fail_json(msg=("Error in update_site: Site should have been updated via API "
-                                  "but API result was empty"))
-
-        return response
-
     def check_sanity(self, state: str, license_type: str, total_agents: int, expiration_date: str,
                      current_account: dict, module: AnsibleModule):
         """
@@ -322,14 +257,14 @@ def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
         console_url=dict(type='str', required=True),
+        site=dict(type='str', required=False),
         token=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', required=False, default='present', choices=['present', 'absent']),
-        name=dict(type='str', required=True),
-        site_type=dict(type='str', required=False, default='Paid', choices=['Trial', 'Paid']),
-        license_type=dict(type='str', required=False, choices=['core', 'control', 'complete'], default='core'),
-        total_agents=dict(type='int', required=False, default=-1),
-        expiration_date=dict(type='str', required=False, default="-1"),
-        description=dict(type='str', required=False, default='')
+        state=dict(type='str', required=False, default='present', choices=['present', 'info']),
+        agent_version=dict(type='str', required=False, default='latest', choices=['latest', 'latest_ea', 'custom']),
+        custom_version=dict(type='str', required=False),
+        os_type=dict(type='str', required=True, choices=['Linux', 'Windows']),
+        packet_format=dict(type='str', required=True, choices=['rpm', 'deb', 'msi', 'exe']),
+        architecture=dict(type='str', required=True, choices=['32_bit', '64_bit']),
     )
 
     module = AnsibleModule(
