@@ -93,6 +93,7 @@ options:
     choices:
       - 32_bit
       - 64_bit
+      - aarch64
 author:
   - "Marco Wester (@mwester117) <marco.wester@sva.de>"
   - "Erik Scihndler (@mintalicious) <erik.schindler@sva.de>"
@@ -209,7 +210,7 @@ class SentineloneDownloadAgent(SentineloneBase):
         return desired_state_site_body
 
     @staticmethod
-    def check_sanity(os_type: str, packet_format: str, module: AnsibleModule):
+    def check_sanity(os_type: str, packet_format: str, architecture: str, module: AnsibleModule):
         """
         Check if the passed module arguments are contradicting each other
 
@@ -221,12 +222,42 @@ class SentineloneDownloadAgent(SentineloneBase):
         :type module: AnsibleModule
         """
 
+        if architecture == "aarch64" and os_type != "Linux":
+            module.fail_json(msg="Error: architecture 'aarch64' needs os_type to be 'Linux'")
+
         if os_type == 'Windows':
             if packet_format not in ['exe', 'msi']:
                 module.fail_json(msg="Error: 'packet_format' needs to be 'exe' or 'msi' if os_type is 'Windows'")
         else:
             if packet_format not in ['deb', 'rpm']:
                 module.fail_json(msg="Error: 'packet_format' needs to be 'deb' or 'rpm' if os_type is 'Linux'")
+
+    def get_download_link(self, agent_version: str, custom_version: str, os_type: str, packet_format: str,
+                          architecture: str, module: AnsibleModule):
+        query_params = {
+            'platformTypes': os_type.lower(),
+            'skipCount': True,
+            'sortOrder': 'desc',
+            'sortBy': 'version',
+            'fileExtension': f".{packet_format}"
+        }
+
+        if self.site_id is not None:
+            query_params['siteIds'] = str(self.site_id)
+
+        if agent_version == 'custom':
+            query_params['version'] = custom_version
+        elif agent_version == 'latest':
+            query_params['status'] = 'ga'
+
+        if os_type == 'Linux':
+            if architecture == 'aarch64':
+                query_params['query'] = 'aarch64'
+            else:
+                query_params['query'] = 'SentinelAgent_linux'
+        else:
+            query_params['query'] = 'SentinelInstaller'
+            query_params['osArches'] = architecture.replace('_', ' ')
 
 
 def run_module():
@@ -240,7 +271,7 @@ def run_module():
         custom_version=dict(type='str', required=False),
         os_type=dict(type='str', required=True, choices=['Linux', 'Windows']),
         packet_format=dict(type='str', required=True, choices=['rpm', 'deb', 'msi', 'exe']),
-        architecture=dict(type='str', required=True, choices=['32_bit', '64_bit']),
+        architecture=dict(type='str', required=True, choices=['32_bit', '64_bit', 'aarch64']),
     )
 
     module = AnsibleModule(
@@ -258,9 +289,12 @@ def run_module():
     # Create site Object
     download_agent_obj = SentineloneDownloadAgent(module)
 
-    site_name = download_agent_obj.site_name
-    site_id = download_agent_obj.site_id
     state = download_agent_obj.state
+
+    if state == 'present':
+        pass
+    else:
+        pass
 
     diffs = ''
     basic_message = ''
