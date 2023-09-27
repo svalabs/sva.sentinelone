@@ -88,15 +88,31 @@ options:
   architecture:
     description:
       - "Architecture of the packet which should be downloaded"
+      - "Windows: Only B(32_bit) and B(64_bit) are allowed"
+      - "Linux: Of not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM agent will be downloaded
     type: str
-    required: true
+    required: false
     choices:
       - 32_bit
       - 64_bit
       - aarch64
+  signed_packages:
+    description:
+      - "Linux only. Will be ignored if B(os_type) is 'Windows'"
+      - "B(true): Only search and download signed agent packages"
+      - "B(false): Only search an download unsigned agent packages"
+    type: bool
+    required: false
+    default: false
+  download_path:
+    description:
+      - "Set the path where the agent should be downloaded."
+      - "If not set the agent will be downloaded to the working directory."
+    type: str
+    required: false
 author:
   - "Marco Wester (@mwester117) <marco.wester@sva.de>"
-  - "Erik Scihndler (@mintalicious) <erik.schindler@sva.de>"
+  - "Erik Schindler (@mintalicious) <erik.schindler@sva.de>"
 requirements:
   - "deepdiff >= 5.6"
 notes:
@@ -139,6 +155,7 @@ message:
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, lib_imp_errors
+from ansible.module_utils.six.moves.urllib.parse import urlencode
 
 
 class SentineloneDownloadAgent(SentineloneBase):
@@ -150,7 +167,7 @@ class SentineloneDownloadAgent(SentineloneBase):
         :type module: AnsibleModule
         """
 
-        module.params['site_name'] = module.params.get('site', "")
+        module.params['site_name'] = module.params['site']
 
         # self.token, self.console_url, self.site_name, self.state, self.api_endpoint_*, self.group_names will be set in
         # super Class
@@ -162,9 +179,10 @@ class SentineloneDownloadAgent(SentineloneBase):
         self.os_type = module.params["os_type"]
         self.packet_format = module.params["packet_format"]
         self.architecture = module.params["architecture"]
+        self.signed_packages = module.params["signed_packages"]
 
         # Do sanity checks
-        self.check_sanity(self.os_type, self.packet_format, module)
+        self.check_sanity(self.os_type, self.packet_format, self.architecture, module)
 
     def desired_state_site_body(self):
         """
@@ -214,6 +232,8 @@ class SentineloneDownloadAgent(SentineloneBase):
         """
         Check if the passed module arguments are contradicting each other
 
+        :param architecture: OS architecture
+        :type architecture: str
         :param os_type: The specified OS type
         :type os_type: str
         :param packet_format: The speciefied packet format
@@ -233,10 +253,9 @@ class SentineloneDownloadAgent(SentineloneBase):
                 module.fail_json(msg="Error: 'packet_format' needs to be 'deb' or 'rpm' if os_type is 'Linux'")
 
     def get_download_link(self, agent_version: str, custom_version: str, os_type: str, packet_format: str,
-                          architecture: str, module: AnsibleModule):
+                          architecture: str, signed_packages: str, module: AnsibleModule):
         query_params = {
             'platformTypes': os_type.lower(),
-            'skipCount': True,
             'sortOrder': 'desc',
             'sortBy': 'version',
             'fileExtension': f".{packet_format}"
@@ -251,13 +270,26 @@ class SentineloneDownloadAgent(SentineloneBase):
             query_params['status'] = 'ga'
 
         if os_type == 'Linux':
+            # If OS is 'Linux'
             if architecture == 'aarch64':
-                query_params['query'] = 'aarch64'
+                query_params['query'] = 'SentinelAgent-aarch64'
+            elif signed_packages:
+                query_params['query'] = 'Signed-SentinelAgent_linux'
             else:
                 query_params['query'] = 'SentinelAgent_linux'
         else:
-            query_params['query'] = 'SentinelInstaller'
+            # If OS is 'Windows'
+            query_params['packageType'] = 'AgentAndRanger'
             query_params['osArches'] = architecture.replace('_', ' ')
+
+        query_params_encoded = urlencode(query_params)
+        api_query_agent_package = f"{self.api_endpoint_update_agent_packages}?{query_params_encoded}"
+
+        response = self.api_call(module, api_query_agent_package)
+        if response["pagination"]["totalItems"] > 0:
+            return response["data"][0]
+
+        module.fail_json(msg=f"Error: No agent found in management console. Please check the given parameters.")
 
 
 def run_module():
@@ -271,7 +303,9 @@ def run_module():
         custom_version=dict(type='str', required=False),
         os_type=dict(type='str', required=True, choices=['Linux', 'Windows']),
         packet_format=dict(type='str', required=True, choices=['rpm', 'deb', 'msi', 'exe']),
-        architecture=dict(type='str', required=True, choices=['32_bit', '64_bit', 'aarch64']),
+        architecture=dict(type='str', required=False, choices=['32_bit', '64_bit', 'aarch64']),
+        signed_packages=dict(type='bool', required=False, default='false'),
+        download_path=dict(type='str', required=False)
     )
 
     module = AnsibleModule(
@@ -290,11 +324,21 @@ def run_module():
     download_agent_obj = SentineloneDownloadAgent(module)
 
     state = download_agent_obj.state
+    agent_version = download_agent_obj.agent_version
+    custom_version = download_agent_obj.custom_version
+    os_type = download_agent_obj.os_type
+    packet_format = download_agent_obj.packet_format
+    architecture = download_agent_obj.architecture
+    signed_packages = download_agent_obj.signed_packages
+
+    agent_obj = download_agent_obj.get_download_link(agent_version, custom_version, os_type, packet_format,
+                                                     architecture, signed_packages, module)
 
     if state == 'present':
         pass
     else:
-        pass
+        original_message = str(agent_obj)
+        basic_message = f"Agent found: {agent_obj['fileName']}"
 
     diffs = ''
     basic_message = ''

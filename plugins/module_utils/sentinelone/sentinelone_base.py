@@ -197,7 +197,7 @@ class SentineloneBase:
         :rtype: dict
         """
 
-        if site_name == "":
+        if site_name is None:
             return None
 
         api_url = f"{self.api_endpoint_sites}?name={quote_plus(site_name)}&state=active"
