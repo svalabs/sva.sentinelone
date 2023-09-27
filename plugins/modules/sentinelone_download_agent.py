@@ -153,6 +153,8 @@ message:
     sample: Site exists but is not up-to-date. Updating site.
 '''
 
+from os import path
+
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, lib_imp_errors
 from ansible.module_utils.six.moves.urllib.parse import urlencode
@@ -180,6 +182,7 @@ class SentineloneDownloadAgent(SentineloneBase):
         self.packet_format = module.params["packet_format"]
         self.architecture = module.params["architecture"]
         self.signed_packages = module.params["signed_packages"]
+        self.download_path = module.params["download_path"]
 
         # Do sanity checks
         self.check_sanity(self.os_type, self.packet_format, self.architecture, module)
@@ -252,7 +255,7 @@ class SentineloneDownloadAgent(SentineloneBase):
             if packet_format not in ['deb', 'rpm']:
                 module.fail_json(msg="Error: 'packet_format' needs to be 'deb' or 'rpm' if os_type is 'Linux'")
 
-    def get_download_link(self, agent_version: str, custom_version: str, os_type: str, packet_format: str,
+    def get_package_obj(self, agent_version: str, custom_version: str, os_type: str, packet_format: str,
                           architecture: str, signed_packages: str, module: AnsibleModule):
         query_params = {
             'platformTypes': os_type.lower(),
@@ -330,15 +333,26 @@ def run_module():
     packet_format = download_agent_obj.packet_format
     architecture = download_agent_obj.architecture
     signed_packages = download_agent_obj.signed_packages
+    download_path = download_agent_obj.download_path
 
-    agent_obj = download_agent_obj.get_download_link(agent_version, custom_version, os_type, packet_format,
+    package_obj = download_agent_obj.get_package_obj(agent_version, custom_version, os_type, packet_format,
                                                      architecture, signed_packages, module)
 
+    changed = False
     if state == 'present':
-        pass
+        url = package_obj['link']
+        filename = package_obj['fileName']
+
+        if download_path is None:
+            download_path = '.'
+
+        filepath = f"{download_path.rstrip('/')}/{filename}"
+        if path.exists(filepath):
+            basic_message = f"File {filename} already exists in {download_path} - nothing to do."
+            original_message = basic_message
     else:
-        original_message = str(agent_obj)
-        basic_message = f"Agent found: {agent_obj['fileName']}"
+        original_message = str(package_obj)
+        basic_message = f"Agent found: {package_obj['fileName']}"
 
     diffs = ''
     basic_message = ''
