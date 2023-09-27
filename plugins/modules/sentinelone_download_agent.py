@@ -64,6 +64,7 @@ options:
     description:
       - "Explicit version of the file to be downloaded"
       - "Has to be set when agent_version=custom"
+      - "Will be ignored if B(agent_version) is not B(custom)" 
     type: str
     required: false
   os_type:
@@ -137,7 +138,6 @@ message:
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, lib_imp_errors
-from datetime import datetime, timezone
 
 
 class SentineloneDownloadAgent(SentineloneBase):
@@ -149,22 +149,21 @@ class SentineloneDownloadAgent(SentineloneBase):
         :type module: AnsibleModule
         """
 
-        module.params['site_name'] = module.params['name']
+        module.params['site_name'] = module.params.get('site', "")
 
         # self.token, self.console_url, self.site_name, self.state, self.api_endpoint_*, self.group_names will be set in
         # super Class
         super().__init__(module)
 
         # Set module specific parameters
-        self.site_type = module.params["site_type"]
-        self.license_type = module.params["license_type"]
-        self.total_agents = module.params["total_agents"]
-        self.expiration_date = module.params["expiration_date"]
-        self.description = module.params["description"]
+        self.agent_version = module.params["agent_version"]
+        self.custom_version = module.params["custom_version"]
+        self.os_type = module.params["os_type"]
+        self.packet_format = module.params["packet_format"]
+        self.architecture = module.params["architecture"]
 
         # Do sanity checks
-        self.check_sanity(self.state, self.license_type, self.total_agents, self.expiration_date,
-                          self.current_account, module)
+        self.check_sanity(self.os_type, self.packet_format, module)
 
     def desired_state_site_body(self):
         """
@@ -209,48 +208,25 @@ class SentineloneDownloadAgent(SentineloneBase):
 
         return desired_state_site_body
 
-    def check_sanity(self, state: str, license_type: str, total_agents: int, expiration_date: str,
-                     current_account: dict, module: AnsibleModule):
+    @staticmethod
+    def check_sanity(os_type: str, packet_format: str, module: AnsibleModule):
         """
         Check if the passed module arguments are contradicting each other
 
-
-        :param state: The state parameter passed to the module
-        :type state: str
-        :param license_type: The license_type parameter passed to the module
-        :type license_type: str
-        :param total_agents: The total_agents parameter passed to the module
-        :type total_agents: int
-        :param expiration_date: The expiration_date parameter passed to the module
-        :type expiration_date: str
-        :param current_account: Account information
-        :type current_account: dict
+        :param os_type: The specified OS type
+        :type os_type: str
+        :param packet_format: The speciefied packet format
+        :type packet_format: str
         :param module: Ansible module for error handling
         :type module: AnsibleModule
         """
 
-        if state == 'present' and not (total_agents == -1 or total_agents > 0):
-            module.fail_json(msg="Error: 'total_agents' has to be > 0 or -1.")
-
-        if state == 'present' and not (expiration_date == '' or expiration_date == '-1'):
-            try:
-                offset = expiration_date[-5:].replace(':', '')
-                expiration_date = expiration_date[:-5] + offset
-
-                timeformat = "%Y-%m-%dT%H:%M%z"
-                expiration_date_parsed = datetime.strptime(expiration_date, timeformat)
-            except Exception as err:
-                module.fail_json(msg=f"Error: 'expiration_date' could not be parsed as date. Error: {str(err)}")
-
-            self.expiration_date = expiration_date_parsed.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:00Z")
-
-        elif state == 'present' and expiration_date == '':
-            module.fail_json(msg="Error: 'expiration_date' has to be -1 or in date format")
-
-        available_license_types = list(map(lambda lic: lic['name'], current_account['licenses']['bundles']))
-        if state == 'present' and license_type not in available_license_types:
-            module.fail_json(msg=f"Error: 'license_type' '{license_type}' not available in account. Available license "
-                                 f"types are: {', '.join(available_license_types)}")
+        if os_type == 'Windows':
+            if packet_format not in ['exe', 'msi']:
+                module.fail_json(msg="Error: 'packet_format' needs to be 'exe' or 'msi' if os_type is 'Windows'")
+        else:
+            if packet_format not in ['deb', 'rpm']:
+                module.fail_json(msg="Error: 'packet_format' needs to be 'deb' or 'rpm' if os_type is 'Linux'")
 
 
 def run_module():
@@ -269,6 +245,9 @@ def run_module():
 
     module = AnsibleModule(
         argument_spec=module_args,
+        required_if={
+            ('agent_version', 'custom', ('custom_version'))
+        },
         supports_check_mode=False
     )
 
@@ -277,43 +256,43 @@ def run_module():
                          exception=lib_imp_errors['lib_imp_err'])
 
     # Create site Object
-    site_obj = SentineloneSite(module)
+    download_agent_obj = SentineloneDownloadAgent(module)
 
-    site_name = site_obj.site_name
-    site_id = site_obj.site_id
-    state = site_obj.state
+    site_name = download_agent_obj.site_name
+    site_id = download_agent_obj.site_id
+    state = download_agent_obj.state
 
     diffs = ''
     basic_message = ''
     if state == 'present':
-        desired_state_site = site_obj.desired_state_site_body()
+        desired_state_site = download_agent_obj.desired_state_site_body()
         if site_id is not None:
             # If site exists, check if it is up-to-date
-            current_site = site_obj.current_site
+            current_site = download_agent_obj.current_site
             # Set ignore keys for merge_compare. These settings are not relevant
             exclude_path = [
                 "root['inherits']", "root['licenses']['bundles'][0]['displayName']",
                 "root['licenses']['bundles'][0]['majorVersion']", "root['licenses']['bundles'][0]['minorVersion']",
                 "root['licenses']['bundles'][0]['totalSurfaces']"
             ]
-            diff = site_obj.merge_compare(current_site, desired_state_site, exclude_path)[0]
+            diff = download_agent_obj.merge_compare(current_site, desired_state_site, exclude_path)[0]
             if diff:
                 # Update site if it is not up-to-date
                 diffs = {'changes': dict(diff), 'siteName': site_name}
                 basic_message = 'Site exists but is not up-to-date. Updating site.'
-                site_obj.update_site(desired_state_site, module)
+                download_agent_obj.update_site(desired_state_site, module)
         else:
             # Creates the site if it is missing
             basic_message = f'Site is missing. Adding site {site_name}'
             diffs = {'changes': basic_message}
-            site_obj.create_site(desired_state_site, module)
+            download_agent_obj.create_site(desired_state_site, module)
     else:
         # Site should be deleted
         if site_id is not None:
             # Check if site exists
             basic_message = f'Site {site_name} exists. Deleting site'
             diffs = {'changes': basic_message}
-            site_obj.delete_site(module)
+            download_agent_obj.delete_site(module)
 
     result = dict(
         changed=False,
