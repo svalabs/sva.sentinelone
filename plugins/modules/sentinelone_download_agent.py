@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from __future__ import (absolute_import, division, print_function)
+
 __metaclass__ = type
 
 DOCUMENTATION = r'''
@@ -176,7 +177,9 @@ original_message:
     description: Get detailed infos about the downloaded package (json as string)
     type: str
     returned: on success
-    sample: "{'download_path': './', 'filename': 'SentinelInstaller_windows_64bit_v23_2_3_358.msi', 'full_path': './SentinelInstaller_windows_64bit_v23_2_3_358.msi'}"
+    sample: >-
+      {'download_path': './', 'filename': 'SentinelInstaller_windows_64bit_v23_2_3_358.msi', 
+      'full_path': './SentinelInstaller_windows_64bit_v23_2_3_358.msi'}
 message:
     description: Get basic infos about the downloaded package in an human readable format
     type: str
@@ -186,9 +189,9 @@ message:
 
 from os import path, makedirs, remove
 
-
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, lib_imp_errors
+from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, \
+    lib_imp_errors
 from ansible.module_utils.six.moves.urllib.parse import urlencode
 
 
@@ -240,12 +243,11 @@ class SentineloneDownloadAgent(SentineloneBase):
         if os_type == 'Windows':
             if packet_format not in ['exe', 'msi']:
                 module.fail_json(msg="Error: 'packet_format' needs to be 'exe' or 'msi' if os_type is 'Windows'")
-        else:
-            if packet_format not in ['deb', 'rpm']:
-                module.fail_json(msg="Error: 'packet_format' needs to be 'deb' or 'rpm' if os_type is 'Linux'")
+        elif packet_format not in ['deb', 'rpm']:
+            module.fail_json(msg="Error: 'packet_format' needs to be 'deb' or 'rpm' if os_type is 'Linux'")
 
     def get_package_obj(self, agent_version: str, custom_version: str, os_type: str, packet_format: str,
-                          architecture: str, signed_packages: str, module: AnsibleModule):
+                        architecture: str, signed_packages: str, module: AnsibleModule):
         query_params = {
             'platformTypes': os_type.lower(),
             'sortOrder': 'desc',
@@ -281,7 +283,7 @@ class SentineloneDownloadAgent(SentineloneBase):
         if response["pagination"]["totalItems"] > 0:
             return response["data"][0]
 
-        module.fail_json(msg=f"Error: No agent found in management console. Please check the given parameters.")
+        module.fail_json(msg="Error: No agent package found in management console. Please check the given parameters.")
 
 
 def run_module():
@@ -302,9 +304,9 @@ def run_module():
 
     module = AnsibleModule(
         argument_spec=module_args,
-        required_if={
+        required_if=[
             ('agent_version', 'custom', ('custom_version',))
-        },
+        ],
         supports_check_mode=False
     )
 
