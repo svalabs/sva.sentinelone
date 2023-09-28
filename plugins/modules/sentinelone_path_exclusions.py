@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2022, Marco Wester <marco.wester@sva.de>, Lasse Wackers <lasse.wackers@sva.de>
+# Copyright: (c) 2023, Marco Wester <marco.wester@sva.de>, Lasse Wackers <lasse.wackers@sva.de>
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
