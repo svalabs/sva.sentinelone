@@ -2,6 +2,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+<meta content="2.4.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>sva.sentinelone.sentinelone_policies module – Manage SentinelOne Policies &mdash; Ansible collections  documentation</title>
@@ -131,6 +132,8 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/sva/sentinelone">sva.sentinelone collection</a> (version 1.0.3).</p>
+<p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
+To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">sva.sentinelone</span></code>.
 You need further requirements to be able to use this module,
 see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sentinelone-policies-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
@@ -162,7 +165,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </section>
 <section id="parameters">
 <h2><a class="toc-backref" href="#id3" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
-<table class="ansible-option-table docutils align-default" style="width: 100%">
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
 <th class="head"><p>Comments</p></th>
@@ -182,7 +185,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Set this option to set the scope to group level</p>
 <p>A list with groupnames where the policy should be changed</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">[]</span></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">[]</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -191,9 +194,9 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </div></td>
 <td><div class="ansible-option-cell"><p>Inherit policy from upper scope</p>
 <p>If set to yes <em>policy</em> will be ignored and the policy will be inherited from upper scope</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
-<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">false</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">false</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
 </ul>
 </div></td>
@@ -206,7 +209,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <p>e.g. agentUiOn or snapshotsOn</p>
 <p>Required if <em>inherit=no</em></p>
 <p>Will be ignored if <em>inherit=yes</em></p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">{}</span></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">{}</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -282,7 +285,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <section id="return-values">
 <h2><a class="toc-backref" href="#id6" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Link to this heading"></a></h2>
 <p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/ansible/devel/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible vdevel)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
-<table class="ansible-option-table docutils align-default" style="width: 100%">
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Key</p></th>
 <th class="head"><p>Description</p></th>
@@ -294,8 +297,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <a class="ansibleOptionLink" href="#return-message" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Get basic infos about the changes made</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[&quot;Updating</span> <span class="pre">policy</span> <span class="pre">in</span> <span class="pre">group</span> <span class="pre">with</span> <span class="pre">id</span> <span class="pre">99999999999999&quot;,</span> <span class="pre">&quot;Updating</span> <span class="pre">policy</span> <span class="pre">in</span> <span class="pre">group</span> <span class="pre">with</span> <span class="pre">id</span> <span class="pre">99999999999999&quot;]</span></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> on success</p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[&quot;Updating</span> <span class="pre">policy</span> <span class="pre">in</span> <span class="pre">group</span> <span class="pre">with</span> <span class="pre">id</span> <span class="pre">99999999999999&quot;,</span> <span class="pre">&quot;Updating</span> <span class="pre">policy</span> <span class="pre">in</span> <span class="pre">group</span> <span class="pre">with</span> <span class="pre">id</span> <span class="pre">99999999999999&quot;]</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -303,8 +306,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <a class="ansibleOptionLink" href="#return-original_message" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Get detailed infos about the changes made</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> on success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">&quot;[{'changes':</span> <span class="pre">{'values_changed':</span> <span class="pre">{\&quot;root['agentUi']['agentUiOn']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">False,</span> <span class="pre">'old_value':</span> <span class="pre">True},</span> <span class="pre">\&quot;root['agentUiOn']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">False,</span> <span class="pre">'old_value':</span> <span class="pre">True}}},</span> <span class="pre">'groupId':</span> <span class="pre">'99999999999999'},</span> <span class="pre">{'changes':</span> <span class="pre">{'values_changed':</span> <span class="pre">{\&quot;root['agentUi']['agentUiOn']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">False,</span> <span class="pre">'old_value':</span> <span class="pre">True},</span> <span class="pre">\&quot;root['agentUiOn']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">False,</span> <span class="pre">'old_value':</span> <span class="pre">True}}},</span> <span class="pre">'groupId':</span> <span class="pre">'99999999999999'}]&quot;</span></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> on success</p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">&quot;[{'changes':</span> <span class="pre">{'values_changed':</span> <span class="pre">{\&quot;root['agentUi']['agentUiOn']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">False,</span> <span class="pre">'old_value':</span> <span class="pre">True},</span> <span class="pre">\&quot;root['agentUiOn']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">False,</span> <span class="pre">'old_value':</span> <span class="pre">True}}},</span> <span class="pre">'groupId':</span> <span class="pre">'99999999999999'},</span> <span class="pre">{'changes':</span> <span class="pre">{'values_changed':</span> <span class="pre">{\&quot;root['agentUi']['agentUiOn']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">False,</span> <span class="pre">'old_value':</span> <span class="pre">True},</span> <span class="pre">\&quot;root['agentUiOn']\&quot;:</span> <span class="pre">{'new_value':</span> <span class="pre">False,</span> <span class="pre">'old_value':</span> <span class="pre">True}}},</span> <span class="pre">'groupId':</span> <span class="pre">'99999999999999'}]&quot;</span></code></p>
 </div></td>
 </tr>
 </tbody>
@@ -317,10 +320,11 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 </section>
 <section id="collection-links">
 <h3>Collection links<a class="headerlink" href="#collection-links" title="Link to this heading"></a></h3>
-<p class="ansible-links">
-  <a href="https://github.com/svalabs/sva.sentinelone/issues" aria-role="button" target="_blank" rel="noopener external">Issue Tracker</a>
-  <a href="https://github.com/svalabs/sva.sentinelone" aria-role="button" target="_blank" rel="noopener external">Repository (Sources)</a>
-</p></section>
+<ul class="ansible-links">
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/svalabs/sva.sentinelone/issues" rel="noopener external" target="_blank">Issue Tracker</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/svalabs/sva.sentinelone" rel="noopener external" target="_blank">Repository (Sources)</a></span></li>
+</ul>
+</section>
 </section>
 </section>
 
