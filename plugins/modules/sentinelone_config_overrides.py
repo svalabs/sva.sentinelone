@@ -425,8 +425,7 @@ def run_module():
     )
 
     if not lib_imp_errors['has_lib']:
-        module.fail_json(msg=missing_required_lib("DeepDiff"),
-                         exception=lib_imp_errors['lib_imp_err'])
+        module.fail_json(msg=missing_required_lib("DeepDiff"), exception=lib_imp_errors['lib_imp_err'])
 
     # Create config_override Object
     config_override_obj = SentineloneConfigOverrides(module)
