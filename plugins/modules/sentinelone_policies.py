@@ -60,7 +60,6 @@ options:
       - "Will be ignored if I(inherit=yes)"
     type: dict
     required: false
-    default: {}
 author:
   - "Marco Wester (@mwester117) <marco.wester@sva.de>"
 requirements:
