@@ -178,7 +178,7 @@ original_message:
     type: str
     returned: on success
     sample: >-
-      {'download_path': './', 'filename': 'SentinelInstaller_windows_64bit_v23_2_3_358.msi', 
+      {'download_path': './', 'filename': 'SentinelInstaller_windows_64bit_v23_2_3_358.msi',
       'full_path': './SentinelInstaller_windows_64bit_v23_2_3_358.msi'}
 message:
     description: Get basic infos about the downloaded package in an human readable format
