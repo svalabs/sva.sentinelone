@@ -64,7 +64,7 @@ options:
     description:
       - "Explicit version of the file to be downloaded"
       - "Has to be set when agent_version=custom"
-      - "Will be ignored if B(agent_version) is not B(custom)" 
+      - "Will be ignored if B(agent_version) is not B(custom)"
     type: str
     required: false
   os_type:
@@ -89,7 +89,7 @@ options:
     description:
       - "Architecture of the packet which should be downloaded"
       - "Windows: Only B(32_bit) and B(64_bit) are allowed"
-      - "Linux: Of not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM agent will be downloaded
+      - "Linux: Of not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM agent will be downloaded"
     type: str
     required: false
     choices:
