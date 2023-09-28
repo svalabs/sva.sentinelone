@@ -12,6 +12,7 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 
 - **Modules**:
   - [sentinelone_config_overrides](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_config_overrides_module.html)
+  - [sentinelone_download_agent](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_download_agent_module.html)
   - [sentinelone_filters](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_filters_module.html)
   - [sentinelone_groups](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_groups_module.html)
   - [sentinelone_sites](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_sites_module.html)
@@ -21,7 +22,7 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 
 ## Requirements
 ### Ansible
-- ansible >= 4 **or** ansible-core >= 2.11
+- ansible >= 6 **or** ansible-core >= 2.13
 
 ### Python
 - Python >= 3.6 (deepdiff requirement)
