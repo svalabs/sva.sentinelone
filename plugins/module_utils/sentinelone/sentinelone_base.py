@@ -87,9 +87,11 @@ class SentineloneBase:
 
         self.module = module
 
-    def api_call(self, module: AnsibleModule, api_endpoint: str, http_method: str = "get", **kwargs):
+    def api_call(self, module: AnsibleModule, api_endpoint: str, http_method: str = "get", parse_response: bool = True,
+                 **kwargs):
         """
         Queries api_endpoint. if no http_method is passed a get request is performed. api_endpoint is mandatory
+
 
         :param module:  Ansible module for error handling
         :type module: AnsibleModule
@@ -98,6 +100,8 @@ class SentineloneBase:
         :param http_method: HTTP query method. Default is GET but POST, PUT, DELETE, etc. is supported as well
         :type http_method: str
         :param kwargs: See below
+        :param parse_response: Wether or not the response should be parsed as json
+        :type parse_response: bool
         :Keyword Arguments:
             * *headers* (dict) --
               You can pass custom headers or custom body.
@@ -106,9 +110,9 @@ class SentineloneBase:
               If body is not passed body is empty
             * *error_msg* (str) --
               Start of error message in case of a failed API call
-        :return: Returnes parsed json response. Type of return value depends on the data returned by the API.
-            Usually dictionary
-        :rtype: dict
+        :return: Returnes parsed json response if parse_response is true. Type of return value depends on the data
+        returned by the API. Usually dictionary. If parse_response is false the raw object will be returned
+        :rtype: dict, HTTPResponse
         """
 
         request_timeout = 120
@@ -148,7 +152,10 @@ class SentineloneBase:
                         response = json.loads(response_unparsed)
                         raise response_raw
                     else:
-                        response = json.loads(response_raw.read().decode('utf-8'))
+                        if parse_response:
+                            response = json.loads(response_raw.read().decode('utf-8'))
+                        else:
+                            response = response_raw
                         break
                 except Exception as err:
                     if retry_count == retries:

@@ -110,6 +110,7 @@ options:
       - "If not set the agent will be downloaded to the working directory."
     type: str
     required: false
+    default: ./
 author:
   - "Marco Wester (@mwester117) <marco.wester@sva.de>"
   - "Erik Schindler (@mintalicious) <erik.schindler@sva.de>"
@@ -122,38 +123,69 @@ notes:
 
 EXAMPLES = r'''
 ---
-- name: Create / update site
-  sentinelone_sites:
+- name: Download latest agent for linux
+  sentinelone_download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    name: "test"
-    license_type: "control"
-    expiration_date: "2022-06-01T12:00+01:00"
-    description: "Testsite"
-- name: Delete site
-  sentinelone_sites:
-    state: "absent"
+    os_type: "Linux"
+    packet_format: "rpm"
+    download_path: "/tmp"
+    architecture: "64_bit"
+- name: Download latest agent for linux and include EA packages
+  sentinelone_download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    name: "test"
+    os_type: "Linux"
+    packet_format: "rpm"
+    download_path: "/tmp"
+    architecture: "64_bit"
+    agent_version: "latest_ea"
+- name: Download latest signed agent for linux and include EA packages
+  sentinelone_download_agent:
+    console_url: "https://XXXXX.sentinelone.net"
+    token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    os_type: "Linux"
+    packet_format: "rpm"
+    download_path: "/tmp"
+    architecture: "64_bit"
+    signed_packages: true
+    agent_version: "latest_ea"
+- name: Download specific agent version
+  sentinelone_download_agent:
+    console_url: "https://XXXXX.sentinelone.net"
+    token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    os_type: "Windows"
+    packet_format: "msi"
+    architecture: "64_bit"
+    agent_version: "custom"
+    custom_version: "23.2.3.358"
+- name: Get info about specified package
+  sentinelone_download_agent:
+    console_url: "https://XXXXX.sentinelone.net"
+    token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    state: "info"
+    os_type: "Windows"
+    packet_format: "msi"
+    architecture: "64_bit"
+    agent_version: "latest"
 '''
 
 RETURN = r'''
 ---
 original_message:
-    description: Get detailed infos about the changes made
+    description: Get detailed infos about the downloaded package (json as string)
     type: str
     returned: on success
-    sample: {'changes': {'values_changed': {"root['description']": {'new_value': 'Test1', 'old_value': 'Test'},
-      "root['unlimitedExpiration']": {'new_value': True, 'old_value': False}}}, 'siteName': 'test'}
+    sample: "{'download_path': './', 'filename': 'SentinelInstaller_windows_64bit_v23_2_3_358.msi', 'full_path': './SentinelInstaller_windows_64bit_v23_2_3_358.msi'}"
 message:
-    description: Get basic infos about the changes made
+    description: Get basic infos about the downloaded package in an human readable format
     type: str
     returned: on success
-    sample: Site exists but is not up-to-date. Updating site.
+    sample: Downloaded File SentinelInstaller_windows_64bit_v23_2_3_358.msi to ./
 '''
 
-from os import path
+from os import path, makedirs, remove
+
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, lib_imp_errors
@@ -163,7 +195,7 @@ from ansible.module_utils.six.moves.urllib.parse import urlencode
 class SentineloneDownloadAgent(SentineloneBase):
     def __init__(self, module: AnsibleModule):
         """
-        Initialization of the site object
+        Initialization of the DownloadAgent object
 
         :param module: Requires the AnsibleModule Object for parsing the parameters
         :type module: AnsibleModule
@@ -186,49 +218,6 @@ class SentineloneDownloadAgent(SentineloneBase):
 
         # Do sanity checks
         self.check_sanity(self.os_type, self.packet_format, self.architecture, module)
-
-    def desired_state_site_body(self):
-        """
-        Create body for site API requests
-
-        :return: Body for site API requests
-        :rtype: dict
-        """
-
-        desired_state_site_body = {
-            "accountId": self.account_id,
-            "siteType": self.site_type,
-            "inherits": True,
-            "name": self.site_name,
-            "licenses": {
-                "bundles": [
-                    {
-                        "name": self.license_type,
-                        "surfaces": [
-                            {
-                                "name": "Total Agents",
-                                "count": self.total_agents
-                            }
-                        ]
-                    }
-                ]
-            }
-        }
-
-        if self.expiration_date == "-1":
-            if self.current_account["unlimitedExpiration"]:
-                desired_state_site_body["unlimitedExpiration"] = True
-            else:
-                desired_state_site_body["unlimitedExpiration"] = False
-                desired_state_site_body["expiration"] = self.current_account["expiration"]
-        else:
-            desired_state_site_body["unlimitedExpiration"] = False
-            desired_state_site_body["expiration"] = self.expiration_date
-
-        if self.description:
-            desired_state_site_body["description"] = self.description
-
-        return desired_state_site_body
 
     @staticmethod
     def check_sanity(os_type: str, packet_format: str, architecture: str, module: AnsibleModule):
@@ -308,13 +297,13 @@ def run_module():
         packet_format=dict(type='str', required=True, choices=['rpm', 'deb', 'msi', 'exe']),
         architecture=dict(type='str', required=False, choices=['32_bit', '64_bit', 'aarch64']),
         signed_packages=dict(type='bool', required=False, default='false'),
-        download_path=dict(type='str', required=False)
+        download_path=dict(type='str', required=False, default='./')
     )
 
     module = AnsibleModule(
         argument_spec=module_args,
         required_if={
-            ('agent_version', 'custom', ('custom_version'))
+            ('agent_version', 'custom', ('custom_version',))
         },
         supports_check_mode=False
     )
@@ -323,7 +312,7 @@ def run_module():
         module.fail_json(msg=missing_required_lib("DeepDiff"),
                          exception=lib_imp_errors['lib_imp_err'])
 
-    # Create site Object
+    # Create DownloadAgent Object
     download_agent_obj = SentineloneDownloadAgent(module)
 
     state = download_agent_obj.state
@@ -342,60 +331,42 @@ def run_module():
     if state == 'present':
         url = package_obj['link']
         filename = package_obj['fileName']
-
-        if download_path is None:
-            download_path = '.'
+        sha1_expected = package_obj['sha1']
 
         filepath = f"{download_path.rstrip('/')}/{filename}"
         if path.exists(filepath):
             basic_message = f"File {filename} already exists in {download_path} - nothing to do."
             original_message = basic_message
+        else:
+            dest_is_dir = path.isdir(download_path)
+            if not dest_is_dir:
+                if path.exists(download_path):
+                    module.fail_json(msg=f"{download_path} is a file but should be a directory.")
+                else:
+                    makedirs(download_path)
+
+            result = download_agent_obj.api_call(module, url, parse_response=False)
+
+            with open(filepath, 'wb') as file:
+                file.write(result.read())
+
+            sha1_file = module.sha1(filepath)
+            if sha1_file != sha1_expected:
+                remove(filepath)
+                module.fail_json(msg="Download failed. SHA1 checksum mismatch. Deleted broken file.")
+
+            changed = True
+            basic_message = f"Downloaded File {filename} to {download_path}"
+            original_message = {'download_path': download_path, 'filename': filename, 'full_path': filepath}
     else:
-        original_message = str(package_obj)
+        original_message = package_obj
         basic_message = f"Agent found: {package_obj['fileName']}"
 
-    diffs = ''
-    basic_message = ''
-    if state == 'present':
-        desired_state_site = download_agent_obj.desired_state_site_body()
-        if site_id is not None:
-            # If site exists, check if it is up-to-date
-            current_site = download_agent_obj.current_site
-            # Set ignore keys for merge_compare. These settings are not relevant
-            exclude_path = [
-                "root['inherits']", "root['licenses']['bundles'][0]['displayName']",
-                "root['licenses']['bundles'][0]['majorVersion']", "root['licenses']['bundles'][0]['minorVersion']",
-                "root['licenses']['bundles'][0]['totalSurfaces']"
-            ]
-            diff = download_agent_obj.merge_compare(current_site, desired_state_site, exclude_path)[0]
-            if diff:
-                # Update site if it is not up-to-date
-                diffs = {'changes': dict(diff), 'siteName': site_name}
-                basic_message = 'Site exists but is not up-to-date. Updating site.'
-                download_agent_obj.update_site(desired_state_site, module)
-        else:
-            # Creates the site if it is missing
-            basic_message = f'Site is missing. Adding site {site_name}'
-            diffs = {'changes': basic_message}
-            download_agent_obj.create_site(desired_state_site, module)
-    else:
-        # Site should be deleted
-        if site_id is not None:
-            # Check if site exists
-            basic_message = f'Site {site_name} exists. Deleting site'
-            diffs = {'changes': basic_message}
-            download_agent_obj.delete_site(module)
-
     result = dict(
-        changed=False,
-        original_message=str(diffs),
+        changed=changed,
+        original_message=str(original_message),
         message=basic_message
     )
-
-    # If we made changes to the objects the list diffs is not empty.
-    # So we can use it to update result['changes'] to True if necessary
-    if diffs:
-        result['changed'] = True
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results
