@@ -33,14 +33,12 @@ This collection needs the following Python modules:
 ## Tested with Ansible and the following Python versions
 
 Tested Ansible versions:
-- 2.11
-- 2.12
 - 2.13
 - 2.14
+- 2.15
+- 2.16
 
 Tested Python versions:
-- 3.6
-- 3.7
 - 3.8
 - 3.9
 - 3.10

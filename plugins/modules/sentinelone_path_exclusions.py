@@ -102,6 +102,7 @@ options:
       - "A short description to describe the exclusion"
     type: str
     required: false
+    default: ""
 author:
   - "Marco Wester (@mwester117) <marco.wester@sva.de>"
   - "Lasse Wackers (@mordecaine) <lasse.wackers@sva.de>"
