@@ -57,7 +57,6 @@ options:
       - "e.g. computerName__contains or osTypes"
     type: dict
     required: false
-    default: {}
 author:
   - "Marco Wester (@mwester117) <marco.wester@sva.de>"
 requirements:

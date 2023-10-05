@@ -74,7 +74,6 @@ options:
       - "Required if I(state=present)"
     type: str
     required: false
-    default: ""
   os_type:
     description:
       - "The os type for which the config is set"
@@ -97,7 +96,6 @@ options:
       - "Will be ignored if I(state=prune)"
     type: dict
     required: false
-    default: {}
   description:
     description:
       - "Optional: Set a description for the config override"

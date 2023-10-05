@@ -68,7 +68,6 @@ options:
       - "Will be ignored if I(inherit_maintenance_windows=yes)"
     type: dict
     required: false
-    default: {}
   max_concurrent_downloads:
     description:
       - "Set the 'Maximum Concurrent Downloads'. Needs to be lower or equal to the value set in the upper scope"
