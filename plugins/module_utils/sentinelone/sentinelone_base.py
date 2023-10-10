@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2022, Marco Wester <marco.wester@sva.de>
+# Copyright: (c) 2023, Marco Wester <marco.wester@sva.de>
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -49,6 +49,7 @@ class SentineloneBase:
         api_uri_accounts = "/web/api/v2.1/accounts"
         api_uri_config_overrides = "/web/api/v2.1/config-override"
         api_uri_upgrade_policy = "/web/api/v2.1/tasks-configuration"
+        api_uri_update_agent_packages = "/web/api/v2.1/update/agent/packages"
 
         # Build full API endpoint from base console URL and API URI
         self.api_endpoint_groups = module.params["console_url"] + api_uri_groups
@@ -58,6 +59,7 @@ class SentineloneBase:
         self.api_endpoint_sites = module.params["console_url"] + api_uri_sites
         self.api_endpoint_config_overrides = module.params["console_url"] + api_uri_config_overrides
         self.api_endpoint_upgrade_policy = module.params["console_url"] + api_uri_upgrade_policy
+        self.api_endpoint_update_agent_packages = module.params["console_url"] + api_uri_update_agent_packages
 
         # Assign passed parameters to class variables
         self.token = module.params["token"]
@@ -85,9 +87,11 @@ class SentineloneBase:
 
         self.module = module
 
-    def api_call(self, module: AnsibleModule, api_endpoint: str, http_method: str = "get", **kwargs):
+    def api_call(self, module: AnsibleModule, api_endpoint: str, http_method: str = "get", parse_response: bool = True,
+                 **kwargs):
         """
         Queries api_endpoint. if no http_method is passed a get request is performed. api_endpoint is mandatory
+
 
         :param module:  Ansible module for error handling
         :type module: AnsibleModule
@@ -96,6 +100,8 @@ class SentineloneBase:
         :param http_method: HTTP query method. Default is GET but POST, PUT, DELETE, etc. is supported as well
         :type http_method: str
         :param kwargs: See below
+        :param parse_response: Wether or not the response should be parsed as json
+        :type parse_response: bool
         :Keyword Arguments:
             * *headers* (dict) --
               You can pass custom headers or custom body.
@@ -104,9 +110,9 @@ class SentineloneBase:
               If body is not passed body is empty
             * *error_msg* (str) --
               Start of error message in case of a failed API call
-        :return: Returnes parsed json response. Type of return value depends on the data returned by the API.
-            Usually dictionary
-        :rtype: dict
+        :return: Returnes parsed json response if parse_response is true. Type of return value depends on the data
+        returned by the API. Usually dictionary. If parse_response is false the raw object will be returned
+        :rtype: dict, HTTPResponse
         """
 
         request_timeout = 120
@@ -146,7 +152,10 @@ class SentineloneBase:
                         response = json.loads(response_unparsed)
                         raise response_raw
                     else:
-                        response = json.loads(response_raw.read().decode('utf-8'))
+                        if parse_response:
+                            response = json.loads(response_raw.read().decode('utf-8'))
+                        else:
+                            response = response_raw
                         break
                 except Exception as err:
                     if retry_count == retries:
@@ -194,6 +203,9 @@ class SentineloneBase:
         :return: Site object as dict
         :rtype: dict
         """
+
+        if site_name is None:
+            return None
 
         api_url = f"{self.api_endpoint_sites}?name={quote_plus(site_name)}&state=active"
         error_msg = "Failed to get site."

@@ -5,3 +5,5 @@ plugins/modules/sentinelone_path_exclusions.py validate-modules:missing-gplv3-li
 plugins/modules/sentinelone_policies.py validate-modules:missing-gplv3-license # ignore license check
 plugins/modules/sentinelone_sites.py validate-modules:missing-gplv3-license # ignore license check
 plugins/modules/sentinelone_upgrade_policies.py validate-modules:missing-gplv3-license # ignore license check
+plugins/modules/sentinelone_download_agent.py validate-modules:missing-gplv3-license # ignore license check
+plugins/modules/sentinelone_download_agent.py validate-modules:parameter-state-invalid-choice # ignore state allows 'info'

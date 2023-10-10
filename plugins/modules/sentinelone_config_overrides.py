@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2022, Marco Wester <marco.wester@sva.de>
+# Copyright: (c) 2023, Marco Wester <marco.wester@sva.de>
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -423,8 +423,7 @@ def run_module():
     )
 
     if not lib_imp_errors['has_lib']:
-        module.fail_json(msg=missing_required_lib("DeepDiff"),
-                         exception=lib_imp_errors['lib_imp_err'])
+        module.fail_json(msg=missing_required_lib("DeepDiff"), exception=lib_imp_errors['lib_imp_err'])
 
     # Create config_override Object
     config_override_obj = SentineloneConfigOverrides(module)
