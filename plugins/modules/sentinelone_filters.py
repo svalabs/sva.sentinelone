@@ -76,7 +76,7 @@ EXAMPLES = r'''
     site_name: "test"
     name: "MyFilter"
     filter_fields:
-      computerName__contains: 
+      computerName__contains:
         - MyComputerName
       osTypes:
         - windows
