@@ -244,7 +244,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;MyFilter&quot;</span>
 <span class="w">    </span><span class="nt">filter_fields</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">computerName__contains</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;MyComputerName&quot;</span>
+<span class="w">      </span><span class="nt">computerName__contains</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MyComputerName</span>
 <span class="w">      </span><span class="nt">osTypes</span><span class="p">:</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">windows</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update filter</span>
