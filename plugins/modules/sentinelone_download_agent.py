@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2023, Marco Wester <marco.wester@sva.de>
+# Copyright: (c) 2024, Marco Wester <marco.wester@sva.de>
 #                      Erik Schindler <erik.schindler@sva.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
@@ -45,7 +45,7 @@ options:
       - "Version of the agent to be downloaded."
       - "B(latest) (default) - download latest GA (stable) release for the specified parameters"
       - "B(latest_ea) - same as latest, but also includes EA packages"
-      - "B(<explicit agent version number>) - download an explicit version of the agent"
+      - "B(custom) - custom_version is required when agent_versioin is custom"
     type: str
     default: latest
     required: false
@@ -82,7 +82,7 @@ options:
     description:
       - "Architecture of the packet which should be downloaded"
       - "Windows: Only B(32_bit) and B(64_bit) are allowed"
-      - "Linux: Of not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM agent will be downloaded"
+      - "Linux: If not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM agent will be downloaded"
     type: str
     required: false
     choices:

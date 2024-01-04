@@ -1,0 +1,22 @@
+---
+# tasks file for install_agent
+- name: "Gather facts"
+  ansible.builtin.setup:
+  when: ansible_facts.distribution is not defined
+
+- name: "Preflight check: Fail when OS is unknown"
+  ansible.builtin.fail:
+    msg: "The package management system on this system is unknown. This can happen if the role runs on an unsupported system."
+  when: pkg_format == 'unknown'
+
+- name: "Download {{ pkg_format }} agent {{ agent_version }}"
+  sentinelone_download_agent:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    os_type: "{{ 'Linux' if ansible_facts.os_family == 'Linux' else 'Windows' }}"
+    packet_format: "{{ pkg_format }}"
+    architecture: "{% if pkg_arch == 'x86_64' %}64_bit{% elif pkg_arch == 'i386' %}32_bit{% elif pkg_arch == 'aarch64' %}aarch64{% endif %}"
+    signed_packages: "{{ signed_packages }}"
+    agent_version: "{{ agent_version }}"
+    custom_version: "{{ custom_version | default(omit) }}"
+  delegate_to: localhost
