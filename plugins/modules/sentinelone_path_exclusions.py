@@ -543,7 +543,7 @@ def run_module():
 
     result = dict(
         changed=False,
-        original_message=str(diffs),
+        original_message=diffs,
         message=basic_message
     )
 

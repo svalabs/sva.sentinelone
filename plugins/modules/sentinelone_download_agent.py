@@ -356,7 +356,6 @@ def run_module():
 
         if path.exists(filepath):
             basic_message = f"File {filename} already exists in {download_dir} - nothing to do."
-            original_message = basic_message
         else:
             # Ensure download_dir exists and is a directory
             dest_is_dir = path.isdir(download_dir)
@@ -379,7 +378,7 @@ def run_module():
 
             changed = True
             basic_message = f"Downloaded file {filename} to {download_dir}"
-            original_message = {'download_dir': download_dir, 'filename': filename, 'full_path': filepath}
+        original_message = {'download_dir': download_dir, 'filename': filename, 'full_path': filepath}
     else:
         # If state=info
         original_message = package_obj
@@ -387,7 +386,7 @@ def run_module():
 
     result = dict(
         changed=changed,
-        original_message=str(original_message),
+        original_message=original_message,
         message=basic_message
     )
 
