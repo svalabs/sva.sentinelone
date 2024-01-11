@@ -6,7 +6,7 @@
 
 - name: "Preflight check: Fail when OS is unknown"
   ansible.builtin.fail:
-    msg: "The package management system on this system is unknown. This can happen if the role runs on an unsupported system."
+    msg: "The package management system on this system is unknown. This can happen if the role runs on an unsupported os."
   when: pkg_format == 'unknown'
 
 - name: "Download {{ pkg_format }} agent {{ agent_version }} to localhost"
@@ -14,7 +14,7 @@
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site: "{{ site }}"
-    os_type: "{{ ansible_facts.os_family }}"
+    os_type: "{{ os_family }}"
     packet_format: "{{ pkg_format }}"
     architecture: "{% if pkg_arch == 'x86_64' %}64_bit{% elif pkg_arch == 'i386' %}32_bit{% elif pkg_arch == 'aarch64' %}aarch64{% endif %}"
     signed_packages: "{{ signed_packages }}"
@@ -32,12 +32,12 @@
         return_content: true
         headers:
           Accept: application/json
-          Authorization: "{{ api_token }}"
+          Authorization: "APIToken {{ api_token }}"
         validate_certs: true
         status_code: 200
       register: siteobj
       delegate_to: localhost
-      until: ((siteobj.json.data | length) > 0) and (siteobj.status == 200)
+      until: ((siteobj.json.data.sites | length) > 0) and (siteobj.status == 200)
       retries: 3
       delay: 20
 
@@ -52,7 +52,7 @@
         return_content: true
         headers:
           Accept: application/json
-          Authorization: "{{ api_token }}"
+          Authorization: "APIToken {{ api_token }}"
         validate_certs: true
         status_code: 200
       register: groupobj
@@ -69,7 +69,7 @@
 
     - name: "Set endpoint URI to get the correct registration token"
       ansible.builtin.set_fact:
-        reg_token_uri: "{{ 'groups/{group_id}/token' if group is defined else 'sites/{site_id}/token' }}"
+        reg_token_uri: "{{ 'groups/{{ groupid }}/token' if group is defined else 'sites/{{ siteid }}/token' }}"
 
     - name: "Get registration token"
       ansible.builtin.uri:
@@ -78,20 +78,26 @@
         return_content: true
         headers:
           Accept: application/json
-          Authorization: "{{ api_token }}"
+          Authorization: "APIToken {{ api_token }}"
         validate_certs: true
         status_code: 200
       register: reg_token_obj
       delegate_to: localhost
-      until: ((reg_token_obj.json.data | length) > 0) and (reg_token_obj.status == 200)
+      until: reg_token_obj.status == 200
       retries: 3
       delay: 20
 
-- name: "Execute tasks for: {{ ansible_facts.os_family }}"
-  ansible.builtin.include_tasks: "{{ ansible_facts.os_family }}.yml"
+- name: "Execute tasks for: Linux"
+  ansible.builtin.include_tasks: "Linux.yml"
   vars:
-    remote_pkg_path: "{{ '/tmp/{{ return_download_agent.original_message.filename }}' if ansible_facts.os_family == 'Linux' else
-      'C:\\Windows\\{{ return_download_agent.original_message.filename }' }}"
+    remote_pkg_path: "/tmp/{{ return_download_agent.original_message.filename }}"
+  when: os_family == 'Linux'
+
+- name: "Execute tasks for: Windows"
+  ansible.builtin.include_tasks: "Windows.yml"
+  vars:
+    remote_pkg_path: "C:\\Windows\\Temp\\{{ return_download_agent.original_message.filename }}"
+  when: os_family == 'Windows'
 
 - name: "Remove agent install package from localhost"
   ansible.builtin.file:
@@ -106,7 +112,7 @@
     return_content: true
     headers:
       Accept: application/json
-      Authorization: "{{ api_token }}"
+      Authorization: "APIToken {{ api_token }}"
     validate_certs: true
     status_code: 200
   register: registrationstatus
