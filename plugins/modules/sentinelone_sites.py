@@ -94,7 +94,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Create / update site
-  sentinelone_sites:
+  sva.sentinelone.sentinelone_sites:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     name: "test"
@@ -102,7 +102,7 @@ EXAMPLES = r'''
     expiration_date: "2022-06-01T12:00+01:00"
     description: "Testsite"
 - name: Delete site
-  sentinelone_sites:
+  sva.sentinelone.sentinelone_sites:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"

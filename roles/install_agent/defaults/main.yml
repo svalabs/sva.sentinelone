@@ -4,4 +4,4 @@ win_download_exe: false
 allow_win_reboot: true
 signed_packages: false
 agent_version: 'latest'
-# custom_version, console_url, api_token, sentinelone_management_token
+# custom_version, console_url, api_token, site, group

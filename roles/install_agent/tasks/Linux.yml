@@ -1,0 +1,44 @@
+---
+- name: "Linux: Copy agent package to remote server"
+  ansible.builtin.copy:
+    src: "{{ return_download_agent.original_message.full_path }}"
+    dest: "{{ remote_pkg_path }}"
+    mode: "0644"
+
+- name: "Linux: Install .rpm agent package via rpm"
+  ansible.builtin.command:
+    cmd: "rpm -i --nodigest {{ remote_pkg_path }}"
+    creates: "/opt/sentinelone/bin/sentinelctl"
+  when: pkg_format == "rpm"
+
+- name: "Linux: Install .deb agent packge via apt"
+  ansible.builtin.apt:
+    update_cache: true
+    deb: "{{ remote_pkg_path }}"
+  when: pkg_format == "deb"
+
+- name: "Linux: Check if Sentinelone agent is already registered"
+  ansible.builtin.shell:
+  # \\s needed because yaml interprets \s as escape sequence
+    cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | grep -E '^Connectivity\\s+(On|Off)$' | awk '{ print $2 }'"
+  register: agent_status
+  failed_when: agent_status.stdout is not regex("On|Off")
+  changed_when: agent_status.stdout is not regex("On|Off")
+
+- name: "Linux: Register Sentinelone agent"
+  ansible.builtin.command:
+    cmd: '/opt/sentinelone/bin/sentinelctl management token set {{ reg_token_obj.json.data.token }}'
+  register: token_set_output
+  failed_when: '"Registration token successfully set" not in token_set_output.stdout'
+  when: agent_status.stdout == 'Off'
+
+- name: "Linux: Start and enable service sentinelone, if neccessary"
+  ansible.builtin.service:
+    name: sentinelone
+    state: started
+    enabled: true
+
+- name: "Linux: Remove agent install package from target machine"
+  ansible.builtin.file:
+    path: "{{ remote_pkg_path }}"
+    state: absent

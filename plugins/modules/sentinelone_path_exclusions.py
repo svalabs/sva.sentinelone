@@ -110,7 +110,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Create exclusion in site scope
-  sentinelone_path_exclusions:
+  sva.sentinelone.sentinelone_path_exclusions:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -118,7 +118,7 @@ EXAMPLES = r'''
     mode: "performance_focus"
     os_type: "windows"
 - name: Create exclusion in single group
-  sentinelone_path_exclusions:
+  sva.sentinelone.sentinelone_path_exclusions:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -127,7 +127,7 @@ EXAMPLES = r'''
     mode: "interoperability_extended"
     os_type: "windows"
 - name: Create exclusion in multiple groups
-  sentinelone_path_exclusions:
+  sva.sentinelone.sentinelone_path_exclusions:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -139,7 +139,7 @@ EXAMPLES = r'''
     mode: "performance_focus_extended"
     os_type: "windows"
 - name: Create exclusion in multiple groups and disable automatic upload to Binary Vault
-  sentinelone_path_exclusions:
+  sva.sentinelone.sentinelone_path_exclusions:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -153,14 +153,14 @@ EXAMPLES = r'''
     os_type: "windows"
     ef_binary_vault: true
 - name: Delete exclusion in site scope
-  sentinelone_path_exclusions:
+  sva.sentinelone.sentinelone_path_exclusions:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "msd"
     os_path: "C:\\Test1234\\"
 - name: Delete exclusion in group scope
-  sentinelone_path_exclusions:
+  sva.sentinelone.sentinelone_path_exclusions:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"

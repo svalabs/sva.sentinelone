@@ -1,0 +1,39 @@
+---
+- name: "Windows: Check if sentinelone is already installed"
+  ansible.windos.win_service:
+    name: SentinelAgent
+  register: sentinelagent_service
+
+- name: "Block: Windows: Install Sentinelone agent"
+  when: not sentinelagent_service.exists
+  block:
+    - name: "Windows: Copy agent package to remote server"
+      ansible.windows.win_copy:
+        src: "{{ return_download_agent.original_message.full_path }}"
+        dest: "{{ remote_pkg_path }}"
+        mode: "0644"
+
+    - name: "Windows: Install agent package {{ return_download_agent.original_message.filename }}"
+      ansible.windows.win_package:
+        path: "{{ remote_pkg_path }}"
+        creates_service: "SentinelAgent"
+        arguments: "{{ '/SITE_TOKEN={{ reg_token_obj.json.data.token }} /quiet' if pkg_format == 'exe' else
+          'SITE_TOKEN={{ reg_token_obj.json.data.token }} /QUIET' }}"
+        register: installation_result
+      when: pkg_format == "msi" or pkg_format == "exe"
+
+    - name: "Windows: Start and enable service sentinelone, if neccessary"
+      ansible.builtin.service:
+        name: sentinelone
+        state: started
+        enabled: true
+
+    - name: "Windows: Remove agent package from target machine"
+      ansible.windos.win_file:
+        path: "{{ remote_pkg_path }}"
+        state: absent
+
+    - name: "Windos: Reboot after Sentinelone agent installation"
+      ansible.windows.win_reboot:
+        post_reboot_delay: 60
+      when: (installation_result.reboot_required | default(false)) and allow_win_reboot

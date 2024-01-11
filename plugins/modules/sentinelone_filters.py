@@ -62,7 +62,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Create filter
-  sentinelone_filters:
+  sva.sentinelone.sentinelone_filters:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -73,7 +73,7 @@ EXAMPLES = r'''
       osTypes:
         - windows
 - name: Update filter
-  sentinelone_filters:
+  sva.sentinelone.sentinelone_filters:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -86,7 +86,7 @@ EXAMPLES = r'''
       osTypes:
         - windows
 - name: Delete filter
-  sentinelone_filters:
+  sva.sentinelone.sentinelone_filters:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"

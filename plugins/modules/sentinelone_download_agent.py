@@ -118,7 +118,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Download latest agent for linux
-  sentinelone_download_agent:
+  sva.sentinelone.sentinelone_download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Linux"
@@ -126,7 +126,7 @@ EXAMPLES = r'''
     download_path: "/tmp"
     architecture: "64_bit"
 - name: Download latest agent for linux and include EA packages
-  sentinelone_download_agent:
+  sva.sentinelone.sentinelone_download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Linux"
@@ -135,7 +135,7 @@ EXAMPLES = r'''
     architecture: "64_bit"
     agent_version: "latest_ea"
 - name: Download latest signed agent for linux and include EA packages
-  sentinelone_download_agent:
+  sva.sentinelone.sentinelone_download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Linux"
@@ -145,7 +145,7 @@ EXAMPLES = r'''
     signed_packages: true
     agent_version: "latest_ea"
 - name: Download specific agent version
-  sentinelone_download_agent:
+  sva.sentinelone.sentinelone_download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Windows"
@@ -154,7 +154,7 @@ EXAMPLES = r'''
     agent_version: "custom"
     custom_version: "23.2.3.358"
 - name: Get info about specified package
-  sentinelone_download_agent:
+  sva.sentinelone.sentinelone_download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     state: "info"

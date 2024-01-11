@@ -65,7 +65,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Create single static group
-  sentinelone_groups:
+  sva.sentinelone.sentinelone_groups:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -73,7 +73,7 @@ EXAMPLES = r'''
     name: "MyGroup"
 
 - name: Create single dynamic group
-  sentinelone_groups:
+  sva.sentinelone.sentinelone_groups:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -82,7 +82,7 @@ EXAMPLES = r'''
     filter_name: "MyFilter"
 
 - name: Create multiple static groups
-  sentinelone_groups:
+  sva.sentinelone.sentinelone_groups:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -93,7 +93,7 @@ EXAMPLES = r'''
       - "MyGroup3"
 
 - name: Delete single static/dynamic group
-  sentinelone_groups:
+  sva.sentinelone.sentinelone_groups:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -101,7 +101,7 @@ EXAMPLES = r'''
     name: "MyGroup"
 
 - name: Delete multiple static/dynamic groups
-  sentinelone_groups:
+  sva.sentinelone.sentinelone_groups:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"

@@ -13,108 +13,105 @@
   sentinelone_download_agent:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
+    site: "{{ site }}"
     os_type: "{{ ansible_facts.os_family }}"
     packet_format: "{{ pkg_format }}"
     architecture: "{% if pkg_arch == 'x86_64' %}64_bit{% elif pkg_arch == 'i386' %}32_bit{% elif pkg_arch == 'aarch64' %}aarch64{% endif %}"
     signed_packages: "{{ signed_packages }}"
     agent_version: "{{ agent_version }}"
     custom_version: "{{ custom_version | default(omit) }}"
-  delegate_to: localhost
   register: return_download_agent
+  delegate_to: localhost
 
-- name: "Block: Linux"
-  when: ansible_facts.os_family == 'Linux'
-  vars:
-    remote_pkg_path: "/tmp/{{ return_download_agent.original_message.filename }}"
+- name: "Block: Get registration token from API"
   block:
-    - name: "Linux: Copy agent package to remote server"
-      ansible.builtin.copy:
-        src: "{{ return_download_agent.original_message.full_path }}"
-        dest: "{{ remote_pkg_path }}"
-        mode: "0644"
+    - name: "Get siteid"
+      ansible.builtin.uri:
+        url: "{{ api_uri }}sites?name={{ site }}&state=active"
+        method: GET
+        return_content: true
+        headers:
+          Accept: application/json
+          Authorization: "{{ api_token }}"
+        validate_certs: true
+        status_code: 200
+      register: siteobj
+      delegate_to: localhost
+      until: ((siteobj.json.data | length) > 0) and (siteobj.status == 200)
+      retries: 3
+      delay: 20
 
-    - name: "Linux: Install .rpm agent package via rpm"
-      ansible.builtin.command:
-        cmd: "rpm -i --nodigest {{ remote_pkg_path }}"
-        creates: "/opt/sentinelone/bin/sentinelctl"
-      when: pkg_format == "rpm"
+    - name: "Extract siteid"
+      ansible.builtin.set_fact:
+        siteid: "{{ siteobj.json.data.sites[0].id }}"
 
-    - name: "Linux: Install .deb agent packge via apt"
-      ansible.builtin.apt:
-        update_cache: true
-        deb: "{{ remote_pkg_path }}"
-      when: pkg_format == "deb"
+    - name: "Get group id"
+      ansible.builtin.uri:
+        url: "{{ api_uri }}groups?name={{ group }}&siteIds={{ siteid }}"
+        method: GET
+        return_content: true
+        headers:
+          Accept: application/json
+          Authorization: "{{ api_token }}"
+        validate_certs: true
+        status_code: 200
+      register: groupobj
+      delegate_to: localhost
+      until: ((groupobj.json.data | length) > 0) and (groupobj.status == 200)
+      retries: 3
+      delay: 20
+      when: group is defined
 
-    - name: "Linux: Check if Sentinelone agent is already registered"
-      ansible.builtin.shell:
-      # \\s needed because yaml interprets \s as escape sequence
-        cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | grep -E '^Connectivity\\s+(On|Off)$' | awk '{ print $2 }'"
-      register: agent_status
-      failed_when: agent_status.stdout is not regex("On|Off")
-      changed_when: agent_status.stdout is not regex("On|Off")
+    - name: "Extract groupid"
+      ansible.builtin.set_fact:
+        groupid: "{{ groupobj.json.data[0].id }}"
+      when: group is defined
 
-    - name: "Linux: Register Sentinelone agent"
-      ansible.builtin.command:
-        cmd: '/opt/sentinelone/bin/sentinelctl management token set {{ sentinelone_management_token }}'
-      register: token_set_output
-      failed_when: '"Registration token successfully set" not in token_set_output.stdout'
-      when: agent_status.stdout == 'Off'
+    - name: "Set endpoint URI to get the correct registration token"
+      ansible.builtin.set_fact:
+        reg_token_uri: "{{ 'groups/{group_id}/token' if group is defined else 'sites/{site_id}/token' }}"
 
-    - name: "Linux: Start and enable service sentinelone, if neccessary"
-      ansible.builtin.service:
-        name: sentinelone
-        state: started
-        enabled: true
+    - name: "Get registration token"
+      ansible.builtin.uri:
+        url: "{{ api_uri }}{{ reg_token_uri }}"
+        method: GET
+        return_content: true
+        headers:
+          Accept: application/json
+          Authorization: "{{ api_token }}"
+        validate_certs: true
+        status_code: 200
+      register: reg_token_obj
+      delegate_to: localhost
+      until: ((reg_token_obj.json.data | length) > 0) and (reg_token_obj.status == 200)
+      retries: 3
+      delay: 20
 
-    - name: "Linux: Remove agent install package from target machine"
-      ansible.builtin.file:
-        path: "{{ remote_pkg_path }}"
-        state: absent
-
-- name: "Block: Windows"
-  when: ansible_facts.os_family == 'Windows'
+- name: "Execute tasks for: {{ ansible_facts.os_family }}"
+  ansible.builtin.include_tasks: "{{ ansible_facts.os_family }}.yml"
   vars:
-    remote_pkg_path: "C:\\Windows\\{{ return_download_agent.original_message.filename }}"
-  block:
-    - name: "Windows: Check if sentinelone is already installed"
-      ansible.windos.win_service:
-        name: SentinelAgent
-      register: sentinelagent_service
+    remote_pkg_path: "{{ '/tmp/{{ return_download_agent.original_message.filename }}' if ansible_facts.os_family == 'Linux' else
+      'C:\\Windows\\{{ return_download_agent.original_message.filename }' }}"
 
-    - name: "Block: Windows: Install Sentinelone agent"
-      when: not sentinelagent_service.exists
-      block:
-        - name: "Windows: Copy agent package to remote server"
-          ansible.windows.win_copy:
-            src: "{{ return_download_agent.original_message.full_path }}"
-            dest: "{{ remote_pkg_path }}"
-            mode: "0644"
+- name: "Remove agent install package from localhost"
+  ansible.builtin.file:
+    path: "{{ return_download_agent.original_message.full_path }}"
+    state: absent
+  delegate_to: localhost
 
-        - name: "Windows: Install agent package {{ return_download_agent.original_message.filename }}"
-          ansible.windows.win_package:
-            path: "{{ remote_pkg_path }}"
-            creates_service: "SentinelAgent"
-            arguments: "{{ '/SITE_TOKEN={{ sentinelone_management_token }} /quiet' if pkg_format == 'exe' else
-              'SITE_TOKEN={{ sentinelone_management_token }} /QUIET' }}"
-            register: installation_result
-          when: pkg_format == "msi" or pkg_format == "exe"
-
-        - name: "Windows: Start and enable service sentinelone, if neccessary"
-          ansible.builtin.service:
-            name: sentinelone
-            state: started
-            enabled: true
-
-        - name: "Windows: Remove agent package from target machine"
-          ansible.windos.win_file:
-            path: "{{ remote_pkg_path }}"
-            state: absent
-
-        - name: "Windos: Reboot after Sentinelone agent installation"
-          ansible.windows.win_reboot:
-            post_reboot_delay: 60
-          when: (installation_result.reboot_required | default(false)) and allow_win_reboot
-
-#TODO Cleanup local packages at the end
-#TODO Create Role requirements file ansible.windows collection
-#TODO Connection vars and become windows/linux
+- name: "Check if new client appears in management console"
+  ansible.builtin.uri:
+    url: "{{ api_uri }}agents?siteIds={{ siteid }}&computerName={{ ansible_hostname }}&isActive=true"
+    method: GET
+    return_content: true
+    headers:
+      Accept: application/json
+      Authorization: "{{ api_token }}"
+    validate_certs: true
+    status_code: 200
+  register: registrationstatus
+  delegate_to: localhost
+  until: ((registrationstatus.json.data | length) > 0) and (registrationstatus.status == 200)
+  retries: 3
+  delay: 20
+# TODO Create Role requirements file ansible.windows collection
