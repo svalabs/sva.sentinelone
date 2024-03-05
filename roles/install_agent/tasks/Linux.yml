@@ -1,23 +1,48 @@
 ---
+- name: "Linux: Include Linux.yml vars"
+  ansible.builtin.include_vars:
+    file: Linux.yml
+
+- name: Get dmesg output
+  ansible.builtin.command: dmesg
+  changed_when: false
+  become: true
+  register: dmesg_output
+
+- name: Assert that no function tracing issues occured
+  ansible.builtin.assert:
+    that:
+      - "'FUNCTION TRACING IS CORRUPTED' not in dmesg_output.stdout"
+    fail_msg: 'System instability detected, function tracing seems corrupted'
+
 - name: "Linux: Copy agent package to remote server"
   ansible.builtin.copy:
     src: "{{ return_download_agent.original_message.full_path }}"
     dest: "{{ remote_pkg_path }}"
     mode: "0644"
 
-- name: "Linux: Install .rpm agent package via rpm"
+- name: "Linux: Import GPG key for rpm"
+  ansible.builtin.rpm_key:
+    key: "https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg"
+  when: pkg_format == "rpm" and signed_packages
+
+- name: Linux: Import GPG key for apt
+  ansible.builtin.apt_key:
+    url: "https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg"
+  when: pkg_format == "deb"
+
+- name: "Linux: Install unsigned .rpm agent package via rpm"
   ansible.builtin.command:
     cmd: "rpm -i --nodigest {{ remote_pkg_path }}"
     creates: "/opt/sentinelone/bin/sentinelctl"
-  when: pkg_format == "rpm"
+  when: pkg_format == "rpm" and not signed_packages
 
-- name: "Linux: Install .deb agent packge via apt"
-  ansible.builtin.apt:
-    update_cache: true
-    deb: "{{ remote_pkg_path }}"
-  when: pkg_format == "deb"
+- name: "Linux: Install signed agent package {{ remote_pkg_path }}"
+  ansible.builtin.package:
+    name: "{{ remote_pkg_path }}"
+  when: (pkg_format == "rpm" and signed_packages) or pkg_format == "deb"
 
-- name: "Linux: Check if Sentinelone agent is already registered"
+- name: "Linux: Check if agent is already registered"
   ansible.builtin.shell:
   # \\s needed because yaml interprets \s as escape sequence
     cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | grep -E '^Connectivity\\s+(On|Off)$' | awk '{ print $2 }'"
@@ -25,14 +50,14 @@
   failed_when: agent_status.stdout is not regex("On|Off")
   changed_when: agent_status.stdout is not regex("On|Off")
 
-- name: "Linux: Register Sentinelone agent"
+- name: "Linux: Register agent"
   ansible.builtin.command:
     cmd: '/opt/sentinelone/bin/sentinelctl management token set {{ reg_token_obj.json.data.token }}'
   register: token_set_output
   failed_when: '"Registration token successfully set" not in token_set_output.stdout'
-  when: agent_status.stdout == 'Off'
+  when: agent_status.stdout == 'Off' or force_new_token
 
-- name: "Linux: Start and enable service sentinelone, if neccessary"
+- name: "Linux: Start and enable service 'sentinelone' if neccessary"
   ansible.builtin.service:
     name: sentinelone
     state: started

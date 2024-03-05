@@ -1,10 +1,21 @@
 ---
-- name: "Windows: Check if sentinelone is already installed"
+- name: "Windows: Include Windows.yml vars"
+  ansible.builtin.include_vars:
+    file: Windows.yml
+
+- name: "Windows: Remove windows defender feature on Windows Server OS"
+  ansible.windows.win_feature:
+    name: Windows-Defender
+    state: absent
+  register: win_feature_remove
+  when: ansible_os_name | search('Windows Server')
+
+- name: "Windows: Check if SentinelOne is already installed"
   ansible.windos.win_service:
     name: SentinelAgent
   register: sentinelagent_service
 
-- name: "Block: Windows: Install Sentinelone agent"
+- name: "Block: Windows: Install SentinelOne agent"
   when: not sentinelagent_service.exists
   block:
     - name: "Windows: Copy agent package to remote server"
@@ -22,7 +33,7 @@
         register: installation_result
       when: pkg_format == "msi" or pkg_format == "exe"
 
-    - name: "Windows: Start and enable service sentinelone, if neccessary"
+    - name: "Windows: Start and enable service 'sentinelone' if neccessary"
       ansible.builtin.service:
         name: sentinelone
         state: started
@@ -33,7 +44,7 @@
         path: "{{ remote_pkg_path }}"
         state: absent
 
-    - name: "Windos: Reboot after Sentinelone agent installation"
+    - name: "Windos: Reboot after agent installation or Windows Feature removal"
       ansible.windows.win_reboot:
         post_reboot_delay: 60
-      when: (installation_result.reboot_required | default(false)) and allow_win_reboot
+      when: (installation_result.reboot_required | default(false) or win_feature_remove.reboot_required) and win_allow_reboot

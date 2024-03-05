@@ -28,7 +28,7 @@ license:
   - "GPL-3.0-or-later"
 # The path to the license file for the collection. This path is relative to the root of the collection. This key is
 # mutually exclusive with 'license'
-license_file: ""
+license_file: "LICENSE"
 
 # A list of tags you want to associate with the collection for indexing/searching. A tag name has the same character
 # requirements as 'namespace' and 'name'
@@ -41,6 +41,7 @@ tags:
   - sentinelone_policies
   - sentinelone_sites
   - sentinelone_upgrade_policies
+  - install_agent
 
 # The URL of the originating SCM repository
 repository: "https://github.com/svalabs/sva.sentinelone"

@@ -7,4 +7,4 @@ pkg_format: "{% if ansible_facts.distribution in ['RedHat', 'CentOS', 'Fedora', 
   else %}unknown{% endif %}"
 pkg_arch: "{{ ansible_facts.architecture }}"
 os_family: "{{ 'Windows' if pkg_format == 'msi' or pkg_format == 'exe' else 'Linux' }}"
-api_uri: "{{ console_url }}/web/api/v2.1/"
+api_url: "{{ console_url }}/web/api/v2.1/"

@@ -92,4 +92,4 @@ Detailed Changelog can be found at [CHANGELOG](CHANGELOG.rst)
 - [ ] Unit tests needs to be written
 
 ## Licensing
-The SVA SentinelOne collection is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for the full license text.
+The SVA SentinelOne collection is licensed under the GNU General Public License v3.0+. See [LICENSE](LICENSE) for the full license text.

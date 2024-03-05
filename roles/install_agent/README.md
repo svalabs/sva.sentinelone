@@ -1,22 +1,63 @@
-Role Name
+install_agent
 =========
 
-A brief description of the role goes here.
+This Ansible role is designed to install the SentinelOne agent package and register the new endpoint in the SentinelOne Management Console.
+
+## Supported Operating Systems:
+- Red Hat Enterprise Linux (RHEL) 8 & 9
+- SUSE Linux Enterprise Server (SLES)
+- Debian
+- Ubuntu
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+An API key is required to use this role. It is considered best practice to create a specific 'API user' role for this purpose.
+
+The API user requires the following permissions:
+- Read site info
+- Read group info (if the scope is set to group)
+- Download agent packages
+- Read the site or group registration token
+- Read agent information
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### Mandatory Variables
 
-Dependencies
+| Variable | Example | Description |
+| --- | --- | --- |
+| `console_url` | https://euce1-120-mssp.sentinelone.net | The URL of the SentinelOne Management Console |
+| `api_token` | XXXXXXXXXXXXXXXXXX | The API token for the API user for authentication |
+| `site` | prod | The site to which the new hosts should be assigned |
+
+### Optional Variables
+
+| Variable | Default | Choices | Description |
+| --- | --- | --- | --- |
+| `group` | | | An optional group which is part of the site. If set, the agent will be assigned to this group instead of the 'Default Group'. |
+| `signed_packages` | true | true, false |.rpm Packages only. Choose whether to use the signed agent package. Signature verification will be enabled too |
+| `agent_version` | latest | latest, latest_ea, custom | Controls which agent should be installed. latest installs the latest general availability version. If custom is set, `custom_version` is mandatory |
+| `custom_version` | | | Install a specific version of the SentinelOne agent. Must be used in combination with `agent_version` set to 'custom' |
+| `win_download_exe` | false | true, false | Windows only: By default, the .msi package is used for installation. If you prefer to use the .exe file, enable this setting |
+| `win_allow_reboot` | true | true, false | Windows only: After the removal of a Windows Feature (here Windows Defender) and after the agent installation, a reboot is required. The role is set to reboot at the end of the installation by default. Disable this setting if you wish to skip the reboot. |
+
+### Variables from `vars.yml`
+
+**Note:** These variables are for documentation only. Do not override these unless you fully understand their functionality.
+
+| Variable | Description |
+| --- | --- |
+| `pkg_format` | Determines the package format (like .exe, .msi, .deb, .rpm) based on the Ansible facts |
+| `pkg_arch` | Sets the agent package architecture based on the Ansible facts |
+| `os_family` | Identifies the underlying operating system (Linux or Windows) |
+| `api_url` | Sets the API base URL |
+
+## Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+If this role is used for Windows hosts, the `ansible.windows` collection needs to be installed.
 
 Example Playbook
 ----------------
@@ -30,9 +71,9 @@ Including an example of how to use your role (for instance, with variables passe
 License
 -------
 
-BSD
+This SVA SentinelOne install_agent role is licensed under the GNU General Public License v3.0+. You can view the complete license text [here](../../LICENSE).
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+ - Marco Wester (@mwester117)

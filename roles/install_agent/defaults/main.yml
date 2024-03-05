@@ -1,7 +1,9 @@
 ---
 # defaults file for install_agent
 win_download_exe: false
-allow_win_reboot: true
-signed_packages: false
+win_allow_reboot: true
+signed_packages: true
 agent_version: 'latest'
+hide_sensitive: true
+lx_force_new_token: true
 # custom_version, console_url, api_token, site, group
