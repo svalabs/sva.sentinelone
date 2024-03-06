@@ -17,7 +17,7 @@ galaxy_info:
   # - CC-BY-4.0
   license: GPL-3.0-or-later
 
-  min_ansible_version: 2.10
+  min_ansible_version: "2.10"
 
   # If this a Container Enabled role, provide the minimum Ansible Container version.
   # min_ansible_container_version:
@@ -29,30 +29,37 @@ galaxy_info:
   # https://galaxy.ansible.com/api/v1/platforms/
   #
   platforms:
-    - name: RHEL
+    - name: EL
       versions:
-        - 8
-        - 9
+        - "8"
+        - "9"
+    - name: Rocky
+      versions:
+        - "all"
+    - name: Fedora
+      versions:
+        - "all"
     - name: SLES
       versions:
-        - 14
-        - 15
+        - "12SP5" # EOL 31.10.27
+        - "15SP2" # EOL 31.12.24
+        - "15SP3" # EOL 31.12.25
+        - "15SP4" # EOL 31.12.26
+        - "15SP5"
     - name: Debian
       versions:
-        - 12
-        - 13
+        - "buster" # 10, EOL 30.06.24
+        - "bullseye" # 11, EOL 30.06.26
+        - "bookworm" # 12, EOL 30.06.28
     - name: Ubuntu
       versions:
-        - 22.04
-        - 23.04
-        - 23.10
-        - 24.04
+        - "focal" # 20.04 LTS, EOL 04.25
+        - "jammy" # 22.04 LTS, EOL 04.27
+        - "noble" # 24.04 LTS
     - name: Windows
       versions:
-        - Server 2019
-        - Server 2022
-        - 10
-        - 11
+        - "2019"
+        - "2022"
   galaxy_tags:
     - SentinelOne
     - agent
@@ -61,6 +68,7 @@ galaxy_info:
     - Linux
     - Windows
     - RHEL
+    - EL
     - SLES
     - SUSE
     - Debian

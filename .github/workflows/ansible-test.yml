@@ -19,7 +19,6 @@ jobs:
     strategy:
       matrix:
         ansible:
-          - stable-2.13
           - stable-2.14
           - stable-2.15
           - stable-2.16
@@ -28,13 +27,11 @@ jobs:
           - '3.10'
           - '3.11'
         exclude:
-          - ansible: stable-2.13
-            python: '3.11'
           - ansible: stable-2.16
             python: '3.9'
         include:
-          - ansible: stable-2.13
-            python: '3.8'
+          - ansible: stable-2.16
+            python: '3.12'
 
     runs-on: ubuntu-latest
     steps:

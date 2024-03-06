@@ -22,10 +22,10 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 
 ## Requirements
 ### Ansible
-- ansible >= 6 **or** ansible-core >= 2.13
+- ansible >= 7 **or** ansible-core >= 2.14
 
 ### Python
-- Python >= 3.6 (deepdiff requirement)
+- Python >= 3.9 (Ansible control node requirement)
 
 ### External
 This collection needs the following Python modules:
@@ -34,13 +34,11 @@ This collection needs the following Python modules:
 ## Tested with Ansible and the following Python versions
 
 Tested Ansible versions:
-- 2.13
 - 2.14
 - 2.15
 - 2.16
 
 Tested Python versions:
-- 3.8
 - 3.9
 - 3.10
 - 3.11

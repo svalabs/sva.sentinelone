@@ -117,8 +117,7 @@
   delay: 20
 
 # TODO: Check if no_log is somewhere needed
-# TODO: Update Readme with new variables
+# TODO: Readme: Provide example
 # TODO: Molecule?
-# TODO: Debian und SUSE Version in meta.yml einfügen
-# TODO: Rolespec File bauen
-# TODO: Create Role requirements file ansible.windows collection
+# TODO: Fix Pipeline
+# TODO: Update global Readme

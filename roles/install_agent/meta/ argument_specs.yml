@@ -1,0 +1,101 @@
+---
+argument_specs:
+  # roles/install_agent/tasks/main.yml entry point
+  main:
+    short_description: "Main entry point for the install_agent role"
+    description:
+      - "This is the main entrypoint for the C(install_agent) role."
+      - "The entrypoint contains all os independent tasks and prepares the environment
+        for the os specific tasks."
+    author:
+      - Marco Wester
+    options:
+      win_download_exe:
+        type: "bool"
+        required: false
+        default: false
+        description:
+          - "Windows only: Controls the Windows agent package format."
+          - "B(false:) Downloads .msi installer file"
+          - "B(true:) Downloads .exe installer file"
+        options:
+          - true
+          - false
+
+      win_allow_reboot:
+        type: "bool"
+        required: false
+        default: true
+        description:
+          - "Windows only: Endpoint needs to be rebooted to SentinelOne work properly."
+          - "Set to B(false) to disable automatic reboot"
+        options:
+          - true
+          - false
+
+      signed_packages:
+        type: "bool"
+        required: false
+        default: true
+        description: "RPM only: Download and install signed agent package or not"
+
+      agent_version:
+        type: "str"
+        required: false
+        default: "latest"
+        description:
+          - "The agent version string. B(default) is to install 'latest' version."
+          - "B(latest:) Install latest GA version."
+          - "B(latest_ea:) Install latest EA version."
+          - "B(custom): Install custom agent version. If set to custom argument 'custom_version' is required."
+        choices:
+          - "latest"
+          - "latest_ea"
+          - "custom"
+
+      hide_sensitive:
+        type: "bool"
+        required: false
+        default: true
+        description:
+          - "Hide sensitive information like API keys in module output."
+          - "Only change to false for debugging purposes."
+        options:
+          - true
+          - false
+
+      lx_force_new_token:
+        type: "bool"
+        required: false
+        default: false
+        description: "Linux only: Set the management token on the linux agent even if it is already registered."
+        options:
+          - true
+          - false
+
+      custom_version:
+        type: "str"
+        required: false
+        description:
+          - "Required when 'agent_version' is set to B(custom)."
+          - "Explicit version of the agent to be installed."
+
+      console_url:
+        type: "str"
+        required: true
+        description: "The SentinelOne management console URL. E.g. https://my-s1-console.net."
+
+      api_token:
+        type: "str"
+        required: true
+        description: "The API token to authenticate at the management console."
+
+      site:
+        type: "str"
+        required: true
+        description: "The name of the site where the new endpoint should join."
+
+      group:
+        type: "str"
+        required: false
+        description: "Optional: The name of the group where the new endpoint should join."

@@ -26,7 +26,7 @@
     key: "https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg"
   when: pkg_format == "rpm" and signed_packages
 
-- name: Linux: Import GPG key for apt
+- name: "Linux: Import GPG key for apt"
   ansible.builtin.apt_key:
     url: "https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg"
   when: pkg_format == "deb"
@@ -44,7 +44,7 @@
 
 - name: "Linux: Check if agent is already registered"
   ansible.builtin.shell:
-  # \\s needed because yaml interprets \s as escape sequence
+    # \\s needed because yaml interprets \s as escape sequence
     cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | grep -E '^Connectivity\\s+(On|Off)$' | awk '{ print $2 }'"
   register: agent_status
   failed_when: agent_status.stdout is not regex("On|Off")

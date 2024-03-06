@@ -11,7 +11,7 @@
   when: ansible_os_name | search('Windows Server')
 
 - name: "Windows: Check if SentinelOne is already installed"
-  ansible.windos.win_service:
+  ansible.windows.win_service:
     name: SentinelAgent
   register: sentinelagent_service
 
@@ -33,11 +33,11 @@
         register: installation_result
       when: pkg_format == "msi" or pkg_format == "exe"
 
-    - name: "Windows: Start and enable service 'sentinelone' if neccessary"
-      ansible.builtin.service:
-        name: sentinelone
+    - name: "Windows: Start SentinelAgent and enable autostart"
+      ansible.windows.win_service:
+        name: SentinelAgent
+        start_mode: auto
         state: started
-        enabled: true
 
     - name: "Windows: Remove agent package from target machine"
       ansible.windos.win_file:
