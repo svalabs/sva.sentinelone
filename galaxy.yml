@@ -43,6 +43,9 @@ tags:
   - sentinelone_upgrade_policies
   - install_agent
 
+dependencies:
+  ansible.windows: "*"
+
 # The URL of the originating SCM repository
 repository: "https://github.com/svalabs/sva.sentinelone"
 

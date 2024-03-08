@@ -3,49 +3,83 @@
   ansible.builtin.include_vars:
     file: Linux.yml
 
-- name: Get dmesg output
-  ansible.builtin.command: dmesg
-  changed_when: false
-  become: true
-  register: dmesg_output
+- name: "Linux Block: Skip if sentinelagent is already installed."
+  when: not agent_installed
+  block:
+    - name: Get dmesg output
+      ansible.builtin.command: dmesg
+      changed_when: false
+      become: true
+      register: dmesg_output
 
-- name: Assert that no function tracing issues occured
-  ansible.builtin.assert:
-    that:
-      - "'FUNCTION TRACING IS CORRUPTED' not in dmesg_output.stdout"
-    fail_msg: 'System instability detected, function tracing seems corrupted'
+    - name: Assert that no function tracing issues occured
+      ansible.builtin.assert:
+        that:
+          - "'FUNCTION TRACING IS CORRUPTED' not in dmesg_output.stdout"
+        fail_msg: 'System instability detected, function tracing seems corrupted'
 
-- name: "Linux: Copy agent package to remote server"
-  ansible.builtin.copy:
-    src: "{{ return_download_agent.original_message.full_path }}"
-    dest: "{{ remote_pkg_path }}"
-    mode: "0644"
+    - name: "Linux: Copy agent package to remote server"
+      ansible.builtin.copy:
+        src: "{{ return_download_agent.original_message.full_path }}"
+        dest: "{{ remote_pkg_path }}"
+        mode: "0644"
 
-- name: "Linux: Import GPG key for rpm"
-  ansible.builtin.rpm_key:
-    key: "https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg"
-  when: pkg_format == "rpm" and signed_packages
+    - name: "Block: RPM based systems"
+      when: pkg_format == "rpm"
+      block:
+        - name: "Linux: Check if package is signed"
+          ansible.builtin.include_tasks: signed.yml
 
-- name: "Linux: Import GPG key for apt"
-  ansible.builtin.apt_key:
-    url: "https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg"
-  when: pkg_format == "deb"
+        - name: "Linux: Copy gpg key to remote server"
+          ansible.builtin.copy:
+            src: "{{ gpg_key }}"
+            dest: "{{ remote_gpg_key_path }}"
+            mode: "0644"
+          when: signed_package
 
-- name: "Linux: Install unsigned .rpm agent package via rpm"
-  ansible.builtin.command:
-    cmd: "rpm -i --nodigest {{ remote_pkg_path }}"
-    creates: "/opt/sentinelone/bin/sentinelctl"
-  when: pkg_format == "rpm" and not signed_packages
+        - name: "Linux: Import GPG key for rpm"
+          ansible.builtin.rpm_key:
+            key: "{{ remote_gpg_key_path }}"
+          when: signed_package
 
-- name: "Linux: Install signed agent package {{ remote_pkg_path }}"
-  ansible.builtin.package:
-    name: "{{ remote_pkg_path }}"
-  when: (pkg_format == "rpm" and signed_packages) or pkg_format == "deb"
+        - name: "Linux: Install unsigned .rpm agent package via rpm"
+          ansible.builtin.command:
+            cmd: "rpm -i --nodigest {{ remote_pkg_path }}"
+            creates: "/opt/sentinelone/bin/sentinelctl"
+          when: not signed_package
+
+        - name: "Linux: Install signed .rpm agent package {{ remote_pkg_path }}"
+          ansible.builtin.package:
+            name: "{{ remote_pkg_path }}"
+          when: signed_package
+
+    - name: "Block: DEB based systems"
+      when: pkg_format == "deb"
+      block:
+        - name: "Install gpg"
+          ansible.builtin.apt:
+            name: gpg
+            update_cache: true
+
+        - name: "Linux: Copy gpg key to remote server"
+          ansible.builtin.copy:
+            src: "{{ gpg_key }}"
+            dest: "{{ remote_gpg_key_path }}"
+            mode: "0644"
+
+        - name: "Linux: Import GPG key for apt"
+          ansible.builtin.apt_key:
+            file: "{{ remote_gpg_key_path }}"
+
+        - name: "Linux: Install deb agent package {{ remote_pkg_path }}"
+          ansible.builtin.apt:
+            deb: "{{ remote_pkg_path }}"
 
 - name: "Linux: Check if agent is already registered"
   ansible.builtin.shell:
     # \\s needed because yaml interprets \s as escape sequence
     cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | grep -E '^Connectivity\\s+(On|Off)$' | awk '{ print $2 }'"
+    executable: "/bin/bash"
   register: agent_status
   failed_when: agent_status.stdout is not regex("On|Off")
   changed_when: agent_status.stdout is not regex("On|Off")
@@ -55,7 +89,7 @@
     cmd: '/opt/sentinelone/bin/sentinelctl management token set {{ reg_token_obj.json.data.token }}'
   register: token_set_output
   failed_when: '"Registration token successfully set" not in token_set_output.stdout'
-  when: agent_status.stdout == 'Off' or force_new_token
+  when: agent_status.stdout == 'Off' or lx_force_new_token
 
 - name: "Linux: Start and enable service 'sentinelone' if neccessary"
   ansible.builtin.service:
@@ -66,4 +100,10 @@
 - name: "Linux: Remove agent install package from target machine"
   ansible.builtin.file:
     path: "{{ remote_pkg_path }}"
+    state: absent
+  when: not agent_installed
+
+- name: "Linux: Remove gpg key from target machine"
+  ansible.builtin.file:
+    path: "{{ remote_gpg_key_path }}"
     state: absent

@@ -29,50 +29,27 @@ galaxy_info:
   # https://galaxy.ansible.com/api/v1/platforms/
   #
   platforms:
-    - name: EL
-      versions:
-        - "8"
-        - "9"
-    - name: Rocky
-      versions:
-        - "all"
-    - name: Fedora
-      versions:
-        - "all"
-    - name: SLES
-      versions:
-        - "12SP5" # EOL 31.10.27
-        - "15SP2" # EOL 31.12.24
-        - "15SP3" # EOL 31.12.25
-        - "15SP4" # EOL 31.12.26
-        - "15SP5"
-    - name: Debian
-      versions:
-        - "buster" # 10, EOL 30.06.24
-        - "bullseye" # 11, EOL 30.06.26
-        - "bookworm" # 12, EOL 30.06.28
     - name: Ubuntu
-      versions:
-        - "focal" # 20.04 LTS, EOL 04.25
-        - "jammy" # 22.04 LTS, EOL 04.27
-        - "noble" # 24.04 LTS
+    - name: Fedora
+    - name: Debian
+    - name: Rocky
+    - name: SLES
+    - name: EL
     - name: Windows
-      versions:
-        - "2019"
-        - "2022"
+
   galaxy_tags:
-    - SentinelOne
+    - sentinelone
     - agent
     - install
-    - install_agent
-    - Linux
-    - Windows
-    - RHEL
-    - EL
-    - SLES
-    - SUSE
-    - Debian
-    - Ubuntu
+    - installagent
+    - linux
+    - windows
+    - rhel
+    - el
+    - sles
+    - suse
+    - debian
+    - ubuntu
     # List tags for your role here, one per line. A tag is a keyword that describes
     # and categorizes the role. Users find roles by searching for tags. Be sure to
     # remove the '[]' above, if you add tags to this list.

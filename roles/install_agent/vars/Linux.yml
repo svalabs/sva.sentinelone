@@ -1,2 +1,4 @@
 ---
 remote_pkg_path: "/tmp/{{ return_download_agent.original_message.filename }}"
+remote_gpg_key_path: "/tmp/sentinel_one.gpg"
+signed_package: true

@@ -89,14 +89,6 @@ options:
       - 32_bit
       - 64_bit
       - aarch64
-  signed_packages:
-    description:
-      - "Linux only. Will be ignored if B(os_type) is 'Windows'"
-      - "B(true): Only search and download signed agent packages"
-      - "B(false): Only search an download unsigned agent packages"
-    type: bool
-    required: false
-    default: false
   download_dir:
     description:
       - "Set the path where the agent should be downloaded."
@@ -133,16 +125,6 @@ EXAMPLES = r'''
     packet_format: "rpm"
     download_path: "/tmp"
     architecture: "64_bit"
-    agent_version: "latest_ea"
-- name: Download latest signed agent for linux and include EA packages
-  sva.sentinelone.sentinelone_download_agent:
-    console_url: "https://XXXXX.sentinelone.net"
-    token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    os_type: "Linux"
-    packet_format: "rpm"
-    download_path: "/tmp"
-    architecture: "64_bit"
-    signed_packages: true
     agent_version: "latest_ea"
 - name: Download specific agent version
   sva.sentinelone.sentinelone_download_agent:
@@ -209,7 +191,6 @@ class SentineloneDownloadAgent(SentineloneBase):
         self.os_type = module.params["os_type"]
         self.packet_format = module.params["packet_format"]
         self.architecture = module.params["architecture"]
-        self.signed_packages = module.params["signed_packages"]
         self.download_dir = module.params["download_dir"]
 
         # Do sanity checks
@@ -240,7 +221,7 @@ class SentineloneDownloadAgent(SentineloneBase):
             module.fail_json(msg="Error: 'packet_format' needs to be 'deb' or 'rpm' if os_type is 'Linux'")
 
     def get_package_obj(self, agent_version: str, custom_version: str, os_type: str, packet_format: str,
-                        architecture: str, signed_packages: bool, module: AnsibleModule):
+                        architecture: str, module: AnsibleModule):
         """
         Queries the API to get the info about the agent package which maches the parameters
 
@@ -254,8 +235,6 @@ class SentineloneDownloadAgent(SentineloneBase):
         :type packet_format: str
         :param architecture: The OS architecture
         :type architecture: str
-        :param signed_packages: Wether or not the package should be signed
-        :type signed_packages: bool
         :param module: Ansible module for error handling
         :type module: AnsibleModule
         :return: Returns the found agent object
@@ -284,8 +263,6 @@ class SentineloneDownloadAgent(SentineloneBase):
             # provide the information elementary. 'osArches' parameter applies only for windows
             if architecture == 'aarch64':
                 query_params['query'] = 'SentinelAgent-aarch64'
-            elif signed_packages:
-                query_params['query'] = 'Signed-SentinelAgent_linux'
             else:
                 query_params['query'] = 'SentinelAgent_linux'
         else:
@@ -316,7 +293,6 @@ def run_module():
         os_type=dict(type='str', required=True, choices=['Linux', 'Windows']),
         packet_format=dict(type='str', required=True, choices=['rpm', 'deb', 'msi', 'exe']),
         architecture=dict(type='str', required=False, choices=['32_bit', '64_bit', 'aarch64']),
-        signed_packages=dict(type='bool', required=False, default='false'),
         download_dir=dict(type='str', required=False, default='./')
     )
 
@@ -340,11 +316,10 @@ def run_module():
     os_type = download_agent_obj.os_type
     packet_format = download_agent_obj.packet_format
     architecture = download_agent_obj.architecture
-    signed_packages = download_agent_obj.signed_packages
 
     # Get package object from API with given parameters
     package_obj = download_agent_obj.get_package_obj(agent_version, custom_version, os_type, packet_format,
-                                                     architecture, signed_packages, module)
+                                                     architecture, module)
 
     changed = False
     if state == 'present':

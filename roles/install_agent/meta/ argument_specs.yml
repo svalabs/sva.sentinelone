@@ -33,12 +33,6 @@ argument_specs:
           - true
           - false
 
-      signed_packages:
-        type: "bool"
-        required: false
-        default: true
-        description: "RPM only: Download and install signed agent package or not"
-
       agent_version:
         type: "str"
         required: false
@@ -99,3 +93,9 @@ argument_specs:
         type: "str"
         required: false
         description: "Optional: The name of the group where the new endpoint should join."
+
+      gpg_key:
+        type: "str"
+        required: false
+        description:
+          - "The path to the gpg key to verify the agent package integrity. Required if installing a rpm agent package >= 23.3.2.12"

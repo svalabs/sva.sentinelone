@@ -4,6 +4,10 @@
   ansible.builtin.setup:
   when: ansible_facts.distribution is not defined
 
+- name: Gather package facts
+  ansible.builtin.package_facts:
+  when: ansible_facts.packages is not defined
+
 - name: "Preflight check: Fail when OS is unknown"
   ansible.builtin.fail:
     msg: "The package management system on this system is unknown. This can happen if the role runs on an unsupported os."
@@ -17,11 +21,12 @@
     os_type: "{{ os_family }}"
     packet_format: "{{ pkg_format }}"
     architecture: "{% if pkg_arch == 'x86_64' %}64_bit{% elif pkg_arch == 'i386' %}32_bit{% elif pkg_arch == 'aarch64' %}aarch64{% endif %}"
-    signed_packages: "{{ signed_packages }}"
     agent_version: "{{ agent_version }}"
     custom_version: "{{ custom_version | default(omit) }}"
   register: return_download_agent
   delegate_to: localhost
+  throttle: 1
+  when: not agent_installed
 
 - name: "Block: Get registration token from API"
   block:
@@ -71,7 +76,7 @@
 
     - name: "Set endpoint URI to get the correct registration token"
       ansible.builtin.set_fact:
-        reg_token_uri: "{{ 'groups/{{ groupid }}/token' if group is defined else 'sites/{{ siteid }}/token' }}"
+        reg_token_uri: "{{ \"groups/{{ groupid }}/token\" if group is defined else \"sites/{{ siteid }}/token\" }}"
 
     - name: "Get registration token"
       ansible.builtin.uri:
@@ -98,6 +103,8 @@
     path: "{{ return_download_agent.original_message.full_path }}"
     state: absent
   delegate_to: localhost
+  when: not agent_installed
+
 
 - name: "Fail if new client does not appear in management console"
   ansible.builtin.uri:

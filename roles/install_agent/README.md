@@ -4,10 +4,20 @@ install_agent
 This Ansible role is designed to install the SentinelOne agent package and register the new endpoint in the SentinelOne Management Console.
 
 ## Supported Operating Systems:
-- Red Hat Enterprise Linux (RHEL) 8, 9
-- SUSE Linux Enterprise Server (SLES) 12, 15
-- Debian 10, 11, 12
-- Ubuntu 20.04, 22.04, 24.04
+- Red Hat Enterprise Linux (RHEL)
+  - 8
+  - 9
+- SUSE Linux Enterprise Server (SLES)
+  - 12
+  - 15
+- Debian
+  - 10
+  - 11
+  - 12
+- Ubuntu
+  - 20.04
+  - 22.04
+  - 24.04
 
 Requirements
 ------------
@@ -28,7 +38,7 @@ Role Variables
 
 | Variable | Example | Description |
 | --- | --- | --- |
-| `console_url` | https://euce1-120-mssp.sentinelone.net | The URL of the SentinelOne Management Console |
+| `console_url` | https://my-console.sentinelone.net | The URL of the SentinelOne Management Console |
 | `api_token` | XXXXXXXXXXXXXXXXXX | The API token for the API user for authentication |
 | `site` | prod | The site to which the new hosts should be assigned |
 
@@ -37,7 +47,6 @@ Role Variables
 | Variable | Default | Choices | Description |
 | --- | --- | --- | --- |
 | `group` | | | An optional group which is part of the site. If set, the agent will be assigned to this group instead of the 'Default Group'. |
-| `signed_packages` | true | true, false |.rpm Packages only. Choose whether to use the signed agent package. Signature verification will be enabled too |
 | `agent_version` | latest | latest, latest_ea, custom | Controls which agent should be installed. latest installs the latest general availability version. If custom is set, `custom_version` is mandatory |
 | `custom_version` | | | Install a specific version of the SentinelOne agent. Must be used in combination with `agent_version` set to 'custom' |
 | `hide_sensitive` | true | true, false | Hide sensitive information like API keys in module output.Only set to false for debugging purposes |
@@ -55,6 +64,7 @@ Role Variables
 | `pkg_arch` | Sets the agent package architecture based on the Ansible facts |
 | `os_family` | Identifies the underlying operating system (Linux or Windows) |
 | `api_url` | Sets the API base URL |
+| `agent_installed` | Determines if the agent is already installed |
 
 ## Dependencies
 ------------
