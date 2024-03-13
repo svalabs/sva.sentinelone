@@ -1,2 +1,4 @@
 ---
 remote_pkg_path: "C:\\Windows\\Temp\\{{ return_download_agent.original_message.filename }}"
+exe_parameters: "-t {{ reg_token_obj.json.data.token }} -q"
+msi_parameters: "SITE_TOKEN={{ reg_token_obj.json.data.token }} /QUIET"

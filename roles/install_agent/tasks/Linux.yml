@@ -88,6 +88,7 @@
   ansible.builtin.command:
     cmd: '/opt/sentinelone/bin/sentinelctl management token set {{ reg_token_obj.json.data.token }}'
   register: token_set_output
+  no_log: "{{ hide_sensitive }}"
   failed_when: '"Registration token successfully set" not in token_set_output.stdout'
   when: agent_status.stdout == 'Off' or lx_force_new_token
 

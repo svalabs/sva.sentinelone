@@ -19,6 +19,13 @@ This Ansible role is designed to install the SentinelOne agent package and regis
   - 22.04
   - 24.04
 
+- Windows
+  - Server 2016
+  - Server 2019
+  - Server 2022
+  - Desktop 10
+  - Desktop 11
+
 Requirements
 ------------
 

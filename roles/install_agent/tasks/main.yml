@@ -4,14 +4,30 @@
   ansible.builtin.setup:
   when: ansible_facts.distribution is not defined
 
-- name: Gather package facts
-  ansible.builtin.package_facts:
-  when: ansible_facts.packages is not defined
-
 - name: "Preflight check: Fail when OS is unknown"
   ansible.builtin.fail:
     msg: "The package management system on this system is unknown. This can happen if the role runs on an unsupported os."
   when: pkg_format == 'unknown'
+
+- name: "Linux: Install python bindings for package managers"
+  ansible.builtin.package:
+    name: "{{ 'python3-rpm' if os_family == 'Suse' else 'python-apt-common' }}"
+  when: os_family == 'Suse' or os_family == 'Debian'
+
+- name: "Linux: Gather package facts"
+  ansible.builtin.package_facts:
+  when: ansible_facts.packages is not defined and os_family == 'Linux'
+
+- name: "Windows: Check if SentinelOne is already installed"
+  ansible.windows.win_service_info:
+    name: SentinelAgent
+  register: sentinelagent_service
+  when: os_family == 'Windows'
+
+- name: "Set fact: agent_installed"
+  ansible.builtin.set_fact:
+    agent_installed: "{{ true if ansible_facts.packages.sentinelagent is defined or ansible_facts.packages.SentinelAgent is defined
+      or sentinelagent_service.exists | default(false) else false }}"
 
 - name: "Download {{ pkg_format }} agent {{ agent_version }} to localhost"
   sentinelone_download_agent:
@@ -20,7 +36,7 @@
     site: "{{ site }}"
     os_type: "{{ os_family }}"
     packet_format: "{{ pkg_format }}"
-    architecture: "{% if pkg_arch == 'x86_64' %}64_bit{% elif pkg_arch == 'i386' %}32_bit{% elif pkg_arch == 'aarch64' %}aarch64{% endif %}"
+    architecture: "{{ pkg_arch }}"
     agent_version: "{{ agent_version }}"
     custom_version: "{{ custom_version | default(omit) }}"
   register: return_download_agent
@@ -29,6 +45,7 @@
   when: not agent_installed
 
 - name: "Block: Get registration token from API"
+  run_once: true
   block:
     - name: "Get siteid"
       ansible.builtin.uri:
