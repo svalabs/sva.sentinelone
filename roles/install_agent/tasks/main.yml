@@ -11,18 +11,18 @@
 
 - name: "Linux: Install python bindings for package managers"
   ansible.builtin.package:
-    name: "{{ 'python3-rpm' if os_family == 'Suse' else 'python-apt-common' }}"
-  when: os_family == 'Suse' or os_family == 'Debian'
+    name: "{{ 'python3-rpm' if ansible_facts.os_family == 'Suse' else 'python-apt-common' }}"
+  when: ansible_facts.os_family == 'Suse' or ansible_facts.os_family == 'Debian'
 
 - name: "Linux: Gather package facts"
   ansible.builtin.package_facts:
-  when: ansible_facts.packages is not defined and os_family == 'Linux'
+  when: ansible_facts.packages is not defined and custom_os_family == 'Linux'
 
 - name: "Windows: Check if SentinelOne is already installed"
   ansible.windows.win_service_info:
     name: SentinelAgent
   register: sentinelagent_service
-  when: os_family == 'Windows'
+  when: custom_os_family == 'Windows'
 
 - name: "Set fact: agent_installed"
   ansible.builtin.set_fact:
@@ -34,7 +34,7 @@
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site: "{{ site }}"
-    os_type: "{{ os_family }}"
+    os_type: "{{ custom_os_family }}"
     packet_format: "{{ pkg_format }}"
     architecture: "{{ pkg_arch }}"
     agent_version: "{{ agent_version }}"
@@ -112,8 +112,8 @@
       retries: 3
       delay: 20
 
-- name: "Include tasks for: {{ os_family }}"
-  ansible.builtin.include_tasks: "{{ os_family }}.yml"
+- name: "Include tasks for: {{ custom_os_family }}"
+  ansible.builtin.include_tasks: "{{ custom_os_family }}.yml"
 
 - name: "Remove agent install package from localhost"
   ansible.builtin.file:
