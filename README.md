@@ -20,9 +20,12 @@ It provides several modules which helps to configure and manage SentinelOne Mana
   - [sentinelone_path_exclusions](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_path_exclusions_module.html)
   - [sentinelone_policies](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_policies_module.html)
 
+- **Roles:**
+  - [install_agent](roles/install_agent/README.md)
+
 ## Requirements
 ### Ansible
-- ansible >= 7 **or** ansible-core >= 2.14
+- ansible >= 7 **or** ansible-core >= 2.14 (Lower versions may work but they have not been tested)
 
 ### Python
 - Python >= 3.9 (Ansible control node requirement)
@@ -75,7 +78,9 @@ See [Ansible Using collections](https://docs.ansible.com/ansible/devel/user_guid
 The module documentation can be found [here](https://svalabs.github.io/sva.sentinelone/branch/main/collections/index_module.html).
 
 ## Changelog
-**v1.0.3**: Increased request timeout and implemented error handling for requests that timed out.
+**v1.1.0**: Added new sentinelone_download_agent module and install_agent role
+
+**v1.0.3**: Increased request timeout and implemented error handling for requests that timed out
 
 **v1.0.2**: Added detailed error message to module output if an API call fails
 

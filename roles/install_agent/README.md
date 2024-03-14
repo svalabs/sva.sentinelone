@@ -3,7 +3,8 @@ install_agent
 
 This Ansible role is designed to install the SentinelOne agent package and register the new endpoint in the SentinelOne Management Console.
 
-## Supported Operating Systems:
+Supported Operating Systems:
+------------
 - Red Hat Enterprise Linux (RHEL)
   - 8
   - 9
@@ -28,7 +29,7 @@ This Ansible role is designed to install the SentinelOne agent package and regis
 
 Requirements
 ------------
-
+### API Token
 An API key is required to use this role. It is considered best practice to create a specific 'API user' role for this purpose.
 
 The API user requires the following permissions:
@@ -37,6 +38,12 @@ The API user requires the following permissions:
 - Download agent packages
 - Read the site or group registration token
 - Read agent information
+
+### GPG Key (Linux only)
+You need to provide the gpg key to validate the package signatures correctly. You obtain the download link from the Sentinelone Help page: "**How to Install on a Linux Endpoint with Yum**".
+
+Place the key on the host executing the Playbook and adjust the `gpg_key` variable accordingly.
+
 
 Role Variables
 --------------
@@ -48,6 +55,7 @@ Role Variables
 | `console_url` | https://my-console.sentinelone.net | The URL of the SentinelOne Management Console |
 | `api_token` | XXXXXXXXXXXXXXXXXX | The API token for the API user for authentication |
 | `site` | prod | The site to which the new hosts should be assigned |
+| `gpg_key` | /tmp/sentinel_one.gpg | Only required on **Linux** agents. Path to the gpg key which will be installed and used for package signature verification |
 
 ### Optional Variables
 
@@ -56,9 +64,9 @@ Role Variables
 | `group` | | | An optional group which is part of the site. If set, the agent will be assigned to this group instead of the 'Default Group'. |
 | `agent_version` | latest | latest, latest_ea, custom | Controls which agent should be installed. latest installs the latest general availability version. If custom is set, `custom_version` is mandatory |
 | `custom_version` | | | Install a specific version of the SentinelOne agent. Must be used in combination with `agent_version` set to 'custom' |
-| `hide_sensitive` | true | true, false | Hide sensitive information like API keys in module output.Only set to false for debugging purposes |
+| `hide_sensitive` | true | true, false | Hides sensitive information like API keys in module output. Only set to false for debugging purposes |
 | `lx_force_new_token` | false | true, false | Linux only: Set the management token on the linux agent even if it is already registered. |
-| `win_download_exe` | false | true, false | Windows only: By default, the .msi package is used for installation. If you prefer to use the .exe file, enable this setting |
+| `win_use_exe` | false | true, false | Windows only: By default, the .msi package is used for installation. If you prefer to use the .exe file, enable this setting |
 | `win_allow_reboot` | true | true, false | Windows only: After the removal of a Windows Feature (here Windows Defender) and after the agent installation, a reboot is required. The role is set to reboot at the end of the installation by default. Disable this setting if you wish to skip the reboot. |
 
 ### Variables from `vars.yml`
@@ -73,7 +81,7 @@ Role Variables
 | `api_url` | Sets the API base URL |
 | `agent_installed` | Determines if the agent is already installed |
 
-## Dependencies
+Dependencies
 ------------
 
 If this role is used for Windows hosts, the `ansible.windows` collection needs to be installed.
@@ -81,11 +89,48 @@ If this role is used for Windows hosts, the `ansible.windows` collection needs t
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+This is an example how to use this role in your Playbooks:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+---
+    - name: Sentinelone Agent Deployment
+      hosts: all
+      gather_facts: true
+      tasks:
+        - name: "Install agent on Linux"
+          ansible.builtin.include_role:
+            name: sva.sentinelone.install_agent
+          vars:
+            console_url: "https://your-instance.sentinelone.net"
+            api_token: "YOUR_S1_API_TOKEN"
+            site: "ansible-test"
+            group: "linux" # optional
+            gpg_key: "/tmp/sentinel_one.gpg"
+          when: ansible_facts.ansible_system is defined and ansible_facts.ansible_system == "Linux"
+
+        - name: "Install specific agent version on Linux"
+          ansible.builtin.include_role:
+            name: sva.sentinelone.install_agent
+          vars:
+            console_url: "https://your-instance.sentinelone.net"
+            api_token: "YOUR_S1_API_TOKEN"
+            site: "ansible-test"
+            gpg_key: "/tmp/sentinel_one.gpg"
+            agent_version: 'custom'
+            custom_version: '23.4.2.14'
+          when: ansible_facts.ansible_system is defined and ansible_facts.ansible_system == "Linux"
+
+        - name: "Install agent on Windows"
+          ansible.builtin.include_role:
+            name: sva.sentinelone.install_agent
+          vars:
+            console_url: "https://your-instance.sentinelone.net"
+            api_token: "YOUR_S1_API_TOKEN"
+            site: "ansible-test"
+            group: "windows" # optional
+            win_use_exe: true # optional
+            win_allow_reboot: false # optional
+          when: os_family == "Windows"
+
 
 License
 -------

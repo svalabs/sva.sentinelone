@@ -139,9 +139,3 @@
   until: ((registrationstatus.json.data | length) > 0) and (registrationstatus.status == 200)
   retries: 3
   delay: 20
-
-# TODO: Check if no_log is somewhere needed
-# TODO: Readme: Provide example
-# TODO: Molecule?
-# TODO: Fix Pipeline
-# TODO: Update global Readme

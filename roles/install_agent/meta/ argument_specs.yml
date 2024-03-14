@@ -10,7 +10,7 @@ argument_specs:
     author:
       - Marco Wester
     options:
-      win_download_exe:
+      win_use_exe:
         type: "bool"
         required: false
         default: false

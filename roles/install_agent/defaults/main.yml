@@ -1,6 +1,6 @@
 ---
 # defaults file for install_agent
-win_download_exe: false
+win_use_exe: false
 win_allow_reboot: true
 agent_version: 'latest'
 hide_sensitive: true
