@@ -11,7 +11,7 @@ on:
 env:
   NAMESPACE: sva
   COLLECTION_NAME: sentinelone
-  ANSIBLE_TEST_PREFER_PODMAN: 1
+  #ANSIBLE_TEST_PREFER_PODMAN: 1
 
 jobs:
   sanity:
