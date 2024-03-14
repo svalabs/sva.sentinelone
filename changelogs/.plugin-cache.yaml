@@ -14,6 +14,11 @@ plugins:
       name: sentinelone_config_overrides
       namespace: ''
       version_added: 1.0.0
+    sentinelone_download_agent:
+      description: Download SentinelOne agent from Management Console
+      name: sentinelone_download_agent
+      namespace: ''
+      version_added: 1.1.0
     sentinelone_filters:
       description: Manage SentinelOne Filters
       name: sentinelone_filters
@@ -48,4 +53,4 @@ plugins:
   shell: {}
   strategy: {}
   vars: {}
-version: 1.0.3
+version: 1.1.0

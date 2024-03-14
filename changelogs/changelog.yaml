@@ -53,3 +53,26 @@ releases:
     fragments:
     - v1.0.3.yml
     release_date: '2023-03-13'
+  1.1.0:
+    changes:
+      release_summary: 'This is the release v1.1.0 of the ``sva.sentinelone`` collection.
+        It introduces new modules and roles.
+
+        Modules: sentinelone_download_agent
+
+        Roles: install_agent
+
+        '
+    fragments:
+    - v1.1.0.yml
+    modules:
+    - description: Download SentinelOne agent from Management Console
+      name: sentinelone_download_agent
+      namespace: ''
+    objects:
+      role:
+      - description: A role to download and install SentinelAgent on Windows and Linux
+          hosts
+        name: install_agent
+        namespace: null
+    release_date: '2024-03-14'

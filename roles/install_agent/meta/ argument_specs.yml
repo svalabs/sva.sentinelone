@@ -2,7 +2,7 @@
 argument_specs:
   # roles/install_agent/tasks/main.yml entry point
   main:
-    short_description: "Main entry point for the install_agent role"
+    short_description: "Entrypoint for install_agent role"
     description:
       - "This is the main entrypoint for the C(install_agent) role."
       - "The entrypoint contains all os independent tasks and prepares the environment
