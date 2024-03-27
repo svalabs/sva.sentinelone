@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2023, Marco Wester <marco.wester@sva.de>
+# Copyright: (c) 2024, Marco Wester <marco.wester@sva.de>
 #                      Erik Schindler <erik.schindler@sva.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
@@ -45,7 +45,7 @@ options:
       - "Version of the agent to be downloaded."
       - "B(latest) (default) - download latest GA (stable) release for the specified parameters"
       - "B(latest_ea) - same as latest, but also includes EA packages"
-      - "B(<explicit agent version number>) - download an explicit version of the agent"
+      - "B(custom) - custom_version is required when agent_versioin is custom"
     type: str
     default: latest
     required: false
@@ -82,21 +82,13 @@ options:
     description:
       - "Architecture of the packet which should be downloaded"
       - "Windows: Only B(32_bit) and B(64_bit) are allowed"
-      - "Linux: Of not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM agent will be downloaded"
+      - "Linux: If not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM agent will be downloaded"
     type: str
     required: false
     choices:
       - 32_bit
       - 64_bit
       - aarch64
-  signed_packages:
-    description:
-      - "Linux only. Will be ignored if B(os_type) is 'Windows'"
-      - "B(true): Only search and download signed agent packages"
-      - "B(false): Only search an download unsigned agent packages"
-    type: bool
-    required: false
-    default: false
   download_dir:
     description:
       - "Set the path where the agent should be downloaded."
@@ -118,7 +110,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Download latest agent for linux
-  sentinelone_download_agent:
+  sva.sentinelone.sentinelone_download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Linux"
@@ -126,26 +118,16 @@ EXAMPLES = r'''
     download_path: "/tmp"
     architecture: "64_bit"
 - name: Download latest agent for linux and include EA packages
-  sentinelone_download_agent:
+  sva.sentinelone.sentinelone_download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Linux"
     packet_format: "rpm"
     download_path: "/tmp"
     architecture: "64_bit"
-    agent_version: "latest_ea"
-- name: Download latest signed agent for linux and include EA packages
-  sentinelone_download_agent:
-    console_url: "https://XXXXX.sentinelone.net"
-    token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    os_type: "Linux"
-    packet_format: "rpm"
-    download_path: "/tmp"
-    architecture: "64_bit"
-    signed_packages: true
     agent_version: "latest_ea"
 - name: Download specific agent version
-  sentinelone_download_agent:
+  sva.sentinelone.sentinelone_download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Windows"
@@ -154,7 +136,7 @@ EXAMPLES = r'''
     agent_version: "custom"
     custom_version: "23.2.3.358"
 - name: Get info about specified package
-  sentinelone_download_agent:
+  sva.sentinelone.sentinelone_download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     state: "info"
@@ -209,7 +191,6 @@ class SentineloneDownloadAgent(SentineloneBase):
         self.os_type = module.params["os_type"]
         self.packet_format = module.params["packet_format"]
         self.architecture = module.params["architecture"]
-        self.signed_packages = module.params["signed_packages"]
         self.download_dir = module.params["download_dir"]
 
         # Do sanity checks
@@ -240,7 +221,7 @@ class SentineloneDownloadAgent(SentineloneBase):
             module.fail_json(msg="Error: 'packet_format' needs to be 'deb' or 'rpm' if os_type is 'Linux'")
 
     def get_package_obj(self, agent_version: str, custom_version: str, os_type: str, packet_format: str,
-                        architecture: str, signed_packages: bool, module: AnsibleModule):
+                        architecture: str, module: AnsibleModule):
         """
         Queries the API to get the info about the agent package which maches the parameters
 
@@ -254,8 +235,6 @@ class SentineloneDownloadAgent(SentineloneBase):
         :type packet_format: str
         :param architecture: The OS architecture
         :type architecture: str
-        :param signed_packages: Wether or not the package should be signed
-        :type signed_packages: bool
         :param module: Ansible module for error handling
         :type module: AnsibleModule
         :return: Returns the found agent object
@@ -284,8 +263,6 @@ class SentineloneDownloadAgent(SentineloneBase):
             # provide the information elementary. 'osArches' parameter applies only for windows
             if architecture == 'aarch64':
                 query_params['query'] = 'SentinelAgent-aarch64'
-            elif signed_packages:
-                query_params['query'] = 'Signed-SentinelAgent_linux'
             else:
                 query_params['query'] = 'SentinelAgent_linux'
         else:
@@ -316,7 +293,6 @@ def run_module():
         os_type=dict(type='str', required=True, choices=['Linux', 'Windows']),
         packet_format=dict(type='str', required=True, choices=['rpm', 'deb', 'msi', 'exe']),
         architecture=dict(type='str', required=False, choices=['32_bit', '64_bit', 'aarch64']),
-        signed_packages=dict(type='bool', required=False, default='false'),
         download_dir=dict(type='str', required=False, default='./')
     )
 
@@ -340,11 +316,10 @@ def run_module():
     os_type = download_agent_obj.os_type
     packet_format = download_agent_obj.packet_format
     architecture = download_agent_obj.architecture
-    signed_packages = download_agent_obj.signed_packages
 
     # Get package object from API with given parameters
     package_obj = download_agent_obj.get_package_obj(agent_version, custom_version, os_type, packet_format,
-                                                     architecture, signed_packages, module)
+                                                     architecture, module)
 
     changed = False
     if state == 'present':
@@ -356,7 +331,6 @@ def run_module():
 
         if path.exists(filepath):
             basic_message = f"File {filename} already exists in {download_dir} - nothing to do."
-            original_message = basic_message
         else:
             # Ensure download_dir exists and is a directory
             dest_is_dir = path.isdir(download_dir)
@@ -379,7 +353,7 @@ def run_module():
 
             changed = True
             basic_message = f"Downloaded file {filename} to {download_dir}"
-            original_message = {'download_dir': download_dir, 'filename': filename, 'full_path': filepath}
+        original_message = {'download_dir': download_dir, 'filename': filename, 'full_path': filepath}
     else:
         # If state=info
         original_message = package_obj
@@ -387,7 +361,7 @@ def run_module():
 
     result = dict(
         changed=changed,
-        original_message=str(original_message),
+        original_message=original_message,
         message=basic_message
     )
 

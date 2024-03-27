@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2023, Marco Wester <marco.wester@sva.de>
+# Copyright: (c) 2024, Marco Wester <marco.wester@sva.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -65,7 +65,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Set custom policy on multiple groups
-  sentinelone_policies:
+  sva.sentinelone.sentinelone_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -77,7 +77,7 @@ EXAMPLES = r'''
       agentUi:
         agentUiOn: false
 - name: Set custom policy on site
-  sentinelone_policies:
+  sva.sentinelone.sentinelone_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -86,7 +86,7 @@ EXAMPLES = r'''
       agentUi:
         agentUiOn: false
 - name: Revert to group default policy inherited from site
-  sentinelone_policies:
+  sva.sentinelone.sentinelone_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -95,7 +95,7 @@ EXAMPLES = r'''
       - group1
       - group2
 - name: Revert to site default policy inherited from account
-  sentinelone_policies:
+  sva.sentinelone.sentinelone_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -330,7 +330,7 @@ def run_module():
 
     result = dict(
         changed=False,
-        original_message=str(diffs),
+        original_message=diffs,
         message=basic_message
     )
 

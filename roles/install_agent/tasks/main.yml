@@ -1,0 +1,141 @@
+---
+# tasks file for install_agent
+- name: "Gather facts"
+  ansible.builtin.setup:
+  when: ansible_facts.distribution is not defined
+
+- name: "Preflight check: Fail when OS is unknown"
+  ansible.builtin.fail:
+    msg: "The package management system on this system is unknown. This can happen if the role runs on an unsupported os."
+  when: pkg_format == 'unknown'
+
+- name: "Linux: Install python bindings for package managers"
+  ansible.builtin.package:
+    name: "{{ 'python3-rpm' if ansible_facts.os_family == 'Suse' else 'python-apt-common' }}"
+  when: ansible_facts.os_family == 'Suse' or ansible_facts.os_family == 'Debian'
+
+- name: "Linux: Gather package facts"
+  ansible.builtin.package_facts:
+  when: ansible_facts.packages is not defined and custom_os_family == 'Linux'
+
+- name: "Windows: Check if SentinelOne is already installed"
+  ansible.windows.win_service_info:
+    name: SentinelAgent
+  register: sentinelagent_service
+  when: custom_os_family == 'Windows'
+
+- name: "Set fact: agent_installed"
+  ansible.builtin.set_fact:
+    agent_installed: "{{ true if ansible_facts.packages.sentinelagent is defined or ansible_facts.packages.SentinelAgent is defined
+      or sentinelagent_service.exists | default(false) else false }}"
+
+- name: "Download {{ pkg_format }} agent {{ agent_version }} to localhost"
+  sentinelone_download_agent:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site: "{{ site }}"
+    os_type: "{{ custom_os_family }}"
+    packet_format: "{{ pkg_format }}"
+    architecture: "{{ pkg_arch }}"
+    agent_version: "{{ agent_version }}"
+    custom_version: "{{ custom_version | default(omit) }}"
+  register: return_download_agent
+  delegate_to: localhost
+  throttle: 1
+  when: not agent_installed
+
+- name: "Block: Get registration token from API"
+  run_once: true
+  block:
+    - name: "Get siteid"
+      ansible.builtin.uri:
+        url: "{{ api_url }}sites?name={{ site }}&state=active"
+        method: GET
+        return_content: true
+        headers:
+          Accept: application/json
+          Authorization: "APIToken {{ api_token }}"
+        validate_certs: true
+        status_code: 200
+      register: siteobj
+      delegate_to: localhost
+      no_log: "{{ hide_sensitive }}"
+      until: ((siteobj.json.data.sites | length) > 0) and (siteobj.status == 200)
+      retries: 3
+      delay: 20
+
+    - name: "Extract siteid"
+      ansible.builtin.set_fact:
+        siteid: "{{ siteobj.json.data.sites[0].id }}"
+
+    - name: "Get group id"
+      ansible.builtin.uri:
+        url: "{{ api_url }}groups?name={{ group }}&siteIds={{ siteid }}"
+        method: GET
+        return_content: true
+        headers:
+          Accept: application/json
+          Authorization: "APIToken {{ api_token }}"
+        validate_certs: true
+        status_code: 200
+      register: groupobj
+      delegate_to: localhost
+      no_log: "{{ hide_sensitive }}"
+      until: ((groupobj.json.data | length) > 0) and (groupobj.status == 200)
+      retries: 3
+      delay: 20
+      when: group is defined
+
+    - name: "Extract groupid"
+      ansible.builtin.set_fact:
+        groupid: "{{ groupobj.json.data[0].id }}"
+      when: group is defined
+
+    - name: "Set endpoint URI to get the correct registration token"
+      ansible.builtin.set_fact:
+        reg_token_uri: "{{ \"groups/{{ groupid }}/token\" if group is defined else \"sites/{{ siteid }}/token\" }}"
+
+    - name: "Get registration token"
+      ansible.builtin.uri:
+        url: "{{ api_url }}{{ reg_token_uri }}"
+        method: GET
+        return_content: true
+        headers:
+          Accept: application/json
+          Authorization: "APIToken {{ api_token }}"
+        validate_certs: true
+        status_code: 200
+      register: reg_token_obj
+      delegate_to: localhost
+      no_log: "{{ hide_sensitive }}"
+      until: reg_token_obj.status == 200
+      retries: 3
+      delay: 20
+
+- name: "Include tasks for: {{ custom_os_family }}"
+  ansible.builtin.include_tasks: "{{ custom_os_family }}.yml"
+
+- name: "Remove agent install package from localhost"
+  ansible.builtin.file:
+    path: "{{ return_download_agent.original_message.full_path }}"
+    state: absent
+  delegate_to: localhost
+  when: not agent_installed
+
+
+- name: "Fail if new client does not appear in management console"
+  ansible.builtin.uri:
+    url: "{{ api_url }}agents?siteIds={{ siteid }}&computerName={{ ansible_hostname }}&isActive=true"
+    method: GET
+    return_content: true
+    headers:
+      Accept: application/json
+      Authorization: "APIToken {{ api_token }}"
+    validate_certs: true
+    status_code: 200
+  register: registrationstatus
+  delegate_to: localhost
+  no_log: "{{ hide_sensitive }}"
+  until: ((registrationstatus.json.data | length) > 0) and (registrationstatus.status == 200)
+  retries: 3
+  delay: 20

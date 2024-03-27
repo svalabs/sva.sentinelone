@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2023, Marco Wester <marco.wester@sva.de>
+# Copyright: (c) 2024, Marco Wester <marco.wester@sva.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -86,7 +86,7 @@ notes:
 
 EXAMPLES = r'''
 - name: Set custom 'Maximum Concurrent Downloads' on multiple groups
-  sentinelone_upgrade_policies:
+  sva.sentinelone.sentinelone_upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -95,14 +95,14 @@ EXAMPLES = r'''
       - group2
     max_concurrent_downloads: 1000
 - name: Enable inheritance for 'Maximum Concurrent Downloads' and for 'Maintenance Windows Settings' on site scope
-  sentinelone_upgrade_policies:
+  sva.sentinelone.sentinelone_upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
     inherit_max_concurrent_downloads: yes
     inherit_maintenance_windows: yes
 - name: Set custom 'Maintenance Windows' for monday and tuesday on single group
-  sentinelone_upgrade_policies:
+  sva.sentinelone.sentinelone_upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -120,7 +120,7 @@ EXAMPLES = r'''
             - from: "3:00 pm"
               to: "7:00 pm"
 - name: Set custom 'Maintenance Windows' for monday on single group and use specific timezone
-  sentinelone_upgrade_policies:
+  sva.sentinelone.sentinelone_upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -134,7 +134,7 @@ EXAMPLES = r'''
               to: "11:00 pm"
     timezone: "+02:00"
 - name: Set custom 'Maintenance Windows' for whole wednesday on site scope
-  sentinelone_upgrade_policies:
+  sva.sentinelone.sentinelone_upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -536,7 +536,7 @@ def run_module():
 
     result = dict(
         changed=False,
-        original_message=str(diffs),
+        original_message=diffs,
         message=basic_message
     )
 

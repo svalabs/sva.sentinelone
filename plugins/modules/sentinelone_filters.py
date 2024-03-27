@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2023, Marco Wester <marco.wester@sva.de>
+# Copyright: (c) 2024, Marco Wester <marco.wester@sva.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -62,7 +62,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Create filter
-  sentinelone_filters:
+  sva.sentinelone.sentinelone_filters:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -73,7 +73,7 @@ EXAMPLES = r'''
       osTypes:
         - windows
 - name: Update filter
-  sentinelone_filters:
+  sva.sentinelone.sentinelone_filters:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -86,7 +86,7 @@ EXAMPLES = r'''
       osTypes:
         - windows
 - name: Delete filter
-  sentinelone_filters:
+  sva.sentinelone.sentinelone_filters:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -292,7 +292,7 @@ def run_module():
 
     result = dict(
         changed=False,
-        original_message=str(diffs),
+        original_message=diffs,
         message=basic_message
     )
 

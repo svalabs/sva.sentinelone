@@ -1,0 +1,52 @@
+---
+- name: "Windows: Include Windows.yml vars"
+  ansible.builtin.include_vars:
+    file: Windows.yml
+
+- name: "Windows: Remove windows defender feature on Windows Server OS"
+  ansible.windows.win_feature:
+    name: Windows-Defender
+    state: absent
+  register: win_feature_remove
+  when: "'Windows Server' in ansible_os_name"
+
+- name: "Block: Windows: Install SentinelOne agent"
+  when: not agent_installed
+  block:
+    - name: "Windows: Copy agent package to remote server"
+      ansible.windows.win_copy:
+        src: "{{ return_download_agent.original_message.full_path }}"
+        dest: "{{ remote_pkg_path }}"
+        mode: "0644"
+
+    - name: "Windows: Install agent package {{ return_download_agent.original_message.filename }}"
+      ansible.windows.win_package:
+        path: "{{ remote_pkg_path }}"
+        creates_service: "SentinelAgent"
+        arguments: "{{ exe_parameters if pkg_format == 'exe' else msi_parameters }}"
+      register: installation_result
+      no_log: "{{ hide_sensitive }}"
+      when: pkg_format == "msi" or pkg_format == "exe"
+
+    - name: "Windows: Wait for 15 seconds"
+      ansible.builtin.pause:
+        seconds: 15
+
+- name: "Windows: Remove agent package from target machine"
+  ansible.windows.win_file:
+    path: "{{ remote_pkg_path }}"
+    state: absent
+
+- name: "Windows: Get service information"
+  ansible.windows.win_service_info:
+    name: SentinelAgent
+  register: sentinelagent_postinstall_service
+
+- name: "Windows: Fail when agent not started and/or not in auto start mode"
+  ansible.builtin.fail: "Sentinelone Agent is not started and/or not configured for automatic start. Service: {{ sentinelagent_postinstall_service }}"
+  when: sentinelagent_postinstall_service.services[0].state != "started" or sentinelagent_postinstall_service.services[0].start_mode != "auto"
+
+- name: "Windos: Reboot after agent installation or Windows Feature removal"
+  ansible.windows.win_reboot:
+    post_reboot_delay: 60
+  when: (installation_result.changed | default(false) or win_feature_remove.reboot_required) and win_allow_reboot

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2023, Marco Wester <marco.wester@sva.de>
+# Copyright: (c) 2024, Marco Wester <marco.wester@sva.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -108,7 +108,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Create/Update config_override for all agents on site
-  sentinelone_config_overrides:
+  sva.sentinelone.sentinelone_config_overrides:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -116,7 +116,7 @@ EXAMPLES = r'''
     os_type: "windows"
     config_override: { powershellProtection: true }
 - name: Create/Update config_override for all agents on group
-  sentinelone_config_overrides:
+  sva.sentinelone.sentinelone_config_overrides:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -126,7 +126,7 @@ EXAMPLES = r'''
     config_override:
       powershellProtection: true
 - name: Create/Update config_override for specific agent version on group
-  sentinelone_config_overrides:
+  sva.sentinelone.sentinelone_config_overrides:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -137,7 +137,7 @@ EXAMPLES = r'''
     config_override:
       powershellProtection: true
 - name: Delete config_override for all agents on group
-  sentinelone_config_overrides:
+  sva.sentinelone.sentinelone_config_overrides:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -145,7 +145,7 @@ EXAMPLES = r'''
     group: "testgroup"
     os_type: "windows"
 - name: Delete config_override for specific agent version on site
-  sentinelone_config_overrides:
+  sva.sentinelone.sentinelone_config_overrides:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -507,7 +507,7 @@ def run_module():
 
     result = dict(
         changed=False,
-        original_message=str(diffs),
+        original_message=diffs,
         message=basic_message
     )
 

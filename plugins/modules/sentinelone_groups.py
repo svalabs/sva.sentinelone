@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2023, Marco Wester <marco.wester@sva.de>
+# Copyright: (c) 2024, Marco Wester <marco.wester@sva.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -65,7 +65,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Create single static group
-  sentinelone_groups:
+  sva.sentinelone.sentinelone_groups:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -73,7 +73,7 @@ EXAMPLES = r'''
     name: "MyGroup"
 
 - name: Create single dynamic group
-  sentinelone_groups:
+  sva.sentinelone.sentinelone_groups:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -82,7 +82,7 @@ EXAMPLES = r'''
     filter_name: "MyFilter"
 
 - name: Create multiple static groups
-  sentinelone_groups:
+  sva.sentinelone.sentinelone_groups:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -93,7 +93,7 @@ EXAMPLES = r'''
       - "MyGroup3"
 
 - name: Delete single static/dynamic group
-  sentinelone_groups:
+  sva.sentinelone.sentinelone_groups:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -101,7 +101,7 @@ EXAMPLES = r'''
     name: "MyGroup"
 
 - name: Delete multiple static/dynamic groups
-  sentinelone_groups:
+  sva.sentinelone.sentinelone_groups:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -370,7 +370,7 @@ def run_module():
 
     result = dict(
         changed=False,
-        original_message=str(diffs),
+        original_message=diffs,
         message=basic_message
     )
 

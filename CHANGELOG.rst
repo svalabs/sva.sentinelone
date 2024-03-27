@@ -4,6 +4,25 @@ Sva.Sentinelone Release Notes
 
 .. contents:: Topics
 
+v1.1.0
+======
+
+Release Summary
+---------------
+
+This is the release v1.1.0 of the ``sva.sentinelone`` collection. It introduces new modules and roles.
+Modules: sentinelone_download_agent
+Roles: install_agent
+
+New Modules
+-----------
+
+- sva.sentinelone.sentinelone_download_agent - Download SentinelOne agent from Management Console
+
+New Roles
+---------
+
+- sva.sentinelone.install_agent - A role to download and install SentinelAgent on Windows and Linux hosts
 
 v1.0.3
 ======
