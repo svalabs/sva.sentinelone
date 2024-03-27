@@ -131,7 +131,7 @@
 <h1>sva.sentinelone.sentinelone_path_exclusions module – Manage SentinelOne Path Exclusions<a class="headerlink" href="#sva-sentinelone-sentinelone-path-exclusions-module-manage-sentinelone-path-exclusions" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/sva/sentinelone/">sva.sentinelone collection</a> (version 1.0.3).</p>
+<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/sva/sentinelone/">sva.sentinelone collection</a> (version 1.1.0).</p>
 <p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">sva.sentinelone</span></code>.
@@ -312,7 +312,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <h2><a class="toc-backref" href="#id5" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create exclusion in site scope</span>
-<span class="w">  </span><span class="nt">sentinelone_path_exclusions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_path_exclusions</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
@@ -320,7 +320,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;performance_focus&quot;</span>
 <span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;windows&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create exclusion in single group</span>
-<span class="w">  </span><span class="nt">sentinelone_path_exclusions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_path_exclusions</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
@@ -329,7 +329,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;interoperability_extended&quot;</span>
 <span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;windows&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create exclusion in multiple groups</span>
-<span class="w">  </span><span class="nt">sentinelone_path_exclusions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_path_exclusions</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;present&quot;</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
@@ -341,7 +341,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;performance_focus_extended&quot;</span>
 <span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;windows&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create exclusion in multiple groups and disable automatic upload to Binary Vault</span>
-<span class="w">  </span><span class="nt">sentinelone_path_exclusions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_path_exclusions</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;present&quot;</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
@@ -355,14 +355,14 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;windows&quot;</span>
 <span class="w">    </span><span class="nt">ef_binary_vault</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete exclusion in site scope</span>
-<span class="w">  </span><span class="nt">sentinelone_path_exclusions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_path_exclusions</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;absent&quot;</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;msd&quot;</span>
 <span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;C:\\Test1234\\&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete exclusion in group scope</span>
-<span class="w">  </span><span class="nt">sentinelone_path_exclusions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_path_exclusions</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;absent&quot;</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>

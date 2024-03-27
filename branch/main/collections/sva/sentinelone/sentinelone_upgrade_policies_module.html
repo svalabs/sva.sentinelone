@@ -131,7 +131,7 @@
 <h1>sva.sentinelone.sentinelone_upgrade_policies module – Manage SentinelOne Upgrade Policies<a class="headerlink" href="#sva-sentinelone-sentinelone-upgrade-policies-module-manage-sentinelone-upgrade-policies" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/sva/sentinelone/">sva.sentinelone collection</a> (version 1.0.3).</p>
+<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/sva/sentinelone/">sva.sentinelone collection</a> (version 1.1.0).</p>
 <p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">sva.sentinelone</span></code>.
@@ -274,7 +274,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <section id="examples">
 <h2><a class="toc-backref" href="#id5" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set custom &#39;Maximum Concurrent Downloads&#39; on multiple groups</span>
-<span class="w">  </span><span class="nt">sentinelone_upgrade_policies</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_upgrade_policies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
@@ -283,14 +283,14 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group2</span>
 <span class="w">    </span><span class="nt">max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enable inheritance for &#39;Maximum Concurrent Downloads&#39; and for &#39;Maintenance Windows Settings&#39; on site scope</span>
-<span class="w">  </span><span class="nt">sentinelone_upgrade_policies</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_upgrade_policies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
 <span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
 <span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set custom &#39;Maintenance Windows&#39; for monday and tuesday on single group</span>
-<span class="w">  </span><span class="nt">sentinelone_upgrade_policies</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_upgrade_policies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
@@ -308,7 +308,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
 <span class="w">              </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;7:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set custom &#39;Maintenance Windows&#39; for monday on single group and use specific timezone</span>
-<span class="w">  </span><span class="nt">sentinelone_upgrade_policies</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_upgrade_policies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
@@ -322,7 +322,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">              </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
 <span class="w">    </span><span class="nt">timezone</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;+02:00&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set custom &#39;Maintenance Windows&#39; for whole wednesday on site scope</span>
-<span class="w">  </span><span class="nt">sentinelone_upgrade_policies</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_upgrade_policies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
