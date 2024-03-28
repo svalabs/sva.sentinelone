@@ -49,7 +49,7 @@
   block:
     - name: "Get siteid"
       ansible.builtin.uri:
-        url: "{{ api_url }}sites?name={{ site }}&state=active"
+        url: "{{ api_url }}sites?name={{ site | urlencode }}&state=active"
         method: GET
         return_content: true
         headers:
@@ -70,7 +70,7 @@
 
     - name: "Get group id"
       ansible.builtin.uri:
-        url: "{{ api_url }}groups?name={{ group }}&siteIds={{ siteid }}"
+        url: "{{ api_url }}groups?name={{ group | urlencode }}&siteIds={{ siteid }}"
         method: GET
         return_content: true
         headers:
@@ -125,7 +125,7 @@
 
 - name: "Fail if new client does not appear in management console"
   ansible.builtin.uri:
-    url: "{{ api_url }}agents?siteIds={{ siteid }}&computerName={{ ansible_hostname }}&isActive=true"
+    url: "{{ api_url }}agents?siteIds={{ siteid }}&computerName={{ ansible_hostname | urlencode }}&isActive=true"
     method: GET
     return_content: true
     headers:
