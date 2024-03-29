@@ -27,8 +27,6 @@
     - name: "Block: RPM based systems"
       when: pkg_format == "rpm"
       block:
-        - name: "Linux: Check if package is signed"
-          ansible.builtin.include_tasks: signed.yml
 
         - name: "Linux: Copy gpg key to remote server"
           ansible.builtin.copy:
