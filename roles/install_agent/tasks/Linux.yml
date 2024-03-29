@@ -5,11 +5,11 @@
 
 - name: "Linux Block: Skip if sentinelagent is already installed."
   when: not agent_installed
+  become: true
   block:
     - name: Get dmesg output
       ansible.builtin.command: dmesg
       changed_when: false
-      become: true
       register: dmesg_output
 
     - name: Assert that no function tracing issues occured
@@ -80,6 +80,7 @@
     # \\s needed because yaml interprets \s as escape sequence
     cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | grep -E '^Connectivity\\s+(On|Off)$' | awk '{ print $2 }'"
     executable: "/bin/bash"
+  become: true
   register: agent_status
   failed_when: agent_status.stdout is not regex("On|Off")
   changed_when: agent_status.stdout is not regex("On|Off")
@@ -87,6 +88,7 @@
 - name: "Linux: Register agent"
   ansible.builtin.command:
     cmd: '/opt/sentinelone/bin/sentinelctl management token set {{ reg_token_obj.json.data.token }}'
+  become: true
   register: token_set_output
   no_log: "{{ hide_sensitive }}"
   failed_when: '"Registration token successfully set" not in token_set_output.stdout'
@@ -97,14 +99,17 @@
     name: sentinelone
     state: started
     enabled: true
+  become: true
 
 - name: "Linux: Remove agent install package from target machine"
   ansible.builtin.file:
     path: "{{ remote_pkg_path }}"
     state: absent
+  become: true
   when: not agent_installed
 
 - name: "Linux: Remove gpg key from target machine"
   ansible.builtin.file:
     path: "{{ remote_gpg_key_path }}"
     state: absent
+  become: true

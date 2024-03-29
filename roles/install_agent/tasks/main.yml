@@ -12,6 +12,7 @@
 - name: "Linux: Install python bindings for package managers"
   ansible.builtin.package:
     name: "{{ 'python3-rpm' if ansible_facts.os_family == 'Suse' else 'python-apt-common' }}"
+  become: true
   when: ansible_facts.os_family == 'Suse' or ansible_facts.os_family == 'Debian'
 
 - name: "Linux: Gather package facts"
@@ -121,7 +122,6 @@
     state: absent
   delegate_to: localhost
   when: not agent_installed
-
 
 - name: "Fail if new client does not appear in management console"
   ansible.builtin.uri:
