@@ -44,6 +44,13 @@ You need to provide the gpg key to validate the package signatures correctly. Yo
 
 Place the key on the host executing the Playbook and adjust the `gpg_key` variable accordingly.
 
+Required for .deb based systems.
+Required for .rpm based systems when agent version >= 23.3.2.12.
+
+### Become user
+**Linux:** On the control-node, where the playbook is executed, only user permissions are required. On the remote node you have to provide a become user since some tasks need to run as root. Either provide a _become_user_ on playbook or _include_role_ task scope or set the variable _ansible_become_user_ accordingly. The remote user must be configured with sudo permissions or other privilege escalation methods.
+
+**Windows:** _ansible_user_ has to be an administrator account. Therefore no privilege escalation is needed.
 
 Role Variables
 --------------
@@ -55,7 +62,7 @@ Role Variables
 | `console_url` | https://my-console.sentinelone.net | The URL of the SentinelOne Management Console |
 | `api_token` | XXXXXXXXXXXXXXXXXX | The API token for the API user for authentication |
 | `site` | prod | The site to which the new hosts should be assigned |
-| `gpg_key` | /tmp/sentinel_one.gpg | Only required on **Linux** agents. Path to the gpg key which will be installed and used for package signature verification |
+| `gpg_key` | /tmp/sentinel_one.gpg | **Linux** only. Required for .deb based systems. Required for .rpm based systems when agent version >= 23.3.2.12. Path to the gpg key which will be installed and used for package signature verification |
 
 ### Optional Variables
 
