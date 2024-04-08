@@ -1,4 +1,4 @@
 ---
 remote_pkg_path: "/tmp/{{ return_download_agent.original_message.filename }}"
 remote_gpg_key_path: "/tmp/sentinel_one.gpg"
-signed_package: true
+signed_package: "{{ false if agent_version == 'custom' and custom_version is version('23.3.2.12', '<') else true }}"
