@@ -4,6 +4,20 @@ Sva.Sentinelone Release Notes
 
 .. contents:: Topics
 
+v1.1.1
+======
+
+Release Summary
+---------------
+
+Maintenance release
+
+Bugfixes
+--------
+
+- install_agent role: Added 'become: true' to necessary linux tasks. It is no longer necessary to use 'become: true' on playbook level. Fixes https://github.com/svalabs/sva.sentinelone/issues/30
+- install_agent role: Added missing 'urlencode' filter so special characters like space can be used in site or group names. Fixes https://github.com/svalabs/sva.sentinelone/issues/28
+
 v1.1.0
 ======
 
