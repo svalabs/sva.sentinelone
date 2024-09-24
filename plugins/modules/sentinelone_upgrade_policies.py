@@ -99,8 +99,8 @@ EXAMPLES = r'''
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
-    inherit_max_concurrent_downloads: yes
-    inherit_maintenance_windows: yes
+    inherit_max_concurrent_downloads: true
+    inherit_maintenance_windows: true
 - name: Set custom 'Maintenance Windows' for monday and tuesday on single group
   sva.sentinelone.sentinelone_upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
@@ -108,17 +108,17 @@ EXAMPLES = r'''
     site_name: "test"
     groups:
       - group1
-    inherit_max_concurrent_downloads: yes
-    inherit_maintenance_windows: no
+    inherit_max_concurrent_downloads: true
+    inherit_maintenance_windows: false
     maintenance_windows:
-        monday:
-            - from: "8:00 am"
-              to: "11:00 pm"
-        tuesday:
-            - from: "8:00 am"
-              to: "12:00 pm"
-            - from: "3:00 pm"
-              to: "7:00 pm"
+      monday:
+        - from: "8:00 am"
+          to: "11:00 pm"
+      tuesday:
+        - from: "8:00 am"
+          to: "12:00 pm"
+        - from: "3:00 pm"
+          to: "7:00 pm"
 - name: Set custom 'Maintenance Windows' for monday on single group and use specific timezone
   sva.sentinelone.sentinelone_upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
@@ -126,22 +126,22 @@ EXAMPLES = r'''
     site_name: "test"
     groups:
       - group1
-    inherit_max_concurrent_downloads: yes
-    inherit_maintenance_windows: no
+    inherit_max_concurrent_downloads: true
+    inherit_maintenance_windows: false
     maintenance_windows:
-        monday:
-            - from: "8:00 am"
-              to: "11:00 pm"
+      monday:
+        - from: "8:00 am"
+          to: "11:00 pm"
     timezone: "+02:00"
 - name: Set custom 'Maintenance Windows' for whole wednesday on site scope
   sva.sentinelone.sentinelone_upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
-    inherit_max_concurrent_downloads: yes
-    inherit_maintenance_windows: no
+    inherit_max_concurrent_downloads: true
+    inherit_maintenance_windows: false
     maintenance_windows:
-        wednesday:
+      wednesday:
 '''
 
 RETURN = r'''

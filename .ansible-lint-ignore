@@ -1,0 +1,7 @@
+# This file contains ignores rule violations for ansible-lint
+roles/install_agent/defaults/main.yml var-naming[no-role-prefix]
+roles/install_agent/tasks/Linux.yml command-instead-of-module
+roles/install_agent/tasks/Linux.yml no-changed-when
+roles/install_agent/vars/Linux.yml var-naming[no-role-prefix]
+roles/install_agent/vars/Windows.yml var-naming[no-role-prefix]
+roles/install_agent/vars/main.yml var-naming[no-role-prefix]
