@@ -67,6 +67,18 @@ argument_specs:
           - true
           - false
 
+      check_console_retries:
+        type: "int"
+        required: false
+        default: 3
+        description: "How many times the ansible role tries to find the agent in the management console after installation"
+
+      check_console_retry_delay:
+        type: "int"
+        required: false
+        default: 20
+        description: "The delay in s between two attempts to find the agent in the management console after installation"
+
       custom_version:
         type: "str"
         required: false
