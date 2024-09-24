@@ -2,7 +2,7 @@
 
 **This role was merged to this collection from the Ansible role [sentinelone_client](https://github.com/stdevel/ansible-sentinelone_client) by [@stdevel](https://github.com/stdevel).**
 
-For greater flexibility, it’s recommended to use the install_agent role if you have access to both the management console and an API access token. However, if you don’t have console access and need to install the agent packages from an alternate source, this role is designed for that scenario. Please note that the agent package must be accessible via a web server to use this role.
+For greater flexibility, it’s recommended to use the install_agent role if you have access to both the management console and an API access token. However, if you don't have console access and need to install the agent packages from an alternate source, this role is designed for that scenario. Please note that the agent package must be accessible via a web server to use this role.
 
 Installs and registers the SentinelOne Endpoint agent with provided os packages (linux only).
 
