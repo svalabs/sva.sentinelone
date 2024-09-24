@@ -1,5 +1,10 @@
 ---
 name: Sanity checks
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 on:
   # Run CI against all pushes (direct commits, also merged PRs), Pull Requests
   push:
@@ -11,37 +16,23 @@ on:
 env:
   NAMESPACE: sva
   COLLECTION_NAME: sentinelone
-  #ANSIBLE_TEST_PREFER_PODMAN: 1
+  # ANSIBLE_TEST_PREFER_PODMAN: 1
 
 jobs:
+  ansible-lint:
+    uses: ansible/ansible-content-actions/.github/workflows/ansible_lint.yaml@main
   sanity:
-    name: Sanity (Ⓐ${{ matrix.ansible }}+py${{ matrix.python }})
-    strategy:
-      matrix:
-        ansible:
-          - stable-2.14
-          - stable-2.15
-          - stable-2.16
-        python:
-          - '3.9'
-          - '3.10'
-          - '3.11'
-        exclude:
-          - ansible: stable-2.16
-            python: '3.9'
-        include:
-          - ansible: stable-2.16
-            python: '3.12'
-
+    uses: ansible/ansible-content-actions/.github/workflows/sanity.yaml@main
+  all_green:
+    if: ${{ always() }}
+    needs:
+      - ansible-lint
+      - sanity
     runs-on: ubuntu-latest
     steps:
-
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Perform sanity testing with ansible-test
-        uses: ansible-community/ansible-test-gh-action@release/v1
-        with:
-          ansible-core-version: ${{ matrix.ansible }}
-          target-python-version: ${{ matrix.python }}
-          testing-type: sanity
+      - run: >-
+          python -c "assert 'failure' not in
+          set([
+          '${{ needs.sanity.result }}',
+          '${{ needs.ansible-lint.result }}'
+          ])"
