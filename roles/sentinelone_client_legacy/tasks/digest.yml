@@ -1,0 +1,11 @@
+---
+- name: Gather RPM package version
+  ansible.builtin.command: "rpm -qp --queryformat '%{VERSION}' /tmp/{{ sentinelone_client_filename | basename }}"
+  register: sentinelone_client_rpm_version
+  changed_when: false
+
+- name: Set nodigest flag, if required
+  ansible.builtin.set_fact:
+    sentinelone_client_digest: '--nodigest'
+  when:
+    - "sentinelone_client_rpm_version.stdout is version('23.3.2.12', '<')"

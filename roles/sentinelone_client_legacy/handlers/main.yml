@@ -1,0 +1,9 @@
+---
+- name: Create initialization file
+  ansible.builtin.file:
+    path: /opt/sentinelone/.INITIALIZATION_COMPLETE
+    owner: root
+    group: root
+    mode: '0644'
+    state: touch
+  become: true
