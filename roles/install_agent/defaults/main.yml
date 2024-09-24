@@ -5,4 +5,6 @@ win_allow_reboot: true
 agent_version: 'latest'
 hide_sensitive: true
 lx_force_new_token: false
+check_console_retries: 3
+check_console_retry_delay: 20
 # custom_version, console_url, api_token, site, group
