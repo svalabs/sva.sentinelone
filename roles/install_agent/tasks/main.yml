@@ -137,5 +137,5 @@
   delegate_to: localhost
   no_log: "{{ hide_sensitive }}"
   until: ((registrationstatus.json.data | length) > 0) and (registrationstatus.status == 200)
-  retries: 3
-  delay: 20
+  retries: "{{ check_console_retries }}"
+  delay: "{{ check_console_retry_delay }}"

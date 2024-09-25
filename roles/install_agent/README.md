@@ -70,6 +70,8 @@ Role Variables
 | --- | --- | --- | --- |
 | `group` | | | An optional group which is part of the site. If set, the agent will be assigned to this group instead of the 'Default Group'. |
 | `agent_version` | latest | latest, latest_ea, custom | Controls which agent should be installed. latest installs the latest general availability version. If custom is set, `custom_version` is mandatory |
+| `check_console_retries` | 3 | | How many times the ansible role tries to find the agent in the management console after installation |
+| `check_console_retry_delay` | 20 | | The delay in s between two attempts to find the agent in the management console |
 | `custom_version` | | | Install a specific version of the SentinelOne agent. Must be used in combination with `agent_version` set to 'custom' |
 | `hide_sensitive` | true | true, false | Hides sensitive information like API keys in module output. Only set to false for debugging purposes |
 | `lx_force_new_token` | false | true, false | Linux only: Set the management token on the linux agent even if it is already registered. |
