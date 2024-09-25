@@ -24,7 +24,7 @@
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Index of all Modules" href="../../index_module.html" />
+    <link rel="next" title="sva.sentinelone.install_agent role – Entrypoint for install_agent role" href="install_agent_role.html" />
     <link rel="prev" title="sva.sentinelone.sentinelone_sites module – Manage SentinelOne Sites" href="sentinelone_sites_module.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
 
 
@@ -82,6 +82,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="index.html">Sva.Sentinelone</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="index.html#description">Description</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="index.html#plugin-index">Plugin Index</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#role-index">Role Index</a></li>
 </ul>
 </li>
 </ul>
@@ -92,6 +93,7 @@
 <p class="caption" role="heading"><span class="caption-text">Plugin indexes:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index_module.html">Index of all Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index_role.html">Index of all Roles</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference indexes:</span></p>
 <ul>
@@ -287,8 +289,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
-<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
-<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set custom &#39;Maintenance Windows&#39; for monday and tuesday on single group</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_upgrade_policies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
@@ -296,17 +298,17 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
 <span class="w">    </span><span class="nt">groups</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group1</span>
-<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
-<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no</span>
+<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">maintenance_windows</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">monday</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
-<span class="w">              </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
-<span class="w">        </span><span class="nt">tuesday</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
-<span class="w">              </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;12:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
-<span class="w">              </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;7:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
+<span class="w">      </span><span class="nt">monday</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
+<span class="w">          </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
+<span class="w">      </span><span class="nt">tuesday</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
+<span class="w">          </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;12:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
+<span class="w">          </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;7:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set custom &#39;Maintenance Windows&#39; for monday on single group and use specific timezone</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_upgrade_policies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
@@ -314,22 +316,22 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
 <span class="w">    </span><span class="nt">groups</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group1</span>
-<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
-<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no</span>
+<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">maintenance_windows</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">monday</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
-<span class="w">              </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
+<span class="w">      </span><span class="nt">monday</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
+<span class="w">          </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
 <span class="w">    </span><span class="nt">timezone</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;+02:00&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set custom &#39;Maintenance Windows&#39; for whole wednesday on site scope</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_upgrade_policies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
-<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
-<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no</span>
+<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">maintenance_windows</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">wednesday</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">wednesday</span><span class="p">:</span>
 </pre></div>
 </div>
 </section>
@@ -386,7 +388,7 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 
 <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="sentinelone_sites_module.html" class="btn btn-neutral float-left" title="sva.sentinelone.sentinelone_sites module – Manage SentinelOne Sites" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../../index_module.html" class="btn btn-neutral float-right" title="Index of all Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="install_agent_role.html" class="btn btn-neutral float-right" title="sva.sentinelone.install_agent role – Entrypoint for install_agent role" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
