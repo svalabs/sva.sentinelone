@@ -2,6 +2,9 @@
 
 # Copyright: (c) 2024, Marco Wester <marco.wester@sva.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
 from ansible.module_utils.six.moves.urllib.parse import urlencode
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase
 from ansible.module_utils.basic import AnsibleModule
@@ -22,7 +25,7 @@ class SentineloneAgentBase(SentineloneBase):
         self.os_type = module.params["os_type"]
         self.packet_format = module.params["packet_format"]
         self.architecture = module.params["architecture"]
-        self.download_dir = module.params["download_dir"]
+        self.download_dir = module.params.get("download_dir", None)
 
         # Do sanity checks
         self.check_sanity(self.os_type, self.packet_format, self.architecture, module)
@@ -50,7 +53,6 @@ class SentineloneAgentBase(SentineloneBase):
                 module.fail_json(msg="Error: 'packet_format' needs to be 'exe' or 'msi' if os_type is 'Windows'")
         elif packet_format not in ['deb', 'rpm']:
             module.fail_json(msg="Error: 'packet_format' needs to be 'deb' or 'rpm' if os_type is 'Linux'")
-
 
     def get_package_obj(self, agent_version: str, custom_version: str, os_type: str, packet_format: str,
                         architecture: str, module: AnsibleModule):

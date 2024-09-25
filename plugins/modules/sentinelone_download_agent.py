@@ -31,15 +31,6 @@ options:
       - "SentinelOne API auth token to authenticate at the management API"
     type: str
     required: true
-  state:
-    description:
-      - "Choose between download and print info of the agent packages"
-    type: str
-    default: present
-    required: false
-    choices:
-      - present
-      - info
   agent_version:
     description:
       - "Version of the agent to be downloaded."
@@ -85,6 +76,7 @@ options:
       - "Linux: If not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM agent will be downloaded"
     type: str
     required: false
+    default: 64_bit
     choices:
       - 32_bit
       - 64_bit
@@ -140,7 +132,7 @@ EXAMPLES = r'''
 RETURN = r'''
 ---
 original_message:
-    description: Get detailed infos about the downloaded package (json as string)
+    description: Get detailed infos about the downloaded package
     type: str
     returned: on success
     sample: >-
@@ -172,13 +164,13 @@ class SentineloneDownloadAgent(SentineloneAgentBase):
         # super Class
         super().__init__(module)
 
+
 def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
         console_url=dict(type='str', required=True),
         site=dict(type='str', required=False),
         token=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', required=False, default='present', choices=['present', 'info']),
         agent_version=dict(type='str', required=False, default='latest', choices=['latest', 'latest_ea', 'custom']),
         custom_version=dict(type='str', required=False),
         os_type=dict(type='str', required=True, choices=['Linux', 'Windows']),
@@ -201,7 +193,6 @@ def run_module():
     # Create DownloadAgent Object
     download_agent_obj = SentineloneDownloadAgent(module)
 
-    state = download_agent_obj.state
     agent_version = download_agent_obj.agent_version
     custom_version = download_agent_obj.custom_version
     os_type = download_agent_obj.os_type
@@ -209,46 +200,40 @@ def run_module():
     architecture = download_agent_obj.architecture
 
     # Get package object from API with given parameters
-    package_obj = download_agent_obj.get_package_obj(agent_version, custom_version, os_type, packet_format,
-                                                     architecture, module)
+    package_obj = download_agent_obj.get_package_obj(agent_version, custom_version, os_type, packet_format, architecture, module)
 
     changed = False
-    if state == 'present':
-        download_dir = download_agent_obj.download_dir
-        url = package_obj['link']
-        filename = package_obj['fileName']
-        sha1_expected = package_obj['sha1']
-        filepath = f"{download_dir.rstrip('/')}/{filename}"
+    download_dir = download_agent_obj.download_dir
+    url = package_obj['link']
+    filename = package_obj['fileName']
+    sha1_expected = package_obj['sha1']
+    filepath = f"{download_dir.rstrip('/')}/{filename}"
 
-        if path.exists(filepath):
-            basic_message = f"File {filename} already exists in {download_dir} - nothing to do."
-        else:
-            # Ensure download_dir exists and is a directory
-            dest_is_dir = path.isdir(download_dir)
-            if not dest_is_dir:
-                if path.exists(download_dir):
-                    module.fail_json(msg=f"{download_dir} is a file but should be a directory.")
-                else:
-                    makedirs(download_dir)
-
-            result = download_agent_obj.api_call(module, url, parse_response=False)
-
-            with open(filepath, 'wb') as file:
-                file.write(result.read())
-
-            # Check SHA1 checksum
-            sha1_file = module.sha1(filepath)
-            if sha1_file != sha1_expected:
-                remove(filepath)
-                module.fail_json(msg="Download failed. SHA1 checksum mismatch. Deleted broken file.")
-
-            changed = True
-            basic_message = f"Downloaded file {filename} to {download_dir}"
-        original_message = {'download_dir': download_dir, 'filename': filename, 'full_path': filepath}
+    if path.exists(filepath):
+        basic_message = f"File {filename} already exists in {download_dir} - nothing to do."
     else:
-        # If state=info
-        original_message = package_obj
-        basic_message = f"Agent found: {package_obj['fileName']}"
+        # Ensure download_dir exists and is a directory
+        dest_is_dir = path.isdir(download_dir)
+        if not dest_is_dir:
+            if path.exists(download_dir):
+                module.fail_json(msg=f"{download_dir} is a file but should be a directory.")
+            else:
+                makedirs(download_dir)
+
+        result = download_agent_obj.api_call(module, url, parse_response=False)
+
+        with open(filepath, 'wb') as file:
+            file.write(result.read())
+
+        # Check SHA1 checksum
+        sha1_file = module.sha1(filepath)
+        if sha1_file != sha1_expected:
+            remove(filepath)
+            module.fail_json(msg="Download failed. SHA1 checksum mismatch. Deleted broken file.")
+
+        changed = True
+        basic_message = f"Downloaded file {filename} to {download_dir}"
+    original_message = {'download_dir': download_dir, 'filename': filename, 'full_path': filepath}
 
     result = dict(
         changed=changed,
