@@ -18,7 +18,7 @@ argument_specs:
           - "Windows only: Controls the Windows agent package format."
           - "B(false:) Downloads .msi installer file"
           - "B(true:) Downloads .exe installer file"
-        options:
+        choices:
           - true
           - false
 
@@ -29,7 +29,7 @@ argument_specs:
         description:
           - "Windows only: Endpoint needs to be rebooted to SentinelOne work properly."
           - "Set to B(false) to disable automatic reboot"
-        options:
+        choices:
           - true
           - false
 
@@ -54,7 +54,7 @@ argument_specs:
         description:
           - "Hide sensitive information like API keys in module output."
           - "Only change to false for debugging purposes."
-        options:
+        choices:
           - true
           - false
 
@@ -63,7 +63,7 @@ argument_specs:
         required: false
         default: false
         description: "Linux only: Set the management token on the linux agent even if it is already registered."
-        options:
+        choices:
           - true
           - false
 

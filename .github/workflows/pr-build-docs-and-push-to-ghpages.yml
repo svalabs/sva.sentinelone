@@ -35,7 +35,8 @@ jobs:
       init-lenient: true
       init-fail-on-error: false
       collection-name: sva.sentinelone
-      render-file-line: '> * `$<status>` [$<path_tail>](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr/${{ github.event.number }}/$<path_tail>)'
+      render-file-line: '> * `$<status>` [$<path_tail>](https://${{ github.repository_owner }}.github.io/$
+        {{ github.event.repository.name }}/pr/${{ github.event.number }}/$<path_tail>)'
 
   publish-docs-gh-pages:
     # use to prevent running on forks
