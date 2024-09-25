@@ -119,7 +119,7 @@ message:
     description: Get basic infos about the agent package
     type: str
     returned: on success
-    sample: Agent found: SentinelAgent_linux_x86_64_v24_2_2_20.rpm
+    sample: "Agent found: SentinelAgent_linux_x86_64_v24_2_2_20.rpm"
 '''
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
