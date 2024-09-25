@@ -31,15 +31,6 @@ options:
       - "SentinelOne API auth token to authenticate at the management API"
     type: str
     required: true
-  state:
-    description:
-      - "Choose between download and print info of the agent packages"
-    type: str
-    default: present
-    required: false
-    choices:
-      - present
-      - info
   agent_version:
     description:
       - "Version of the agent to be downloaded."
@@ -85,6 +76,7 @@ options:
       - "Linux: If not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM agent will be downloaded"
     type: str
     required: false
+    default: 64_bit
     choices:
       - 32_bit
       - 64_bit
@@ -135,21 +127,12 @@ EXAMPLES = r'''
     architecture: "64_bit"
     agent_version: "custom"
     custom_version: "23.2.3.358"
-- name: Get info about specified package
-  sva.sentinelone.sentinelone_download_agent:
-    console_url: "https://XXXXX.sentinelone.net"
-    token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    state: "info"
-    os_type: "Windows"
-    packet_format: "msi"
-    architecture: "64_bit"
-    agent_version: "latest"
 '''
 
 RETURN = r'''
 ---
 original_message:
-    description: Get detailed infos about the downloaded package (json as string)
+    description: Get detailed infos about the downloaded package
     type: str
     returned: on success
     sample: >-
@@ -165,12 +148,11 @@ message:
 from os import path, makedirs, remove
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, \
-    lib_imp_errors
-from ansible.module_utils.six.moves.urllib.parse import urlencode
+from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_agent_base import SentineloneAgentBase
+from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import lib_imp_errors
 
 
-class SentineloneDownloadAgent(SentineloneBase):
+class SentineloneDownloadAgent(SentineloneAgentBase):
     def __init__(self, module: AnsibleModule):
         """
         Initialization of the DownloadAgent object
@@ -179,106 +161,8 @@ class SentineloneDownloadAgent(SentineloneBase):
         :type module: AnsibleModule
         """
 
-        module.params['site_name'] = module.params['site']
-
-        # self.token, self.console_url, self.site_name, self.state, self.api_endpoint_*, self.group_names will be set in
         # super Class
         super().__init__(module)
-
-        # Set module specific parameters
-        self.agent_version = module.params["agent_version"]
-        self.custom_version = module.params["custom_version"]
-        self.os_type = module.params["os_type"]
-        self.packet_format = module.params["packet_format"]
-        self.architecture = module.params["architecture"]
-        self.download_dir = module.params["download_dir"]
-
-        # Do sanity checks
-        self.check_sanity(self.os_type, self.packet_format, self.architecture, module)
-
-    @staticmethod
-    def check_sanity(os_type: str, packet_format: str, architecture: str, module: AnsibleModule):
-        """
-        Check if the passed module arguments are contradicting each other
-
-        :param architecture: OS architecture
-        :type architecture: str
-        :param os_type: The specified OS type
-        :type os_type: str
-        :param packet_format: The speciefied packet format
-        :type packet_format: str
-        :param module: Ansible module for error handling
-        :type module: AnsibleModule
-        """
-
-        if architecture == "aarch64" and os_type != "Linux":
-            module.fail_json(msg="Error: architecture 'aarch64' needs os_type to be 'Linux'")
-
-        if os_type == 'Windows':
-            if packet_format not in ['exe', 'msi']:
-                module.fail_json(msg="Error: 'packet_format' needs to be 'exe' or 'msi' if os_type is 'Windows'")
-        elif packet_format not in ['deb', 'rpm']:
-            module.fail_json(msg="Error: 'packet_format' needs to be 'deb' or 'rpm' if os_type is 'Linux'")
-
-    def get_package_obj(self, agent_version: str, custom_version: str, os_type: str, packet_format: str,
-                        architecture: str, module: AnsibleModule):
-        """
-        Queries the API to get the info about the agent package which maches the parameters
-
-        :param agent_version: which version to search for
-        :type agent_version: str
-        :param custom_version: custom agent version if specified
-        :type custom_version: str
-        :param os_type: For which OS the package should fit
-        :type os_type: str
-        :param packet_format: the packet format
-        :type packet_format: str
-        :param architecture: The OS architecture
-        :type architecture: str
-        :param module: Ansible module for error handling
-        :type module: AnsibleModule
-        :return: Returns the found agent object
-        :rtype: dict
-        """
-
-        # Build query parameters dependend on the Modules input
-        # Default parameters which are set always
-        query_params = {
-            'platformTypes': os_type.lower(),
-            'sortOrder': 'desc',
-            'sortBy': 'version',
-            'fileExtension': f".{packet_format}"
-        }
-
-        if self.site_id is not None:
-            query_params['siteIds'] = str(self.site_id)
-
-        if agent_version == 'custom':
-            query_params['version'] = custom_version
-        elif agent_version == 'latest':
-            query_params['status'] = 'ga'
-
-        if os_type == 'Linux':
-            # Use query parameter to do a free text search matching the 'fileName' field beacause S1 API does not
-            # provide the information elementary. 'osArches' parameter applies only for windows
-            if architecture == 'aarch64':
-                query_params['query'] = 'SentinelAgent-aarch64'
-            else:
-                query_params['query'] = 'SentinelAgent_linux'
-        else:
-            query_params['packageType'] = 'AgentAndRanger'
-            # osArches is only supported if you query windows packaes
-            query_params['osArches'] = architecture.replace('_', ' ')
-
-        # translate dictionary to URI argurments and build full query
-        query_params_encoded = urlencode(query_params)
-        api_query_agent_package = f"{self.api_endpoint_update_agent_packages}?{query_params_encoded}"
-
-        response = self.api_call(module, api_query_agent_package)
-        if response["pagination"]["totalItems"] > 0:
-            return response["data"][0]
-
-        module.fail_json(msg="Error: No agent package found in management console. Please check the given parameters.")
 
 
 def run_module():
@@ -287,12 +171,11 @@ def run_module():
         console_url=dict(type='str', required=True),
         site=dict(type='str', required=False),
         token=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', required=False, default='present', choices=['present', 'info']),
         agent_version=dict(type='str', required=False, default='latest', choices=['latest', 'latest_ea', 'custom']),
         custom_version=dict(type='str', required=False),
         os_type=dict(type='str', required=True, choices=['Linux', 'Windows']),
         packet_format=dict(type='str', required=True, choices=['rpm', 'deb', 'msi', 'exe']),
-        architecture=dict(type='str', required=False, choices=['32_bit', '64_bit', 'aarch64']),
+        architecture=dict(type='str', required=False, choices=['32_bit', '64_bit', 'aarch64'], default="64_bit"),
         download_dir=dict(type='str', required=False, default='./')
     )
 
@@ -310,7 +193,6 @@ def run_module():
     # Create DownloadAgent Object
     download_agent_obj = SentineloneDownloadAgent(module)
 
-    state = download_agent_obj.state
     agent_version = download_agent_obj.agent_version
     custom_version = download_agent_obj.custom_version
     os_type = download_agent_obj.os_type
@@ -318,46 +200,40 @@ def run_module():
     architecture = download_agent_obj.architecture
 
     # Get package object from API with given parameters
-    package_obj = download_agent_obj.get_package_obj(agent_version, custom_version, os_type, packet_format,
-                                                     architecture, module)
+    package_obj = download_agent_obj.get_package_obj(agent_version, custom_version, os_type, packet_format, architecture, module)
 
     changed = False
-    if state == 'present':
-        download_dir = download_agent_obj.download_dir
-        url = package_obj['link']
-        filename = package_obj['fileName']
-        sha1_expected = package_obj['sha1']
-        filepath = f"{download_dir.rstrip('/')}/{filename}"
+    download_dir = download_agent_obj.download_dir
+    url = package_obj['link']
+    filename = package_obj['fileName']
+    sha1_expected = package_obj['sha1']
+    filepath = f"{download_dir.rstrip('/')}/{filename}"
 
-        if path.exists(filepath):
-            basic_message = f"File {filename} already exists in {download_dir} - nothing to do."
-        else:
-            # Ensure download_dir exists and is a directory
-            dest_is_dir = path.isdir(download_dir)
-            if not dest_is_dir:
-                if path.exists(download_dir):
-                    module.fail_json(msg=f"{download_dir} is a file but should be a directory.")
-                else:
-                    makedirs(download_dir)
-
-            result = download_agent_obj.api_call(module, url, parse_response=False)
-
-            with open(filepath, 'wb') as file:
-                file.write(result.read())
-
-            # Check SHA1 checksum
-            sha1_file = module.sha1(filepath)
-            if sha1_file != sha1_expected:
-                remove(filepath)
-                module.fail_json(msg="Download failed. SHA1 checksum mismatch. Deleted broken file.")
-
-            changed = True
-            basic_message = f"Downloaded file {filename} to {download_dir}"
-        original_message = {'download_dir': download_dir, 'filename': filename, 'full_path': filepath}
+    if path.exists(filepath):
+        basic_message = f"File {filename} already exists in {download_dir} - nothing to do."
     else:
-        # If state=info
-        original_message = package_obj
-        basic_message = f"Agent found: {package_obj['fileName']}"
+        # Ensure download_dir exists and is a directory
+        dest_is_dir = path.isdir(download_dir)
+        if not dest_is_dir:
+            if path.exists(download_dir):
+                module.fail_json(msg=f"{download_dir} is a file but should be a directory.")
+            else:
+                makedirs(download_dir)
+
+        result = download_agent_obj.api_call(module, url, parse_response=False)
+
+        with open(filepath, 'wb') as file:
+            file.write(result.read())
+
+        # Check SHA1 checksum
+        sha1_file = module.sha1(filepath)
+        if sha1_file != sha1_expected:
+            remove(filepath)
+            module.fail_json(msg="Download failed. SHA1 checksum mismatch. Deleted broken file.")
+
+        changed = True
+        basic_message = f"Downloaded file {filename} to {download_dir}"
+    original_message = {'download_dir': download_dir, 'filename': filename, 'full_path': filepath}
 
     result = dict(
         changed=changed,
