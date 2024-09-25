@@ -10,7 +10,7 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 ---
 module: sentinelone_agent_info
-short_description: "Get info about the sentinelone one agent package"
+short_description: "Get info about the SentinelOne agent package"
 version_added: "2.0.0"
 description:
   - "This module is able to get info about the sentinelone agent package you requested"
@@ -158,7 +158,7 @@ def run_module():
         required_if=[
             ('agent_version', 'custom', ('custom_version',))
         ],
-        supports_check_mode=False
+        supports_check_mode=True
     )
 
     if not lib_imp_errors['has_lib']:
