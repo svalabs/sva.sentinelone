@@ -1,0 +1,22 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+platforms:
+  - name: s1-ubuntu
+    box: generic/ubuntu2204
+  - name: s1-fedora
+    box: generic/fedora38
+  - name: s1-almalinux
+    box: almalinux/9
+  - name: s1-opensuse
+    box: opensuse/Tumbleweed.x86_64
+provisioner:
+  name: ansible
+verifier:
+  name: testinfra
+lint: |
+  yamllint .
+  ansible-lint
+  flake8

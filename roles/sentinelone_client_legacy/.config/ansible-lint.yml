@@ -1,0 +1,5 @@
+---
+skip_list:
+  - fqcn-builtins
+  - command-instead-of-module
+  - no-changed-when
