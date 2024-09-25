@@ -4,54 +4,54 @@ releases:
     changes:
       release_summary: This is the initial version of the ``sva.sentinelone`` collection
     fragments:
-    - v1.0.0.yml
+      - v1.0.0.yml
     modules:
-    - description: Manage SentinelOne Config Overrides
-      name: sentinelone_config_overrides
-      namespace: ''
-    - description: Manage SentinelOne Filters
-      name: sentinelone_filters
-      namespace: ''
-    - description: Manage SentinelOne Groups
-      name: sentinelone_groups
-      namespace: ''
-    - description: Manage SentinelOne Path Exclusions
-      name: sentinelone_path_exclusions
-      namespace: ''
-    - description: Manage SentinelOne Policies
-      name: sentinelone_policies
-      namespace: ''
-    - description: Manage SentinelOne Sites
-      name: sentinelone_sites
-      namespace: ''
-    - description: Manage SentinelOne Upgrade Policies
-      name: sentinelone_upgrade_policies
-      namespace: ''
+      - description: Manage SentinelOne Config Overrides
+        name: sentinelone_config_overrides
+        namespace: ''
+      - description: Manage SentinelOne Filters
+        name: sentinelone_filters
+        namespace: ''
+      - description: Manage SentinelOne Groups
+        name: sentinelone_groups
+        namespace: ''
+      - description: Manage SentinelOne Path Exclusions
+        name: sentinelone_path_exclusions
+        namespace: ''
+      - description: Manage SentinelOne Policies
+        name: sentinelone_policies
+        namespace: ''
+      - description: Manage SentinelOne Sites
+        name: sentinelone_sites
+        namespace: ''
+      - description: Manage SentinelOne Upgrade Policies
+        name: sentinelone_upgrade_policies
+        namespace: ''
     release_date: '2022-08-16'
   1.0.1:
     changes:
       bugfixes:
-      - 'sentinelone_policies module: When a group policy inherited from the site
-        scope was updated with a custom setting, all other settings were reset to
-        the default values. Now the inherited settings are updated by the settings
-        passed to the module and the other inherited settings are retained.'
+        - 'sentinelone_policies module: When a group policy inherited from the site
+          scope was updated with a custom setting, all other settings were reset to
+          the default values. Now the inherited settings are updated by the settings
+          passed to the module and the other inherited settings are retained.'
       release_summary: This is a bugfix release
     fragments:
-    - v1.0.1.yaml
+      - v1.0.1.yaml
     release_date: '2023-01-30'
   1.0.2:
     changes:
       release_summary: Added detailed error message to module output if an API call
         fails
     fragments:
-    - v1.0.2.yml
+      - v1.0.2.yml
     release_date: '2023-03-08'
   1.0.3:
     changes:
       release_summary: Increased request timeout and implemented error handling for
         requests that timed out.
     fragments:
-    - v1.0.3.yml
+      - v1.0.3.yml
     release_date: '2023-03-13'
   1.1.0:
     changes:
@@ -64,26 +64,26 @@ releases:
 
         '
     fragments:
-    - v1.1.0.yml
+      - v1.1.0.yml
     modules:
-    - description: Download SentinelOne agent from Management Console
-      name: sentinelone_download_agent
-      namespace: ''
+      - description: Download SentinelOne agent from Management Console
+        name: sentinelone_download_agent
+        namespace: ''
     objects:
       role:
-      - description: A role to download and install SentinelAgent on Windows and Linux
-          hosts
-        name: install_agent
-        namespace: null
+        - description: A role to download and install SentinelAgent on Windows and Linux
+            hosts
+          name: install_agent
+          namespace: null
     release_date: '2024-03-14'
   1.1.1:
     changes:
       bugfixes:
-      - 'install_agent role: Added ''become: true'' to necessary linux tasks. It
-        is no longer necessary to use ''become: true'' on playbook level. Fixes https://github.com/svalabs/sva.sentinelone/issues/30'
-      - 'install_agent role: Added missing ''urlencode'' filter so special characters
-        like space can be used in site or group names. Fixes https://github.com/svalabs/sva.sentinelone/issues/28'
+        - 'install_agent role: Added ''become: true'' to necessary linux tasks. It
+          is no longer necessary to use ''become: true'' on playbook level. Fixes https://github.com/svalabs/sva.sentinelone/issues/30'
+        - 'install_agent role: Added missing ''urlencode'' filter so special characters
+          like space can be used in site or group names. Fixes https://github.com/svalabs/sva.sentinelone/issues/28'
       release_summary: Maintenance release
     fragments:
-    - v1.1.1.yml
+      - v1.1.1.yml
     release_date: '2024-05-27'

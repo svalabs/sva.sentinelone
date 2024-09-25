@@ -1,0 +1,51 @@
+---
+- name: Include distribution-specific variables
+  ansible.builtin.include_vars: "{{ ansible_os_family | regex_replace(' ', '_') | lower }}.yml"
+
+- name: Get dmesg output
+  ansible.builtin.command: dmesg
+  changed_when: false
+  become: true
+  register: dmesg_output
+
+- name: Assert that no function tracing issues occured
+  ansible.builtin.assert:
+    that:
+      - "'FUNCTION TRACING IS CORRUPTED' not in dmesg_output.stdout"
+    fail_msg: 'System instability detected, function tracing seems corrupted'
+
+- name: Download installation package
+  ansible.builtin.get_url:
+    url: "{{ sentinelone_client_filename }}"
+    dest: "/tmp/{{ sentinelone_client_filename | basename }}"
+    mode: "0644"
+  when: "'http' in sentinelone_client_filename"
+
+- name: Copy installation package
+  ansible.builtin.copy:
+    src: "{{ sentinelone_client_filename }}"
+    dest: "/tmp/{{ sentinelone_client_filename | basename }}"
+    mode: '0644'
+  when: "'http' not in sentinelone_client_filename"
+
+- name: Include installation tasks
+  ansible.builtin.include_tasks: "install_{{ ansible_os_family | regex_replace(' ', '_') | lower }}.yml"
+
+- name: Remove installation package
+  ansible.builtin.file:
+    path: "/tmp/{{ sentinelone_client_filename | basename }}"
+    state: absent
+
+- name: Set Group/Site token
+  ansible.builtin.command: "/opt/sentinelone/bin/sentinelctl management token set {{ sentinelone_client_token }}"
+  args:
+    creates: /opt/sentinelone/.INITIALIZATION_COMPLETE
+  become: true
+  notify: Create initialization file
+  when: sentinelone_client_token is defined and sentinelone_client_token != ''
+
+- name: Start agent
+  ansible.builtin.command: /opt/sentinelone/bin/sentinelctl control start
+  register: start_output
+  changed_when: "'agent is running' in start_output.stdout|lower"
+  become: true

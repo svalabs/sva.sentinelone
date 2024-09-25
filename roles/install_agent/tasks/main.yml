@@ -30,8 +30,8 @@
     agent_installed: "{{ true if ansible_facts.packages.sentinelagent is defined or ansible_facts.packages.SentinelAgent is defined
       or sentinelagent_service.exists | default(false) else false }}"
 
-- name: "Download agent {{ agent_version }} to localhost"
-  sentinelone_download_agent:
+- name: "Download agent to localhost. Version: {{ agent_version }}"
+  sva.sentinelone.sentinelone_download_agent:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site: "{{ site }}"

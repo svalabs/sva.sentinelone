@@ -22,6 +22,7 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 
 - **Roles:**
   - [install_agent](roles/install_agent/README.md)
+  - [sentinelone_client_legacy](roles/sentinelone_client_legacy/README.md)
 
 ## Requirements
 ### Ansible
