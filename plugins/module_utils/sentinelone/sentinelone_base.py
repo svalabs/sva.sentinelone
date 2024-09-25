@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2023, Marco Wester <marco.wester@sva.de>
+# Copyright: (c) 2024, Marco Wester <marco.wester@sva.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
@@ -57,7 +57,7 @@ class SentineloneBase:
         self.token = module.params["token"]
         self.console_url = module.params["console_url"]
         self.site_name = module.params["site_name"]
-        self.state = module.params["state"]
+        self.state = module.params.get("state", None)
         self.group_names = module.params.get("groups", [])
 
         # Get AccountID by name

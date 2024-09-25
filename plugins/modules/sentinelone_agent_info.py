@@ -9,11 +9,11 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: sentinelone_download_agent
-short_description: "Download SentinelOne agent from Management Console"
-version_added: "1.1.0"
+module: sentinelone_agent_info
+short_description: "Get info about the sentinelone one agent package"
+version_added: "2.0.0"
 description:
-  - "This module is able to download a SentinelOne agent from Management Console"
+  - "This module is able to get info about the sentinelone agent package you requested"
 options:
   console_url:
     description:
@@ -31,15 +31,6 @@ options:
       - "SentinelOne API auth token to authenticate at the management API"
     type: str
     required: true
-  state:
-    description:
-      - "Choose between download and print info of the agent packages"
-    type: str
-    default: present
-    required: false
-    choices:
-      - present
-      - info
   agent_version:
     description:
       - "Version of the agent to be downloaded."
@@ -85,56 +76,30 @@ options:
       - "Linux: If not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM agent will be downloaded"
     type: str
     required: false
+    default: 64_bit
     choices:
       - 32_bit
       - 64_bit
       - aarch64
-  download_dir:
-    description:
-      - "Set the path where the agent should be downloaded."
-      - "If not set the agent will be downloaded to the working directory."
-      - "If the directory does not exists it will be created"
-    type: str
-    required: false
-    default: ./
 author:
   - "Marco Wester (@mwester117) <marco.wester@sva.de>"
-  - "Erik Schindler (@mintalicious) <erik.schindler@sva.de>"
 requirements:
   - "deepdiff >= 5.6"
 notes:
-  - "Python module deepdiff. Tested with version >=5.6. Lower version may work too"
+  - "Python module deepdiff required. Tested with version >=5.6. Lower version may work too"
   - "Currently only supported in single-account management consoles"
 '''
 
 EXAMPLES = r'''
 ---
-- name: Download latest agent for linux
-  sva.sentinelone.sentinelone_download_agent:
-    console_url: "https://XXXXX.sentinelone.net"
-    token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    os_type: "Linux"
-    packet_format: "rpm"
-    download_path: "/tmp"
-    architecture: "64_bit"
-- name: Download latest agent for linux and include EA packages
-  sva.sentinelone.sentinelone_download_agent:
-    console_url: "https://XXXXX.sentinelone.net"
-    token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    os_type: "Linux"
-    packet_format: "rpm"
-    download_path: "/tmp"
-    architecture: "64_bit"
-    agent_version: "latest_ea"
-- name: Download specific agent version
-  sva.sentinelone.sentinelone_download_agent:
+- name: Get info about specified package
+  sva.sentinelone.sentinelone_agent_info:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Windows"
     packet_format: "msi"
     architecture: "64_bit"
-    agent_version: "custom"
-    custom_version: "23.2.3.358"
+    agent_version: "latest"
 '''
 
 RETURN = r'''
@@ -153,14 +118,12 @@ message:
     sample: Downloaded file SentinelInstaller_windows_64bit_v23_2_3_358.msi to ./
 '''
 
-from os import path, makedirs, remove
-
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_agent_base import SentineloneAgentBase
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import lib_imp_errors
 
 
-class SentineloneDownloadAgent(SentineloneAgentBase):
+class SentineloneAgentInfo(SentineloneAgentBase):
     def __init__(self, module: AnsibleModule):
         """
         Initialization of the DownloadAgent object
@@ -172,13 +135,13 @@ class SentineloneDownloadAgent(SentineloneAgentBase):
         # super Class
         super().__init__(module)
 
+
 def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
         console_url=dict(type='str', required=True),
         site=dict(type='str', required=False),
         token=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', required=False, default='present', choices=['present', 'info']),
         agent_version=dict(type='str', required=False, default='latest', choices=['latest', 'latest_ea', 'custom']),
         custom_version=dict(type='str', required=False),
         os_type=dict(type='str', required=True, choices=['Linux', 'Windows']),
@@ -199,56 +162,21 @@ def run_module():
         module.fail_json(msg=missing_required_lib("DeepDiff"), exception=lib_imp_errors['lib_imp_err'])
 
     # Create DownloadAgent Object
-    download_agent_obj = SentineloneDownloadAgent(module)
+    agent_info_obj = SentineloneAgentInfo(module)
 
-    state = download_agent_obj.state
-    agent_version = download_agent_obj.agent_version
-    custom_version = download_agent_obj.custom_version
-    os_type = download_agent_obj.os_type
-    packet_format = download_agent_obj.packet_format
-    architecture = download_agent_obj.architecture
+    agent_version = agent_info_obj.agent_version
+    custom_version = agent_info_obj.custom_version
+    os_type = agent_info_obj.os_type
+    packet_format = agent_info_obj.packet_format
+    architecture = agent_info_obj.architecture
 
     # Get package object from API with given parameters
-    package_obj = download_agent_obj.get_package_obj(agent_version, custom_version, os_type, packet_format,
+    package_obj = agent_info_obj.get_package_obj(agent_version, custom_version, os_type, packet_format,
                                                      architecture, module)
 
     changed = False
-    if state == 'present':
-        download_dir = download_agent_obj.download_dir
-        url = package_obj['link']
-        filename = package_obj['fileName']
-        sha1_expected = package_obj['sha1']
-        filepath = f"{download_dir.rstrip('/')}/{filename}"
-
-        if path.exists(filepath):
-            basic_message = f"File {filename} already exists in {download_dir} - nothing to do."
-        else:
-            # Ensure download_dir exists and is a directory
-            dest_is_dir = path.isdir(download_dir)
-            if not dest_is_dir:
-                if path.exists(download_dir):
-                    module.fail_json(msg=f"{download_dir} is a file but should be a directory.")
-                else:
-                    makedirs(download_dir)
-
-            result = download_agent_obj.api_call(module, url, parse_response=False)
-
-            with open(filepath, 'wb') as file:
-                file.write(result.read())
-
-            # Check SHA1 checksum
-            sha1_file = module.sha1(filepath)
-            if sha1_file != sha1_expected:
-                remove(filepath)
-                module.fail_json(msg="Download failed. SHA1 checksum mismatch. Deleted broken file.")
-
-            changed = True
-            basic_message = f"Downloaded file {filename} to {download_dir}"
-        original_message = {'download_dir': download_dir, 'filename': filename, 'full_path': filepath}
-    else:
-        # If state=info
-        original_message = package_obj
-        basic_message = f"Agent found: {package_obj['fileName']}"
+    original_message = package_obj
+    basic_message = f"Agent found: {package_obj['fileName']}"
 
     result = dict(
         changed=changed,
