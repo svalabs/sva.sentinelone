@@ -289,8 +289,8 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
-<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
-<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
+<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set custom &#39;Maintenance Windows&#39; for monday and tuesday on single group</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_upgrade_policies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
@@ -298,17 +298,17 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
 <span class="w">    </span><span class="nt">groups</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group1</span>
-<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
-<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no</span>
+<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">maintenance_windows</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">monday</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
-<span class="w">              </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
-<span class="w">        </span><span class="nt">tuesday</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
-<span class="w">              </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;12:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
-<span class="w">              </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;7:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
+<span class="w">      </span><span class="nt">monday</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
+<span class="w">          </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
+<span class="w">      </span><span class="nt">tuesday</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
+<span class="w">          </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;12:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
+<span class="w">          </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;7:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set custom &#39;Maintenance Windows&#39; for monday on single group and use specific timezone</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_upgrade_policies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
@@ -316,22 +316,22 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-sen
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
 <span class="w">    </span><span class="nt">groups</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group1</span>
-<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
-<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no</span>
+<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">maintenance_windows</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">monday</span><span class="p">:</span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
-<span class="w">              </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
+<span class="w">      </span><span class="nt">monday</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;8:00</span><span class="nv"> </span><span class="s">am&quot;</span>
+<span class="w">          </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;11:00</span><span class="nv"> </span><span class="s">pm&quot;</span>
 <span class="w">    </span><span class="nt">timezone</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;+02:00&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set custom &#39;Maintenance Windows&#39; for whole wednesday on site scope</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.sentinelone_upgrade_policies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
 <span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
 <span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
-<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yes</span>
-<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no</span>
+<span class="w">    </span><span class="nt">inherit_max_concurrent_downloads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">inherit_maintenance_windows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="nt">maintenance_windows</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">wednesday</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">wednesday</span><span class="p">:</span>
 </pre></div>
 </div>
 </section>
