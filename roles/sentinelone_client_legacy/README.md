@@ -23,7 +23,7 @@ No requirements.
 No dependencies.
 
 ### Role Documentation
-A **[HTML documentation](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_client_legacy.html)** in the usual Ansible documentation format can be found [here](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_client_legacy.html).
+A **[HTML documentation](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_client_legacy_role.html)** in the usual Ansible documentation format can be found [here](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_client_legacy_role.html).
 
 ## Example Playbook
 
