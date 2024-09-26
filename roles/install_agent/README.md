@@ -52,6 +52,9 @@ Required for .rpm based systems when agent version >= 23.3.2.12.
 
 **Windows:** _ansible_user_ has to be an administrator account. Therefore no privilege escalation is needed.
 
+### Role Documentation
+A **[HTML documentation](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/install_agent_role.html)** in the usual Ansible documentation format can be found [here](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/install_agent_role.html).
+
 Role Variables
 --------------
 

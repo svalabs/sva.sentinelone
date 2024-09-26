@@ -1,4 +1,4 @@
-# sentinelone_client_legacy (Alias: sentinelone_client)
+# sentinelone_client_legacy
 
 **This role was merged to this collection from the Ansible role [sentinelone_client](https://github.com/stdevel/ansible-sentinelone_client) by [@stdevel](https://github.com/stdevel).**
 
