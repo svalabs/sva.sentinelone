@@ -5,14 +5,5 @@ on:
       - published
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout release
-        uses: actions/checkout@v3
-      - name: Build and Deploy Collection
-        uses: artis3n/ansible_galaxy_collection@v2
-        with:
-          api_key: '${{ secrets.GALAXY_API_TOKEN }}'
+  release_galaxy:
+    uses: ansible/ansible-content-actions/.github/workflows/release_galaxy.yaml@main
