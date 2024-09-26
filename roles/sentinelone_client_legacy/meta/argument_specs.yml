@@ -21,7 +21,7 @@ argument_specs:
         type: "str"
         required: true
         description:
-          - "Package file to install"
+          - "Group/Site token"
 
       sentinelone_client_gpgkey:
         type: "str"
