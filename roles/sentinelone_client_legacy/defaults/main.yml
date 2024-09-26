@@ -1,3 +1,4 @@
 ---
 sentinelone_client_token: ''
 sentinelone_client_gpgkey: ''
+sentinelone_client_force_new_token: false
