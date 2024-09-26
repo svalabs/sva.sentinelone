@@ -11,6 +11,7 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 ## Included content
 
 - **Modules**:
+  - [sentinelone_agent_info](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_agent_info_module.html)
   - [sentinelone_config_overrides](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_config_overrides_module.html)
   - [sentinelone_download_agent](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_download_agent_module.html)
   - [sentinelone_filters](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_filters_module.html)
@@ -38,14 +39,15 @@ This collection needs the following Python modules:
 ## Tested with Ansible and the following Python versions
 
 Tested Ansible versions:
-- 2.14
 - 2.15
 - 2.16
+- 2.17
 
 Tested Python versions:
 - 3.9
 - 3.10
 - 3.11
+- 3.12
 
 ## Using this collection
 ### Installing the collection from Ansible Galaxy
@@ -78,7 +80,14 @@ See [Ansible Using collections](https://docs.ansible.com/ansible/devel/user_guid
 ### User documentation
 The module documentation can be found [here](https://svalabs.github.io/sva.sentinelone/branch/main/collections/index_module.html).
 
+The role documentation can be found [here](https://svalabs.github.io/sva.sentinelone/branch/main/collections/index_role.html).
+
 ## Changelog
+**v2.0.0**:
+- Added new sentinelone_agent_info module and [@stdevels](https://github.com/stdevel/ansible-sentinelone_client) sentinelone_client role as sentinelone_client_legacy.
+- install_agent role: Added configurable retries and delays in the step which checks if the agent appears in the management console.
+- **Breaking Changes**: The download_agent modules `state` parameter is no longer available. If you used `state: info` please use the new agent_info module instead. `state` parameter has been removed from download_agent module.
+
 **v1.1.1**: Bugfix release. Changed privilege escalation behaviour
 
 **v1.1.0**: Added new sentinelone_download_agent module and install_agent role

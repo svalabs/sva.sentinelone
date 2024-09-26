@@ -9,7 +9,7 @@ namespace: "sva"
 name: "sentinelone"
 
 # The version of the collection. Must be compatible with semantic versioning
-version: "1.1.1"
+version: "2.0.0"
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: "README.md"
@@ -34,9 +34,13 @@ license_file: "LICENSE"
 # A list of tags you want to associate with the collection for indexing/searching. A tag name has the same character
 # requirements as 'namespace' and 'name'
 tags:
+  - agent
   - application
+  - install_agent
   - security
   - sentinelone
+  - sentinelone_client
+  - sentinelone_client_legacy
   - sentinelone_config_overrides
   - sentinelone_filters
   - sentinelone_groups
@@ -44,7 +48,6 @@ tags:
   - sentinelone_policies
   - sentinelone_sites
   - sentinelone_upgrade_policies
-  - install_agent
 
 dependencies:
   ansible.windows: "*"

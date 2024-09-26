@@ -1,14 +1,29 @@
-objects: {}
+objects:
+  role:
+    install_agent:
+      description: Entrypoint for install_agent role
+      name: install_agent
+      version_added: null
+    sentinelone_client_legacy:
+      description: Entrypoint for sentinelone_client_legacy role
+      name: sentinelone_client_legacy
+      version_added: 2.0.0
 plugins:
   become: {}
   cache: {}
   callback: {}
   cliconf: {}
   connection: {}
+  filter: {}
   httpapi: {}
   inventory: {}
   lookup: {}
   module:
+    sentinelone_agent_info:
+      description: Get info about the SentinelOne agent package
+      name: sentinelone_agent_info
+      namespace: ''
+      version_added: 2.0.0
     sentinelone_config_overrides:
       description: Manage SentinelOne Config Overrides
       name: sentinelone_config_overrides
@@ -52,5 +67,6 @@ plugins:
   netconf: {}
   shell: {}
   strategy: {}
+  test: {}
   vars: {}
-version: 1.1.1
+version: 2.0.0

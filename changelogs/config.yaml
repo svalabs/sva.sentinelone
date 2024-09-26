@@ -30,3 +30,4 @@ sections:
 title: Sva.Sentinelone
 trivial_section_name: trivial
 use_fqcn: true
+changelog_nice_yaml: true

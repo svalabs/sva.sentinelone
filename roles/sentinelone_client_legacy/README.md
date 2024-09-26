@@ -1,4 +1,4 @@
-# sentinelone_client_legacy (Alias: sentinelone_client)
+# sentinelone_client_legacy
 
 **This role was merged to this collection from the Ansible role [sentinelone_client](https://github.com/stdevel/ansible-sentinelone_client) by [@stdevel](https://github.com/stdevel).**
 
@@ -21,6 +21,9 @@ No requirements.
 ## Dependencies
 
 No dependencies.
+
+### Role Documentation
+A **[HTML documentation](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_client_legacy.html)** in the usual Ansible documentation format can be found [here](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_client_legacy.html).
 
 ## Example Playbook
 
