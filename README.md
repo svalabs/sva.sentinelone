@@ -27,7 +27,7 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 
 ## Requirements
 ### Ansible
-- ansible >= 7 **or** ansible-core >= 2.14 (Lower versions may work but they have not been tested)
+- ansible >= 8 **or** ansible-core >= 2.15 (Lower versions may work but they have not been tested)
 
 ### Python
 - Python >= 3.9 (Ansible control node requirement)
