@@ -1,0 +1,30 @@
+---
+argument_specs:
+  # roles/sentinelone_client_legacy/tasks/main.yml entry point
+  main:
+    short_description: "Entrypoint for sentinelone_client_legacy role"
+    version_added: 2.0.0
+    description:
+      - "This is the main entrypoint for the C(sentinelone_client_legacy) role."
+      - "The entrypoint contains all os independent tasks and prepares the environment
+        for the os specific tasks."
+    author:
+      - Christian Stankovic
+    options:
+      sentinelone_client_filename:
+        type: "str"
+        required: true
+        description:
+          - "Package file to install"
+
+      sentinelone_client_token:
+        type: "str"
+        required: true
+        description:
+          - "Package file to install"
+
+      sentinelone_client_gpgkey:
+        type: "str"
+        required: true
+        description:
+          - "GPG signing key to import"
