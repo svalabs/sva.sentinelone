@@ -28,3 +28,10 @@ argument_specs:
         required: false
         description:
           - "GPG signing key to import"
+
+      sentinelone_client_force_new_token:
+        type: "bool"
+        required: false
+        default: false
+        description:
+          - "Set to true to force a new token"

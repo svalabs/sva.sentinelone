@@ -12,11 +12,12 @@ No requirements.
 
 ## Role Variables
 
-| Variable | Default | Description |
-| -------- | ------- | ----------- |
-| `sentinelone_client_filename` | *(empty)* | Package file to install |
-| `sentinelone_client_token` | *(empty)* | Group/Site token |
-| `sentinelone_client_gpgkey` | *(empty)* | GPG signing key to import |
+| Variable                             | Default   | Description                      |
+| ------------------------------------ | --------- | -------------------------------- |
+| `sentinelone_client_filename`        | *(empty)* | Package file to install          |
+| `sentinelone_client_token`           | *(empty)* | Group/Site token                 |
+| `sentinelone_client_gpgkey`          | *(empty)* | GPG signing key to import        |
+| `sentinelone_client_force_new_token` | `false`   | Set to true to force a new token |
 
 ## Dependencies
 
