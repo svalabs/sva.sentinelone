@@ -7,3 +7,7 @@ on:
 jobs:
   release_galaxy:
     uses: ansible/ansible-content-actions/.github/workflows/release_galaxy.yaml@main
+    with:
+      environment: release
+    secrets:
+      ah_token: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
