@@ -1,3 +1,4 @@
+---
 ancestor: null
 releases:
   1.0.0:
@@ -71,8 +72,8 @@ releases:
         namespace: ''
     objects:
       role:
-        - description: A role to download and install SentinelAgent on Windows and Linux
-            hosts
+        - description: A role to download and install SentinelAgent on Windows and
+            Linux hosts
           name: install_agent
           namespace: null
     release_date: '2024-03-14'
@@ -80,10 +81,41 @@ releases:
     changes:
       bugfixes:
         - 'install_agent role: Added ''become: true'' to necessary linux tasks. It
-          is no longer necessary to use ''become: true'' on playbook level. Fixes https://github.com/svalabs/sva.sentinelone/issues/30'
+          is no longer necessary to use ''become: true'' on playbook level. Fixes
+          https://github.com/svalabs/sva.sentinelone/issues/30'
         - 'install_agent role: Added missing ''urlencode'' filter so special characters
           like space can be used in site or group names. Fixes https://github.com/svalabs/sva.sentinelone/issues/28'
       release_summary: Maintenance release
     fragments:
       - v1.1.1.yml
     release_date: '2024-05-27'
+  2.0.0:
+    changes:
+      breaking_changes:
+        - 'The download_agent modules `state` parameter is no longer available. If
+          you used `state: info` please use the new agent_info module instead.'
+        - '`state` parameter has been removed from download_agent module.'
+      minor_changes:
+        - 'Pipelines: Switched ansible-content-actions when performing sanity checks,
+          linting and release to ansible galaxy'
+      release_summary: '- Added new agent_info module and merged sentinelone_client_legacy
+        from @stdevel.
+
+        - Added new `check_console_retries` and `check_console_retry_delay` in install_agent
+        role.
+
+        - Switched to ansible-content-actions in pipelines
+
+        '
+    fragments:
+      - v2.0.0.yml
+    modules:
+      - description: Get info about the SentinelOne agent package
+        name: sentinelone_agent_info
+        namespace: ''
+    objects:
+      role:
+        - description: Entrypoint for sentinelone_client_legacy role
+          name: sentinelone_client_legacy
+          namespace: null
+    release_date: '2024-09-26'

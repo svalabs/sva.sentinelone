@@ -4,6 +4,37 @@ Sva.Sentinelone Release Notes
 
 .. contents:: Topics
 
+v2.0.0
+======
+
+Release Summary
+---------------
+
+- Added new agent_info module and merged sentinelone_client_legacy from @stdevel.
+- Added new `check_console_retries` and `check_console_retry_delay` in install_agent role.
+- Switched to ansible-content-actions in pipelines
+
+Minor Changes
+-------------
+
+- Pipelines: Switched ansible-content-actions when performing sanity checks, linting and release to ansible galaxy
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- The download_agent modules `state` parameter is no longer available. If you used `state: info` please use the new agent_info module instead.
+- `state` parameter has been removed from download_agent module.
+
+New Modules
+-----------
+
+- sva.sentinelone.sentinelone_agent_info - Get info about the SentinelOne agent package
+
+New Roles
+---------
+
+- sva.sentinelone.sentinelone_client_legacy - Entrypoint for sentinelone_client_legacy role
+
 v1.1.1
 ======
 

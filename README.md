@@ -11,6 +11,7 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 ## Included content
 
 - **Modules**:
+  - [sentinelone_agent_info](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_agent_info_module.html)
   - [sentinelone_config_overrides](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_config_overrides_module.html)
   - [sentinelone_download_agent](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_download_agent_module.html)
   - [sentinelone_filters](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_filters_module.html)
