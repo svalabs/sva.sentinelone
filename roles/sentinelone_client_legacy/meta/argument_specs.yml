@@ -35,3 +35,17 @@ argument_specs:
         default: false
         description:
           - "Set to true to force a new token"
+
+      sentinelone_client_customer_id:
+        type: "str"
+        required: false
+        default: ''
+        description:
+          - "Set optional customer id"
+
+      entinelone_client_zypper_disable_gpg_check:
+        type: "bool"
+        required: false
+        default: false
+        description:
+          - "Disable GPG Check for zypper"

@@ -23,5 +23,6 @@
 - name: Install package
   community.general.zypper:
     name: "/tmp/{{ sentinelone_client_filename | basename }}"
+    disable_gpg_check: "{{ sentinelone_client_zypper_disable_gpg_check }}"
   become: true
   when: sentinelone_client_digest is not defined

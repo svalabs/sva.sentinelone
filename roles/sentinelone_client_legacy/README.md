@@ -12,12 +12,14 @@ No requirements.
 
 ## Role Variables
 
-| Variable                             | Default   | Description                      |
-| ------------------------------------ | --------- | -------------------------------- |
-| `sentinelone_client_filename`        | *(empty)* | Package file to install          |
-| `sentinelone_client_token`           | *(empty)* | Group/Site token                 |
-| `sentinelone_client_gpgkey`          | *(empty)* | GPG signing key to import        |
-| `sentinelone_client_force_new_token` | `false`   | Set to true to force a new token |
+| Variable                                          | Default   | Description                      |
+| ------------------------------------------------- | --------- | -------------------------------- |
+| `sentinelone_client_filename`                     | *(empty)* | Package file to install          |
+| `sentinelone_client_token`                        | *(empty)* | Group/Site token                 |
+| `sentinelone_client_gpgkey`                       | *(empty)* | GPG signing key to import        |
+| `sentinelone_client_force_new_token`              | `false`   | Set to true to force a new token |
+| `sentinelone_client_customer_id`                  | *(empty)* | Set optional customer id         |
+| `sentinelone_client_zypper_disable_gpg_check`     | `false`   | Disable GPG Check for zypper     |
 
 ## Dependencies
 
