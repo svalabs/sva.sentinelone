@@ -25,6 +25,6 @@ argument_specs:
 
       sentinelone_client_gpgkey:
         type: "str"
-        required: true
+        required: false
         description:
           - "GPG signing key to import"
