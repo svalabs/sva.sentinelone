@@ -2,3 +2,5 @@
 sentinelone_client_token: ''
 sentinelone_client_gpgkey: ''
 sentinelone_client_force_new_token: false
+sentinelone_client_customer_id: ''
+sentinelone_client_zypper_disable_gpg_check: 'false'
