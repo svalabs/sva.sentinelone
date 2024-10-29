@@ -43,6 +43,8 @@
   register: return_download_agent
   delegate_to: localhost
   throttle: 1
+  vars:
+    ansible_connection: local
   when: not agent_installed
 
 - name: "Block: Get registration token from API"
