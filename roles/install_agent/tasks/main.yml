@@ -43,6 +43,8 @@
   register: return_download_agent
   delegate_to: localhost
   throttle: 1
+  vars:
+    ansible_connection: local
   when: not agent_installed
 
 - name: "Block: Get registration token from API"
@@ -64,6 +66,8 @@
       until: ((siteobj.json.data.sites | length) > 0) and (siteobj.status == 200)
       retries: 3
       delay: 20
+      vars:
+        ansible_connection: local
 
     - name: "Extract siteid"
       ansible.builtin.set_fact:
@@ -85,6 +89,8 @@
       until: ((groupobj.json.data | length) > 0) and (groupobj.status == 200)
       retries: 3
       delay: 20
+      vars:
+        ansible_connection: local
       when: group is defined
 
     - name: "Extract groupid"
@@ -108,6 +114,8 @@
         status_code: 200
       register: reg_token_obj
       delegate_to: localhost
+      vars:
+        ansible_connection: local
       no_log: "{{ hide_sensitive }}"
       until: reg_token_obj.status == 200
       retries: 3
@@ -121,6 +129,8 @@
     path: "{{ return_download_agent.original_message.full_path }}"
     state: absent
   delegate_to: localhost
+  vars:
+    ansible_connection: local
   when: not agent_installed
 
 - name: "Fail if new client does not appear in management console"
@@ -138,4 +148,6 @@
   no_log: "{{ hide_sensitive }}"
   until: ((registrationstatus.json.data | length) > 0) and (registrationstatus.status == 200)
   retries: "{{ check_console_retries }}"
+  vars:
+    ansible_connection: local
   delay: "{{ check_console_retry_delay }}"
