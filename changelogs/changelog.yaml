@@ -119,3 +119,12 @@ releases:
           name: sentinelone_client_legacy
           namespace: null
     release_date: '2024-09-26'
+  2.0.1:
+    changes:
+      bugfixes:
+        - Fixed a bug where the install_agent role fails on local tasks if "ansible_connection"
+          var is set in playbook.
+      release_summary: Bugfix release
+    fragments:
+      - v2.0.1.yml
+    release_date: '2024-10-29'

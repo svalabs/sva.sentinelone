@@ -4,6 +4,19 @@ Sva.Sentinelone Release Notes
 
 .. contents:: Topics
 
+v2.0.1
+======
+
+Release Summary
+---------------
+
+Bugfix release
+
+Bugfixes
+--------
+
+- Fixed a bug where the install_agent role fails on local tasks if "ansible_connection" var is set in playbook.
+
 v2.0.0
 ======
 
