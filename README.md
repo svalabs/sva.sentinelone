@@ -83,7 +83,9 @@ The module documentation can be found [here](https://svalabs.github.io/sva.senti
 The role documentation can be found [here](https://svalabs.github.io/sva.sentinelone/branch/main/collections/index_role.html).
 
 ## Changelog
-**v2.0.1**: Bugfix release. Fixed idempotency bug in install_agent role
+**v2.0.2**: Bugfix release. Fixed idempotency bug in install_agent role and reversed changes from v2.0.2
+
+**v2.0.1**: Bugfix release. Fixed a bug where the install_agent role fails on local tasks if "ansible_connection" var is set in playbook.
 
 **v2.0.0**:
 - Added new sentinelone_agent_info module and [@stdevels](https://github.com/stdevel/ansible-sentinelone_client) sentinelone_client role as sentinelone_client_legacy.
