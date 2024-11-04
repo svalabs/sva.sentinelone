@@ -148,6 +148,6 @@
   no_log: "{{ hide_sensitive }}"
   until: ((registrationstatus.json.data | length) > 0) and (registrationstatus.status == 200)
   retries: "{{ check_console_retries }}"
+  delay: "{{ check_console_retry_delay }}"
   vars:
     ansible_connection: local
-  delay: "{{ check_console_retry_delay }}"

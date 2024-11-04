@@ -32,10 +32,10 @@
       ansible.builtin.pause:
         seconds: 15
 
-- name: "Windows: Remove agent package from target machine"
-  ansible.windows.win_file:
-    path: "{{ remote_pkg_path }}"
-    state: absent
+    - name: "Windows: Remove agent package from target machine"
+      ansible.windows.win_file:
+        path: "{{ remote_pkg_path }}"
+        state: absent
 
 - name: "Windows: Get service information"
   ansible.windows.win_service_info:
