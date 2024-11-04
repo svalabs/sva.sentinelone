@@ -128,3 +128,12 @@ releases:
     fragments:
       - v2.0.1.yml
     release_date: '2024-10-29'
+  2.0.2:
+    changes:
+      bugfixes:
+        - 'install_agent role: Fixed a bug where idepotency in the ''Windows: Remove
+          agent package from target machine'' task was broken.'
+      release_summary: This is a bugfix release
+    fragments:
+      - v2.0.2.yml
+    release_date: '2024-11-04'
