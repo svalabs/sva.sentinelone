@@ -4,6 +4,20 @@ Sva.Sentinelone Release Notes
 
 .. contents:: Topics
 
+v2.0.2
+======
+
+Release Summary
+---------------
+
+This is a bugfix release
+
+Bugfixes
+--------
+
+- Reversed changes made in v2.0.1.
+- install_agent role: Fixed a bug where idepotency in the 'Windows: Remove agent package from target machine' task was broken.
+
 v2.0.1
 ======
 
