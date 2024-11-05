@@ -16,7 +16,7 @@ Bugfixes
 --------
 
 - Reversed changes made in v2.0.1.
-- install_agent role: Fixed a bug where idepotency in the 'Windows: Remove agent package from target machine' task was broken.
+- install_agent role: Fixed a bug where idempotency in the 'Windows: Remove agent package from target machine' task was broken.
 
 v2.0.1
 ======
