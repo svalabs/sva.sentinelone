@@ -83,6 +83,8 @@ The module documentation can be found [here](https://svalabs.github.io/sva.senti
 The role documentation can be found [here](https://svalabs.github.io/sva.sentinelone/branch/main/collections/index_role.html).
 
 ## Changelog
+**v2.0.3**: Bugfix release. Fixed OpenSUSE compatibility
+
 **v2.0.2**: Bugfix release. Fixed idempotency bug in install_agent role and reverted changes from v2.0.1
 
 **v2.0.1**: Bugfix release. Fixed a bug where the install_agent role fails on local tasks if "ansible_connection" var is set in playbook.
