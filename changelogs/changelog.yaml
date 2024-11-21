@@ -144,5 +144,5 @@ releases:
         - 'install_agent role: Fixed a bug which broke OpenSUSE compatibility'
       release_summary: This is a bgfix release
     fragments:
-      - v2.0.4.yml
+      - v2.0.3.yml
     release_date: '2024-11-21'
