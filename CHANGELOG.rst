@@ -4,6 +4,19 @@ Sva.Sentinelone Release Notes
 
 .. contents:: Topics
 
+v2.0.3
+======
+
+Release Summary
+---------------
+
+This is a bgfix release
+
+Bugfixes
+--------
+
+- install_agent role: Fixed a bug which broke OpenSUSE compatibility
+
 v2.0.2
 ======
 
