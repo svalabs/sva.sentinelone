@@ -1,6 +1,6 @@
 ---
 # vars file for install_agent
-pkg_format: "{% if ansible_facts.distribution in ['RedHat', 'CentOS', 'Fedora', 'SLES', 'Suse'] %}rpm{%
+pkg_format: "{% if ansible_facts.distribution in ['RedHat', 'CentOS', 'Fedora', 'SLES', 'Suse', 'openSUSE Tumbleweed', 'openSUSE Tumbleweed'] %}rpm{%
   elif ansible_facts.distribution in ['Debian', 'Ubuntu'] %}deb{%
   elif ansible_facts.os_family == 'Windows' and not win_use_exe %}msi{%
   elif ansible_facts.os_family == 'Windows' and win_use_exe %}exe{%
