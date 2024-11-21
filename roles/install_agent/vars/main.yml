@@ -1,7 +1,7 @@
 ---
 # vars file for install_agent
-pkg_format: "{% if ansible_facts.distribution in ['RedHat', 'CentOS', 'Fedora', 'SLES', 'Suse'] %}rpm{%
-  elif ansible_facts.distribution in ['Debian', 'Ubuntu'] %}deb{%
+pkg_format: "{% if ansible_facts.pkg_mgr in ['yum', 'dnf', 'zypper'] %}rpm{%
+  elif ansible_facts.pkg_mgr  == 'apt' %}deb{%
   elif ansible_facts.os_family == 'Windows' and not win_use_exe %}msi{%
   elif ansible_facts.os_family == 'Windows' and win_use_exe %}exe{%
   else %}unknown{% endif %}"
