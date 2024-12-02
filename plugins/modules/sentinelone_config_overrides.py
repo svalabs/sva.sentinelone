@@ -6,6 +6,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
+
 DOCUMENTATION = '''
 ---
 module: sentinelone_config_overrides
@@ -275,6 +276,13 @@ class SentineloneConfigOverrides(SentineloneBase):
         else:
             query_options.append("versionOption=SPECIFIC")
             query_options.append(f"agentVersions={self.agent_version}")
+
+        if self.config_override_name is None or self.config_override_name == "":
+            query_options.append(f"name__like={self.config_override_name}")
+        else:
+            # Encode the parameters
+            encoded_params_name_like = quote_plus(self.config_override_name)
+            query_options.append(f"name__like={encoded_params_name_like}")
 
         query_uri = '&'.join(query_options)
         api_url = f"{self.api_endpoint_config_overrides}?{query_uri}"
