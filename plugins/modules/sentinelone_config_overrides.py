@@ -6,6 +6,7 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
+
 DOCUMENTATION = '''
 ---
 module: sentinelone_config_overrides
@@ -172,7 +173,7 @@ from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, lib_imp_errors
 from ansible.module_utils.six.moves.urllib.parse import quote_plus
 import copy
-
+#import urllib.parse
 
 class SentineloneConfigOverrides(SentineloneBase):
     def __init__(self, module: AnsibleModule):
@@ -275,7 +276,9 @@ class SentineloneConfigOverrides(SentineloneBase):
         else:
             query_options.append("versionOption=SPECIFIC")
             query_options.append(f"agentVersions={self.agent_version}")
-
+        # Encode the parameters
+        encoded_params_name_like = quote_plus(self.config_override_name)
+        query_options.append(f"name__like={encoded_params_name_like}")
         query_uri = '&'.join(query_options)
         api_url = f"{self.api_endpoint_config_overrides}?{query_uri}"
         response = self.api_call(module, api_url, error_msg=error_msg)
