@@ -173,7 +173,6 @@ from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentinelone_base import SentineloneBase, lib_imp_errors
 from ansible.module_utils.six.moves.urllib.parse import quote_plus
 import copy
-#import urllib.parse
 
 class SentineloneConfigOverrides(SentineloneBase):
     def __init__(self, module: AnsibleModule):
