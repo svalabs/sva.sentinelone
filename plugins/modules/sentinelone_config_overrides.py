@@ -276,6 +276,9 @@ class SentineloneConfigOverrides(SentineloneBase):
             query_options.append("versionOption=SPECIFIC")
             query_options.append(f"agentVersions={self.agent_version}")
 
+        # Encode the parameters
+        encoded_params_name_like = quote_plus.quote(self.config_override_name)
+        query_options.append(f"name__like={encoded_params_name_like}")
         query_uri = '&'.join(query_options)
         api_url = f"{self.api_endpoint_config_overrides}?{query_uri}"
         response = self.api_call(module, api_url, error_msg=error_msg)
