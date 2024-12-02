@@ -174,6 +174,7 @@ from ansible_collections.sva.sentinelone.plugins.module_utils.sentinelone.sentin
 from ansible.module_utils.six.moves.urllib.parse import quote_plus
 import copy
 
+
 class SentineloneConfigOverrides(SentineloneBase):
     def __init__(self, module: AnsibleModule):
         """
