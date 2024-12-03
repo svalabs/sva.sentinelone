@@ -4,6 +4,19 @@ Sva.Sentinelone Release Notes
 
 .. contents:: Topics
 
+v2.0.4
+======
+
+Release Summary
+---------------
+
+This is a bugfix release
+
+Bugfixes
+--------
+
+- added parameter name__like to query and url encoding if not Null by function "get_current_config_override" to be sure that become only one object from API Response
+
 v2.0.3
 ======
 
