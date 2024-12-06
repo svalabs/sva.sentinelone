@@ -3,6 +3,18 @@ Sva.Sentinelone Release Notes
 =============================
 
 .. contents:: Topics
+v2.0.5
+======
+
+Release Summary
+---------------
+
+This is a bugfix release
+
+Bugfixes
+--------
+
+- added default values for the pkg_format var to fix issues with the installation on Windows systems
 
 v2.0.4
 ======
