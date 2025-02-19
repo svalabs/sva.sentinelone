@@ -371,7 +371,10 @@ class SentineloneExclusions(SentineloneBase):
         """
 
         api_url = self.api_endpoint_exclusions + (f"?siteIds={quote_plus(self.site_id)}&"
-                                                  f"value={quote_plus(exclusion_path)}&type=path")
+                                                  f"value={quote_plus(exclusion_path)}&"
+                                                  f"osTypes={quote_plus(self.os_type)}&"
+                                                  f"type=path"
+                                                  )
         if current_group_ids:
             # Scope is group level
             api_url += f"&groupIds={quote_plus(','.join(current_group_ids))}"
@@ -401,6 +404,26 @@ class SentineloneExclusions(SentineloneBase):
                 module.fail_json(msg="Exclusions should have been deleted via API but API result was empty")
         else:
             response = "Nothing to delete"
+
+        return response
+
+    def update_exclusions(self, module: AnsibleModule, exclusion_id):
+        """
+        Update exclusions
+
+        :param module: Ansible module for error handling
+        :type module: AnsibleModule
+        :return: API response of the create query
+        :rtype: dict
+        """
+        api_url = self.api_endpoint_exclusions
+        update_body = self.get_desired_state_exclusion_body()
+        update_body['data']['id'] = exclusion_id
+        error_msg = "Failed to update exclusions."
+        response = self.api_call(module, api_url, "PUT", body=update_body, error_msg=error_msg)
+
+        if len(response['data']) == 0:
+            module.fail_json(msg="Exclusions could not be updated - API result was empty")
 
         return response
 
@@ -504,7 +527,7 @@ def run_module():
                         # Get name for group with group_id
                         group_name = list(filter(lambda filterobj: filterobj[0] == group_id,
                                                  current_group_ids_names))[0][1]
-                        diffs.append({'changes': dict(diff), 'groupId': group_id})
+                        diffs.append({'changes': dict(diff), 'groupId': group_id, "exclusion_id": current_exclusion['id']})
                         basic_message.append(f"Exclusion exists in group {group_name} but is not up-to-date. "
                                              f"Updating exclusion.")
             else:
@@ -524,22 +547,32 @@ def run_module():
                 current_exclusion = current_exclusions['data'][0]
                 diff = exclusion_obj.merge_compare(current_exclusion, desired_state_exclusion['data'])[0]
                 if diff:
-                    diffs.append({'changes': dict(diff), 'siteId': current_exclusion['scope']['siteIds']})
+                    diffs.append({'changes': dict(diff),
+                                  'siteId': current_exclusion['scope']['siteIds'],
+                                  'exclusion_id': current_exclusion['id']
+                                  })
                     basic_message.append(f"Exclusion exists in site {site_name} but is not up-to-date. "
                                          f"Updating exclusion.")
 
         if diffs:
-            # Delete Exclusions
-            exclusion_obj.delete_exclusions(module)
+            if diffs[0].get('exclusion_id'):
+                # Update Exclusions
+                exclusion_obj.update_exclusions(module, exclusion_id=diffs[0]['exclusion_id'])
 
-            # Create Exclusions
-            exclusion_obj.create_exclusions(module)
+            else:
+                # Create Exclusions
+                exclusion_obj.create_exclusions(module)
+
+        else:
+            basic_message.append(f"Nothing to change, all desired changes are already set")
 
     else:
         if current_exclusions['pagination']['totalItems'] != 0:
             # Exclusions should be deleted
             exclusion_obj.delete_exclusions(module)
             diffs.append({'changes': 'Deleted all exclusions in Scope'})
+        else:
+            basic_message.append(f"Nothing to change, exclusion does not exist")
 
     result = dict(
         changed=False,
