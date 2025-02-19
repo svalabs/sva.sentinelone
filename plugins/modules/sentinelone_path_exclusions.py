@@ -564,7 +564,7 @@ def run_module():
                 exclusion_obj.create_exclusions(module)
 
         else:
-            basic_message.append(f"Nothing to change, all desired changes are already set")
+            basic_message.append("Nothing to change, all desired changes are already set")
 
     else:
         if current_exclusions['pagination']['totalItems'] != 0:
@@ -572,7 +572,7 @@ def run_module():
             exclusion_obj.delete_exclusions(module)
             diffs.append({'changes': 'Deleted all exclusions in Scope'})
         else:
-            basic_message.append(f"Nothing to change, exclusion does not exist")
+            basic_message.append("Nothing to change, exclusion does not exist")
 
     result = dict(
         changed=False,
