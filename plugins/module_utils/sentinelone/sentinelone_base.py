@@ -120,7 +120,7 @@ class SentineloneBase:
 
         body = kwargs.get("body", {})
 
-        error_msg = kwargs.get("error_msg", "API call failed.")
+        error_msg = f'{kwargs.get("error_msg", "API call failed.")} API-Endpoint: {api_endpoint}'
 
         retry_count = 0
         try:
