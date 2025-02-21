@@ -146,3 +146,12 @@ releases:
     fragments:
       - v2.0.3.yml
     release_date: '2024-11-21'
+  2.0.5:
+    changes:
+      minor_changes:
+        - add filter on os_type while get request on exclusions
+        - output URL in failure message of api_call
+        - when updateing s1 exclusions do  put request instead of delete and post
+    fragments:
+      - v2.0.5.yml
+    release_date: '2025-02-21'

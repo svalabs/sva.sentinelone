@@ -3,31 +3,16 @@ Sva.Sentinelone Release Notes
 =============================
 
 .. contents:: Topics
+
 v2.0.5
 ======
 
-Release Summary
----------------
+Minor Changes
+-------------
 
-This is a bugfix release
-
-Bugfixes
---------
-
-- added default values for the pkg_format var to fix issues with the installation on Windows systems
-
-v2.0.4
-======
-
-Release Summary
----------------
-
-This is a bugfix release
-
-Bugfixes
---------
-
-- added parameter name__like to query and url encoding if not Null by function "get_current_config_override" to be sure that become only one object from API Response
+- add filter on os_type while get request on exclusions
+- output URL in failure message of api_call
+- when updateing s1 exclusions do  put request instead of delete and post
 
 v2.0.3
 ======
