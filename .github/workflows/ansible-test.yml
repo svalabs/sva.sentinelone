@@ -21,6 +21,8 @@ env:
 jobs:
   ansible-lint:
     uses: ansible/ansible-content-actions/.github/workflows/ansible_lint.yaml@main
+    with:
+      args: "--exclude .ansible/"
   sanity:
     uses: ansible/ansible-content-actions/.github/workflows/sanity.yaml@main
   all_green:
