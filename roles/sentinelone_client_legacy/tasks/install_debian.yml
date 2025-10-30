@@ -3,7 +3,7 @@
   ansible.builtin.apt_key:
     url: "{{ sentinelone_client_gpgkey }}"
   become: true
-  when: sentinelone_client_gpgkey
+  when: sentinelone_client_gpgkey | length > 0
 
 - name: Install package
   ansible.builtin.apt:
