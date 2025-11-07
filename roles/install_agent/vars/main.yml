@@ -1,11 +1,13 @@
 ---
 # vars file for install_agent
-pkg_format: "{% if ansible_facts.pkg_mgr | default([]) in ['yum', 'dnf', 'zypper'] %}rpm{%
+pkg_format:
+  "{% if ansible_facts.pkg_mgr | default([]) in ['yum', 'dnf', 'dnf5', 'zypper'] %}rpm{%
   elif ansible_facts.pkg_mgr | default('') == 'apt' %}deb{%
   elif ansible_facts.os_family | default('') == 'Windows' and not win_use_exe %}msi{%
   elif ansible_facts.os_family | default('') == 'Windows' and win_use_exe %}exe{%
   else %}unknown{% endif %}"
-pkg_arch: "{% if ansible_facts.architecture | regex_search('x86_64|64-bit') %}64_bit{%
+pkg_arch:
+  "{% if ansible_facts.architecture | regex_search('x86_64|64-bit') %}64_bit{%
   elif ansible_facts.architecture | regex_search('i386|32-bit') %}32_bit{%
   elif ansible_facts.architecture == 'aarch64' %}aarch64{%
   else %}unknown{% endif %}"
