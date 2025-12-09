@@ -18,7 +18,7 @@
   ansible.builtin.get_url:
     url: "{{ sentinelone_client_filename }}"
     dest: "/tmp/{{ sentinelone_client_filename | basename }}"
-    mode: "0644"
+    mode: '0644'
   when: "'http' in sentinelone_client_filename"
 
 - name: Copy installation package
