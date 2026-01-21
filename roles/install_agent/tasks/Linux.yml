@@ -27,17 +27,25 @@
     - name: "Block: RPM based systems"
       when: pkg_format == "rpm"
       block:
-
-        - name: "Linux: Copy gpg key to remote server"
+        - name: "Linux: Copy GPG key to remote server (RPM)"
           ansible.builtin.copy:
             src: "{{ gpg_key }}"
             dest: "{{ remote_gpg_key_path }}"
             mode: "0644"
           when: signed_package
 
-        - name: "Linux: Import GPG key for rpm"
-          ansible.builtin.rpm_key:
-            key: "{{ remote_gpg_key_path }}"
+        - name: "Linux: Try importing RPM GPG key"
+          ansible.builtin.command:
+            cmd: "rpm --import {{ remote_gpg_key_path }}"
+          register: rpm_import
+          changed_when: rpm_import.rc == 0
+          failed_when: signed_package and rpm_import.rc != 0
+          when: signed_package
+
+        - name: "Linux: Verify RPM key"
+          ansible.builtin.command: "rpm -qa gpg-pubkey* --qf '%{NAME}-%{VERSION}-%{RELEASE}\n'"
+          register: rpm_keys
+          changed_when: false
           when: signed_package
 
         - name: "Linux: Install unsigned .rpm agent package via rpm"
