@@ -30,7 +30,7 @@
     agent_installed: "{{ true if ansible_facts.packages.sentinelagent is defined or ansible_facts.packages.SentinelAgent is defined
       or sentinelagent_service.exists | default(false) else false }}"
 
-- name: "Download agent to localhost. Version: {{ agent_version }}"
+- name: "Download agent to localhost from SentinelOne. Version: {{ agent_version }}"
   sva.sentinelone.sentinelone_download_agent:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
@@ -43,10 +43,33 @@
   register: return_download_agent
   delegate_to: localhost
   throttle: 1
-  when: not agent_installed
+  tags:
+    - download_client_from_sentinel_one
+  when: '(not agent_installed) and (linux_custom_client_url | length == 0)'
+
+- name: "Download agent to localhost from custom source."
+  tags:
+    - download_client_from_custom_url
+  when: '(not agent_installed) and (linux_custom_client_url | length > 0)'
+  block:
+    - name: "Client Custom Source: Download custom installation package"
+      ansible.builtin.get_url:
+        url: "{{ linux_custom_client_url }}"
+        dest: "{{ tmp_dir }}"
+        mode: '0644'
+      register: _return_download_package
+
+    - name: "Client Custom Source: Set path from downloaded agent to variable"
+      ansible.builtin.set_fact:
+        return_download_agent:
+          original_message:
+            full_path: "{{ _return_download_package.dest }}"
+            filename: "{{ _return_download_package.dest | basename }}"
 
 - name: "Block: Get registration token from API"
   run_once: true
+  tags:
+    - sentinelone_install_agent_get_registration_token
   block:
     - name: "Get siteid"
       ansible.builtin.uri:
@@ -124,6 +147,8 @@
   when: not agent_installed
 
 - name: "Fail if new client does not appear in management console"
+  tags:
+    - sentinelone_install_agent_mgmt_console_client_verification
   ansible.builtin.uri:
     url: "{{ api_url }}agents?siteIds={{ siteid }}&computerName={{ ansible_hostname | urlencode }}&isActive=true"
     method: GET

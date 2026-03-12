@@ -80,6 +80,7 @@ Role Variables
 | `lx_force_new_token` | false | true, false | Linux only: Set the management token on the linux agent even if it is already registered. |
 | `win_use_exe` | false | true, false | Windows only: By default, the .msi package is used for installation. If you prefer to use the .exe file, enable this setting |
 | `win_allow_reboot` | true | true, false | Windows only: After the removal of a Windows Feature (here Windows Defender) and after the agent installation, a reboot is required. The role is set to reboot at the end of the installation by default. Disable this setting if you wish to skip the reboot. |
+| `linux_custom_client_url` | | | Optional Url to a package source to download the SentinelOne client package. If is not set, SentinelOne client will be downloaded by the default SentinelOne API. |
 
 ### Variables from `vars.yml`
 

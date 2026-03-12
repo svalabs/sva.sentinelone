@@ -7,4 +7,5 @@ hide_sensitive: true
 lx_force_new_token: false
 check_console_retries: 3
 check_console_retry_delay: 20
+linux_custom_client_url: ""
 # custom_version, console_url, api_token, site, group
