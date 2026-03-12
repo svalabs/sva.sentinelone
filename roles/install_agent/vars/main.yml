@@ -11,4 +11,4 @@ pkg_arch: "{% if ansible_facts.architecture | regex_search('x86_64|64-bit') %}64
   else %}unknown{% endif %}"
 custom_os_family: "{{ 'Windows' if pkg_format | regex_search('msi|exe') else 'Linux' }}"
 api_url: "{{ console_url }}/web/api/v2.1/"
-tmp_dir: "{% if ansible_os_family == 'windows'%}C:\\Windows\\Temp\\{% else %}/tmp/{% endif %}"
+tmp_dir: "{% if ansible_os_family == 'windows' %}C:\\Windows\\Temp\\{% else %}/tmp/{% endif %}"
