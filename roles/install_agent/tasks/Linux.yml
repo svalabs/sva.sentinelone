@@ -27,7 +27,6 @@
     - name: "Block: RPM based systems"
       when: pkg_format == "rpm"
       block:
-
         - name: "Linux: Copy gpg key to remote server"
           ansible.builtin.copy:
             src: "{{ gpg_key }}"
@@ -53,21 +52,20 @@
 
     - name: "Block: DEB based systems"
       when: pkg_format == "deb"
+      become: true
       block:
         - name: "Install gpg"
           ansible.builtin.apt:
             name: gpg
             update_cache: true
 
-        - name: "Linux: Copy gpg key to remote server"
+        - name: "Linux: Install GPG key to trusted.gpg.d"
           ansible.builtin.copy:
             src: "{{ gpg_key }}"
-            dest: "{{ remote_gpg_key_path }}"
+            dest: /etc/apt/trusted.gpg.d/sentinelone.gpg
+            owner: root
+            group: root
             mode: "0644"
-
-        - name: "Linux: Import GPG key for apt"
-          ansible.builtin.apt_key:
-            file: "{{ remote_gpg_key_path }}"
 
         - name: "Linux: Install deb agent package {{ remote_pkg_path }}"
           ansible.builtin.apt:

@@ -33,11 +33,12 @@ Requirements
 An API key is required to use this role. It is considered best practice to create a specific 'API user' role for this purpose.
 
 The API user requires the following permissions:
-- Read site info
-- Read group info (if the scope is set to group)
-- Download agent packages
-- Read the site or group registration token
-- Read agent information
+- Endpoints -> View
+- Accounts -> View
+- Agent Packages -> View
+- Groups -> View (If the scope is set to "group")
+- Roles -> View
+- Sites -> View
 
 ### GPG Key (Linux only)
 You need to provide the gpg key to validate the package signatures correctly. You obtain the download link from the Sentinelone Help page: "**How to Install on a Linux Endpoint with Yum**".

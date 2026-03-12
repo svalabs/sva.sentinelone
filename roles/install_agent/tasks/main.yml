@@ -31,6 +31,7 @@
       or sentinelagent_service.exists | default(false) else false }}"
 
 - name: "Download agent to localhost. Version: {{ agent_version }}"
+  become: false
   sva.sentinelone.sentinelone_download_agent:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
@@ -47,6 +48,7 @@
 
 - name: "Block: Get registration token from API"
   run_once: true
+  become: false
   block:
     - name: "Get siteid"
       ansible.builtin.uri:
@@ -94,7 +96,7 @@
 
     - name: "Set endpoint URI to get the correct registration token"
       ansible.builtin.set_fact:
-        reg_token_uri: "{{ \"groups/{{ groupid }}/token\" if group is defined else \"sites/{{ siteid }}/token\" }}"
+        reg_token_uri: "{{ 'groups/' ~ groupid ~ '/token' if group is defined else 'sites/' ~ siteid ~ '/token' }}"
 
     - name: "Get registration token"
       ansible.builtin.uri:
@@ -117,6 +119,7 @@
   ansible.builtin.include_tasks: "{{ custom_os_family }}.yml"
 
 - name: "Remove agent install package from localhost"
+  become: false
   ansible.builtin.file:
     path: "{{ return_download_agent.original_message.full_path }}"
     state: absent
@@ -124,6 +127,7 @@
   when: not agent_installed
 
 - name: "Fail if new client does not appear in management console"
+  become: false
   ansible.builtin.uri:
     url: "{{ api_url }}agents?siteIds={{ siteid }}&computerName={{ ansible_hostname | urlencode }}&isActive=true"
     method: GET
@@ -136,6 +140,6 @@
   register: registrationstatus
   delegate_to: localhost
   no_log: "{{ hide_sensitive }}"
-  until: ((registrationstatus.json.data | length) > 0) and (registrationstatus.status == 200)
+  until: (registrationstatus.json.data | default([]) | length > 0) and (registrationstatus.status | default(0) == 200)
   retries: "{{ check_console_retries }}"
   delay: "{{ check_console_retry_delay }}"
