@@ -18,7 +18,7 @@
   ansible.builtin.get_url:
     url: "{{ sentinelone_client_filename }}"
     dest: "/tmp/{{ sentinelone_client_filename | basename }}"
-    mode: "0644"
+    mode: '0644'
   when: "'http' in sentinelone_client_filename"
 
 - name: Copy installation package
@@ -49,7 +49,7 @@
 - name: Set Group/Site token
   ansible.builtin.command: "/opt/sentinelone/bin/sentinelctl management token set {{ sentinelone_client_token }}"
   args:
-    creates: /opt/sentinelone/.INITIALIZATION_COMPLETE
+    creates: /opt/.SENTINELTWO_INITIALIZATION_COMPLETE
   become: true
   notify: Create initialization file
   when: sentinelone_client_token is defined and sentinelone_client_token != ''
