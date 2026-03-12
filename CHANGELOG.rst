@@ -4,6 +4,15 @@ Sva.Sentinelone Release Notes
 
 .. contents:: Topics
 
+v2.0.6
+======
+
+Release Summary
+---------------
+
+Added the possibility to install own s1 packaged with the role
+
+
 v2.0.5
 ======
 

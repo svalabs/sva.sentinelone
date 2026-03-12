@@ -155,3 +155,5 @@ releases:
     fragments:
       - v2.0.5.yml
     release_date: '2025-02-21'
+  2.0.6:
+    release_date: '2026-03-12'
