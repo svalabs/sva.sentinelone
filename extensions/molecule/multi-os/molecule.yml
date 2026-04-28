@@ -1,0 +1,125 @@
+---
+platforms:
+  - name: ubuntu-2204
+    box: "bento/ubuntu-22.04"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 1
+    config_options:
+      ssh.keep_alive: true
+
+  - name: ubuntu-2404
+    box: "bento/ubuntu-24.04"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 1
+    config_options:
+      ssh.keep_alive: true
+
+  - name: rocky-8
+    box: "bento/rockylinux-8"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 1
+    config_options:
+      ssh.keep_alive: true
+
+  - name: rocky-9
+    box: "bento/rockylinux-9"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 1
+    config_options:
+      ssh.keep_alive: true
+
+  - name: rocky-10
+    box: "bento/rockylinux-10"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 1
+    config_options:
+      ssh.keep_alive: true
+
+  - name: opensuse-leap-15
+    box: "bento/opensuse-leap-15"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 1
+    config_options:
+      ssh.keep_alive: true
+
+  - name: opensuse-leap-160
+    box: "bento/opensuse-leap-16.0"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 1
+    config_options:
+      ssh.keep_alive: true
+
+  - name: debian-12
+    box: "bento/debian-12"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 1
+    config_options:
+      ssh.keep_alive: true
+
+  - name: debian-13
+    box: "bento/debian-13"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 1
+    config_options:
+      ssh.keep_alive: true
+
+  - name: fedora-42
+    box: "bento/fedora-42"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 1
+    config_options:
+      ssh.keep_alive: true
+
+  - name: fedora-43
+    box: "bento/fedora-43"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 1
+    config_options:
+      ssh.keep_alive: true
+
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: ../default/prepare.yml
+    converge: ../default/converge.yml
+    verify: ../default/verify.yml
+    cleanup: cleanup.yml
+
+  inventory:
+    host_vars:
+      ubuntu-2204:
+        ansible_python_interpreter: /usr/bin/python3
+      ubuntu-2404:
+        ansible_python_interpreter: /usr/bin/python3
+      rocky-8:
+        ansible_python_interpreter: /usr/bin/python3
+      rocky-9:
+        ansible_python_interpreter: /usr/bin/python3
+      rocky-10:
+        ansible_python_interpreter: /usr/bin/python3
+      opensuse-leap-15:
+        ansible_python_interpreter: /usr/bin/python3
+      opensuse-leap-160:
+        ansible_python_interpreter: /usr/bin/python3
+      debian-12:
+        ansible_python_interpreter: /usr/bin/python3
+      debian-13:
+        ansible_python_interpreter: /usr/bin/python3
+      fedora-42:
+        ansible_python_interpreter: /usr/bin/python3
+      fedora-43:
+        ansible_python_interpreter: /usr/bin/python3
+  env:
+    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/../../roles"
+    ANSIBLE_COLLECTIONS_PATH: "${MOLECULE_PROJECT_DIRECTORY}/../../../.."

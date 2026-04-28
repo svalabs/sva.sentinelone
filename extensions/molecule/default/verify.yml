@@ -1,0 +1,23 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Verify facts are collected
+      ansible.builtin.assert:
+        that:
+          - ansible_facts is defined
+        success_msg: "Verification passed"
+        fail_msg: "Verification failed"
+
+    # Beispiel: Service prüfen
+    # - name: Gather service facts
+    #   ansible.builtin.service_facts:
+    #
+    # - name: Assert service is running
+    #   ansible.builtin.assert:
+    #     that:
+    #       - "'my_service.service' in ansible_facts.services"
+    #       - "ansible_facts.services['my_service.service'].state == 'running'"

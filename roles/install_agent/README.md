@@ -5,26 +5,31 @@ This Ansible role is designed to install the SentinelOne agent package and regis
 
 Supported Operating Systems:
 ------------
-- Red Hat Enterprise Linux (RHEL)
+- Red Hat Enterprise Linux (RHEL) / Rocky
   - 8
   - 9
-- SUSE Linux Enterprise Server (SLES)
-  - 12
-  - 15
-- Debian
   - 10
+
+- Fedora
+  - 42
+  - 43
+
+- SUSE Linux Enterprise Server (SLES) / OpenSuse Leap
+  - 15
+  - 16
+
+- Debian
   - 11
   - 12
+  - 13
+
 - Ubuntu
-  - 20.04
   - 22.04
   - 24.04
 
 - Windows
-  - Server 2016
-  - Server 2019
   - Server 2022
-  - Desktop 10
+  - Server 2025
   - Desktop 11
 
 Requirements

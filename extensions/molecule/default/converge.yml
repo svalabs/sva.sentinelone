@@ -1,0 +1,16 @@
+---
+- name: Execute Modules and Roles
+  hosts: all
+  strategy: linear
+  gather_facts: true
+
+  vars_files:
+    - vars/test_vars.yml
+
+  tasks:
+    - name: "Test S1 Modules"
+      ansible.builtin.include_tasks: tasks/test_modules.yml
+      run_once: true
+
+    - name: "Test S1 Agent installation role"
+      ansible.builtin.include_tasks: tasks/install_agent.yml

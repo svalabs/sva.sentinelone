@@ -1,0 +1,7 @@
+---
+roles: []
+
+collections:
+  - name: ansible.posix
+  - name: community.general
+  - name: ansible.windows

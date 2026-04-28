@@ -1,0 +1,112 @@
+---
+- name: "Converge: Create a site"
+  sva.sentinelone.sentinelone_sites:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    name: "{{ site }}"
+    license_type: "{{ license_type }}"
+    total_agents: "{{ total_agents }}"
+    site_type: "{{ site_type }}"
+
+- name: "Converge: Update site policy"
+  sva.sentinelone.sentinelone_policies:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    policy:
+      scanNewAgents: false
+      snapshotsOn: false
+
+- name: "Converge: Add exclusion to site"
+  sva.sentinelone.sentinelone_path_exclusions:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    os_path: 'C:\temp\test.exe'
+    description: "[Converge] Test Site exclusion"
+    mode: "interoperability_extended"
+    os_type: "windows"
+    include_subfolders: "yes"
+
+- name: "Converge: Add filters to site"
+  sva.sentinelone.sentinelone_filters:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "{{ item.name }}"
+    filter_fields:
+      osTypes: "{{ item.os }}"
+  loop:
+    - name: "Linux Hosts"
+      os: "linux"
+    - name: "Windows Hosts"
+      os: "windows"
+
+- name: "Converge: Add dynamic groups to site"
+  sva.sentinelone.sentinelone_groups:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "{{ item.name }}"
+    filter_name: "{{ item.filter_name }}"
+  loop:
+    - name: "Linux Hosts"
+      filter_name: "Linux Hosts"
+    - name: "Windows Hosts"
+      filter_name: "Windows Hosts"
+
+- name: "Converge: Add static groups to site"
+  sva.sentinelone.sentinelone_groups:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name:
+      - "Testgroup1"
+      - "Testgroup2"
+
+- name: "Converge: Create Exclusions in groups"
+  sva.sentinelone.sentinelone_path_exclusions:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    groups: "Linux Hosts"
+    os_path: 'root'
+    description: "[Converge] Test Site exclusion"
+    mode: "performance_focus"
+    os_type: "linux"
+    include_subfolders: "yes"
+
+- name: "Converge: Create config overrides"
+  sva.sentinelone.sentinelone_config_overrides:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    description: "[Converge] Test config override"
+    name: "[Converge] Test config override"
+    os_type: "windows"
+    config_override:
+      powershellProtection: false
+
+- name: "Converge: Update group policy"
+  sva.sentinelone.sentinelone_policies:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    groups: "Testgroup1"
+    policy:
+      agentUi:
+        agentUiOn: false
+
+- name: "Converge: Sentinelone set custom update window"
+  block:
+    - name: "Sentinelone: Set custom update window"
+      sva.sentinelone.sentinelone_upgrade_policies:
+        console_url: "{{ console_url }}"
+        token: "{{ api_token }}"
+        site_name: "{{ site }}"
+        inherit_max_concurrent_downloads: true
+        timezone: "+01:00"
+        maintenance_windows:
+          monday:
+            - from: '08:00 am'
+              to: '04:00 pm'

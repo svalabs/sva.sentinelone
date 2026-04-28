@@ -1,0 +1,9 @@
+[project]
+name = "sva-sentinelone"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "ansible-dev-tools",
+    "argcomplete",
+    "molecule-plugins[vagrant]",
+]

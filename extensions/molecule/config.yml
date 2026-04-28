@@ -1,0 +1,29 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+
+verifier:
+  name: ansible
+
+scenario:
+  name: default
+  test_sequence:
+    - dependency
+    - syntax
+    - cleanup
+    - destroy
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - verify
+    - cleanup
+    - verify verify_cleanup.yml
+    - destroy

@@ -1,0 +1,28 @@
+---
+- name: Prepare instances
+  hosts: all
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Wait for connection
+      ansible.builtin.wait_for_connection:
+        timeout: 120
+
+    - name: Gather facts
+      ansible.builtin.setup:
+
+    - name: Install Python3 (Debian/Ubuntu)
+      ansible.builtin.raw: apt-get update && apt-get install -y python3
+      when: ansible_os_family is not defined or ansible_os_family == 'Debian'
+      changed_when: true
+
+    - name: Install Python3 (RedHat/Rocky/Fedora)
+      ansible.builtin.raw: dnf install -y python3
+      when: ansible_os_family is defined and ansible_os_family == 'RedHat'
+      changed_when: true
+
+    - name: Install Python3 (openSUSE/SLES)
+      ansible.builtin.raw: zypper install -y python3
+      when: ansible_os_family is defined and ansible_os_family == 'Suse'
+      changed_when: true

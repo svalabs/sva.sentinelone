@@ -2,3 +2,6 @@ tests/output/
 .idea/
 .vscode/
 .lock
+.venv/
+uv.lock
+.ansible/

@@ -1,0 +1,15 @@
+---
+- name: Remove test site
+  hosts: all
+  gather_facts: false
+
+  vars_files:
+    - vars/test_vars.yml
+
+  tasks:
+    - name: "Converge: Remove test site"
+      sva.sentinelone.sentinelone_sites:
+        console_url: "{{ console_url }}"
+        token: "{{ api_token }}"
+        name: "{{ site }}"
+        state: absent
