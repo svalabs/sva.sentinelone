@@ -11,4 +11,4 @@ install_agent_pkg_arch: "{% if ansible_facts.architecture | regex_search('x86_64
   else %}unknown{% endif %}"
 install_agent_custom_os_family: "{{ 'Windows' if install_agent_pkg_format | regex_search('msi|exe') else 'Linux' }}"
 install_agent_api_url: "{{ install_agent_console_url }}/web/api/v2.1/"
-install_agent_tmp_dir: "{% if ansible_os_family == 'windows' %}C:\\Windows\\Temp\\{% else %}/tmp/{% endif %}"
+install_agent_tmp_dir: "{% if ansible_os_family | lower == 'windows' %}C:\\Windows\\Temp\\{% else %}/tmp/{% endif %}"
