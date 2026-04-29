@@ -29,23 +29,19 @@
       block:
         - name: "Linux: Copy GPG key to remote server (RPM)"
           ansible.builtin.copy:
-            src: "{{ gpg_key }}"
+            src: "{{ install_agent_gpg_key }}"
             dest: "{{ install_agent_remote_gpg_key_path }}"
             mode: "0644"
           when: install_agent_signed_package
 
-        # TODO RPM Kram nochmal anschauen
+        # Workaround for RHEL 10. Wait until fix in https://github.com/ansible/ansible/pull/86237 is
+        # backported in all supported ansible releases to go back to rpm_key module
         - name: "Linux: Try importing RPM GPG key"
           ansible.builtin.command:
-            cmd: "rpm --import {{ install_agent_remote_gpg_key_path }}"
+            cmd: "rpm -i {{ install_agent_remote_gpg_key_path }}"
           register: install_agent_rpm_import
           changed_when: install_agent_rpm_import.rc == 0
           failed_when: install_agent_signed_package and install_agent_rpm_import.rc != 0
-          when: install_agent_signed_package
-
-        - name: "Linux: Verify RPM key"
-          ansible.builtin.command: "rpm -qa gpg-pubkey* --qf '%{NAME}-%{VERSION}-%{RELEASE}\n'"
-          changed_when: false
           when: install_agent_signed_package
 
         - name: "Linux: Install unsigned .rpm agent package via rpm"
@@ -69,7 +65,7 @@
 
         - name: "Linux: Copy gpg key to remote server"
           ansible.builtin.copy:
-            src: "{{ gpg_key }}"
+            src: "{{ install_agent_gpg_key }}"
             dest: "{{ install_agent_remote_gpg_key_path }}"
             mode: "0644"
 

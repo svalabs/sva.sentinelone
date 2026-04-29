@@ -39,7 +39,7 @@
     packet_format: "{{ install_agent_pkg_format }}"
     architecture: "{{ install_agent_pkg_arch }}"
     agent_version: "{{ install_agent_agent_version }}"
-    custom_version: "{{ custom_version | default(omit) }}"
+    custom_version: "{{ install_agent_custom_version | default(omit) }}"
   register: install_agent_return_download_agent
   delegate_to: localhost
   throttle: 1
@@ -117,7 +117,8 @@
 
     - name: "Set endpoint URI to get the correct registration token"
       ansible.builtin.set_fact:
-        install_agent_reg_token_uri: "{{ \"groups/{{ install_agent_groupid }}/token\" if install_agent_group is defined else \"sites/{{ install_agent_siteid }}/token\" }}"
+        install_agent_reg_token_uri: "{{ \"groups/{{ install_agent_groupid }}/token\" if
+          install_agent_group is defined else \"sites/{{ install_agent_siteid }}/token\" }}"
 
     - name: "Get registration token"
       ansible.builtin.uri:

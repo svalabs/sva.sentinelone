@@ -1,12 +1,10 @@
 # This file contains ignores rule violations for ansible-lint
 roles/install_agent/tasks/Linux.yml command-instead-of-module
-roles/install_agent/tasks/Linux.yml no-changed-when
 roles/sentinelone_client_legacy/defaults/main.yml var-naming[no-role-prefix]
 roles/sentinelone_client_legacy/tasks/digest.yml command-instead-of-module
 roles/sentinelone_client_legacy/tasks/digest.yml var-naming[no-role-prefix]
 roles/sentinelone_client_legacy/tasks/install_redhat.yml command-instead-of-module
 roles/sentinelone_client_legacy/tasks/install_redhat.yml var-naming[no-role-prefix]
-roles/sentinelone_client_legacy/tasks/install_redhat.yml fqcn[action-core]
 roles/sentinelone_client_legacy/tasks/install_suse.yml command-instead-of-module
 roles/sentinelone_client_legacy/tasks/install_suse.yml var-naming[no-role-prefix]
 roles/sentinelone_client_legacy/tasks/main.yml var-naming[no-role-prefix]
