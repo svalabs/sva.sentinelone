@@ -1,11 +1,17 @@
 ---
 # defaults file for install_agent
-win_use_exe: false
-win_allow_reboot: true
-agent_version: 'latest'
-hide_sensitive: true
-lx_force_new_token: false
-check_console_retries: 3
-check_console_retry_delay: 20
-linux_custom_client_url: ""
-# custom_version, console_url, api_token, site, group
+install_agent_console_url: "{{ console_url }}"
+install_agent_api_token: "{{ api_token }}"
+install_agent_site: "{{ site }}"
+install_agent_group: "{{ group | default(omit) }}"
+install_agent_win_use_exe: "{{ win_use_exe | default(false) }}"
+install_agent_win_allow_reboot: "{{ win_allow_reboot | default(true) }}"
+install_agent_agent_version: "{{ agent_version | default('latest') }}"
+install_agent_hide_sensitive: "{{ hide_sensitive | default(true) }}"
+install_agent_lx_force_new_token: "{{ lx_force_new_token | default(false) }}"
+install_agent_check_console_retries: "{{ check_console_retries | default(3) }}"
+install_agent_check_console_retry_delay: "{{ check_console_retry_delay | default(20) }}"
+install_agent_linux_custom_client_url: "{{ linux_custom_client_url | default('') }}"
+# custom_version
+
+# TODO custom_version, gpg_key

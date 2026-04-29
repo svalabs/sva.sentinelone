@@ -93,11 +93,11 @@ Role Variables
 
 | Variable | Description |
 | --- | --- |
-| `pkg_format` | Determines the package format (like .exe, .msi, .deb, .rpm) based on the Ansible facts |
-| `pkg_arch` | Sets the agent package architecture based on the Ansible facts |
-| `custom_os_family` | Identifies the underlying operating system (Linux or Windows) |
-| `api_url` | Sets the API base URL |
-| `agent_installed` | Determines if the agent is already installed |
+| `install_agent_pkg_format` | Determines the package format (like .exe, .msi, .deb, .rpm) based on the Ansible facts |
+| `install_agent_pkg_arch` | Sets the agent package architecture based on the Ansible facts |
+| `install_agent_custom_os_family` | Identifies the underlying operating system (Linux or Windows) |
+| `install_agent_api_url` | Sets the API base URL |
+| `install_agent_agent_installed` | Determines if the agent is already installed |
 
 Dependencies
 ------------

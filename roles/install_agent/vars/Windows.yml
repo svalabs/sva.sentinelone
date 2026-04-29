@@ -1,4 +1,4 @@
 ---
-remote_pkg_path: "{{ tmp_dir }}{{ return_download_agent.original_message.filename }}"
-exe_parameters: "-t {{ reg_token_obj.json.data.token }} -q"
-msi_parameters: "SITE_TOKEN={{ reg_token_obj.json.data.token }} /QUIET"
+install_agent_remote_pkg_path: "{{ install_agent_tmp_dir }}{{ install_agent_return_download_agent.original_message.filename }}"
+install_agent_exe_parameters: "-t {{ install_agent_signed_package.json.data.token }} -q"
+install_agent_msi_parameters: "SITE_TOKEN={{ install_agent_signed_package.json.data.token }} /QUIET"
