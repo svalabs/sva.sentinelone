@@ -27,4 +27,3 @@ scenario:
 #    - cleanup
 #    - verify verify_cleanup.yml
 #    - destroy
-
