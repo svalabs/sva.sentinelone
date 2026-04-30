@@ -4,12 +4,13 @@
   gather_facts: false
 
   vars_files:
-    - vars/test_vars.yml
+    - ../vars/test_vars.yml
 
   tasks:
-    - name: "Converge: Remove test site"
+    - name: "Cleanup: Remove test site"
       sva.sentinelone.sentinelone_sites:
         console_url: "{{ console_url }}"
         token: "{{ api_token }}"
         name: "{{ site }}"
         state: absent
+      delegate_to: localhost

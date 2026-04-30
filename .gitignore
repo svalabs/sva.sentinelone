@@ -5,3 +5,4 @@ tests/output/
 .venv/
 uv.lock
 .ansible/
+extensions/molecule/vars/test_vars.yml

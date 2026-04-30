@@ -89,7 +89,7 @@
 
 - name: "Linux: Register agent"
   ansible.builtin.command:
-    cmd: '/opt/sentinelone/bin/sentinelctl management token set {{ install_agent_signed_package.json.data.token }}'
+    cmd: "/opt/sentinelone/bin/sentinelctl management token set {{ install_agent_reg_token_obj.json.data.token }}"
   become: true
   register: install_agent_token_set_output
   no_log: "{{ install_agent_hide_sensitive }}"

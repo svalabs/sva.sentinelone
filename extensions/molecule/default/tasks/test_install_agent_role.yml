@@ -1,0 +1,14 @@
+---
+- name: "Converge: Install agent on Linux"
+  ansible.builtin.include_role:
+    name: sva.sentinelone.install_agent
+  when: ansible_facts['system'] is defined and
+    ansible_facts['system'] == "Linux"
+
+- name: "Converge: Install agent on Windows"
+  ansible.builtin.include_role:
+    name: sva.sentinelone.install_agent
+  vars:
+    win_use_exe: false  # optional
+    win_allow_reboot: true  # optional
+  when: ansible_facts['os_family'] == "Windows"

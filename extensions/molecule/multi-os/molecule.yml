@@ -4,7 +4,7 @@ platforms:
     box: "bento/ubuntu-22.04"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 
@@ -12,7 +12,7 @@ platforms:
     box: "bento/ubuntu-24.04"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 
@@ -20,7 +20,7 @@ platforms:
     box: "bento/rockylinux-8"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 
@@ -28,7 +28,7 @@ platforms:
     box: "bento/rockylinux-9"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 
@@ -36,7 +36,7 @@ platforms:
     box: "bento/rockylinux-10"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 
@@ -44,7 +44,7 @@ platforms:
     box: "bento/opensuse-leap-15"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 
@@ -52,7 +52,7 @@ platforms:
     box: "bento/opensuse-leap-16.0"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 
@@ -60,7 +60,7 @@ platforms:
     box: "bento/debian-12"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 
@@ -68,7 +68,7 @@ platforms:
     box: "bento/debian-13"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 
@@ -76,7 +76,7 @@ platforms:
     box: "bento/fedora-42"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 
@@ -84,7 +84,7 @@ platforms:
     box: "bento/fedora-43"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 

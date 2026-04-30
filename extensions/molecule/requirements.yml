@@ -5,3 +5,6 @@ collections:
   - name: ansible.posix
   - name: community.general
   - name: ansible.windows
+  - name: sva.sentinelone
+    type: dir
+    source: ../../

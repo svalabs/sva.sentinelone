@@ -5,4 +5,4 @@ site: "ansible-test"
 license_type: "core"
 total_agents: 100
 site_type: Paid
-gpg_key_path: "/tmp/sentinel_one.gpg"  # optional
+gpg_key: "/tmp/sentinel_one.gpg"  # optional

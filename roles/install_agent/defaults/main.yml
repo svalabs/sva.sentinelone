@@ -9,7 +9,7 @@ install_agent_site: "{{ site }}"
 # Optional variables
 install_agent_gpg_key: "{{ gpg_key }}"
 install_agent_custom_version: "{{ custom_version | default(omit) }}"
-install_agent_group: "{{ group | default(omit) }}"
+install_agent_group: "{{ group | default('', true) }}"
 install_agent_win_use_exe: "{{ win_use_exe | default(false) }}"
 install_agent_win_allow_reboot: "{{ win_allow_reboot | default(true) }}"
 install_agent_agent_version: "{{ agent_version | default('latest') }}"

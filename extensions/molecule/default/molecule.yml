@@ -4,7 +4,7 @@ platforms:
     box: "bento/ubuntu-24.04"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
-    cpus: 1
+    cpus: 2
     config_options:
       ssh.keep_alive: true
 
@@ -19,6 +19,3 @@ provisioner:
     host_vars:
       ubuntu-2404:
         ansible_python_interpreter: /usr/bin/python3
-  env:
-    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/../../roles"
-    ANSIBLE_COLLECTIONS_PATH: "${MOLECULE_PROJECT_DIRECTORY}/../../../.."

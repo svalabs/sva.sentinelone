@@ -34,13 +34,16 @@
     token: "{{ api_token }}"
     site_name: "{{ site }}"
     name: "{{ item.name }}"
-    filter_fields:
-      osTypes: "{{ item.os }}"
+    filter_fields: "{{ item.filter_fields }}"
   loop:
     - name: "Linux Hosts"
-      os: "linux"
+      filter_fields:
+        osTypes:
+          - "linux"
     - name: "Windows Hosts"
-      os: "windows"
+      filter_fields:
+        osTypes:
+          - "windows"
 
 - name: "Converge: Add dynamic groups to site"
   sva.sentinelone.sentinelone_groups:

@@ -429,9 +429,25 @@ class SentineloneUpgradePolicies(SentineloneBase):
                                                  f"Expecting dict with 'from:' and 'to'. At least one is missing")
 
                         try:
-                            # Check if entered time is valid
-                            time1 = datetime.strptime(from_value, "%I:%M %p")
-                            time2 = datetime.strptime(to_value, "%I:%M %p")
+                            # Check if entered time is valid.
+                            # Working around different locales on different execution nodes.
+                            # time1 = datetime.strptime(from_value, "%I:%M %p") is not working on systems with 24h format.
+
+                            time_part, meridiem = from_value.strip().rsplit(" ", 1)
+                            hour, minute = map(int, time_part.split(":"))
+                            if meridiem.lower() == "pm" and hour != 12:
+                                hour += 12
+                            elif meridiem.lower() == "am" and hour == 12:
+                                hour = 0
+                            time1 = datetime(1900, 1, 1, hour, minute)
+
+                            time_part, meridiem = to_value.strip().rsplit(" ", 1)
+                            hour, minute = map(int, time_part.split(":"))
+                            if meridiem.lower() == "pm" and hour != 12:
+                                hour += 12
+                            elif meridiem.lower() == "am" and hour == 12:
+                                hour = 0
+                            time2 = datetime(1900, 1, 1, hour, minute)
                         except ValueError as err:
                             module.fail_json(msg=f"Please check the entered maintenance window time values for {day}. "
                                              f"The entered time value is not valid. Exception is: {err}")
@@ -474,9 +490,11 @@ def run_module():
     inherit_maintenance_windows = upgrade_policy_obj.inherit_maintenance_windows
     inherit_max_concurrent_downloads = upgrade_policy_obj.inherit_max_concurrent_downloads
 
+    # policyPayload is for flexible maintenance windows. Currently, I don't see it in my Management console but only via
+    # API. Support might be included in the future but is disabled for idempotency by now
+    exclude_path = ["root['data']['policyPayload']"]
     # The API will give us 'maintenanceWindowsByDay' and 'maxConcurrent' even if inheritance is enabled. Therefore, we
     # need to ignore it. Otherwise, it will not be idempotent.
-    exclude_path = []
     if inherit_maintenance_windows:
         exclude_path.append("root['data']['maintenanceWindowsByDay']")
 
