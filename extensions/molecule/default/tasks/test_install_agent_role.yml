@@ -2,6 +2,9 @@
 - name: "Converge: Install agent on Linux"
   ansible.builtin.include_role:
     name: sva.sentinelone.install_agent
+  vars:
+    check_console_retries: 18
+    check_console_retry_delay: 20
   when: ansible_facts['system'] is defined and
     ansible_facts['system'] == "Linux"
 

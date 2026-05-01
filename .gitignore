@@ -6,3 +6,4 @@ tests/output/
 uv.lock
 .ansible/
 extensions/molecule/vars/test_vars.yml
+ansible_collections/

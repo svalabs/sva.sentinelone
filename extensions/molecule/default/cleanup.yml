@@ -7,10 +7,43 @@
     - ../vars/test_vars.yml
 
   tasks:
+    - name: "Get agent UUID"
+      ansible.builtin.shell:
+        cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | awk -F' ' 'NR == 14 {print $2}'"
+        executable: "/bin/bash"
+      become: true
+      register: agent_uuid
+      no_log: "{{ hide_sensitive | default(true) }}"
+      changed_when: true
+      failed_when: agent_uuid.rc != 0
+
+    - name: "Uninstall agent for site deletion"
+      ansible.builtin.uri:
+        url: "{{ console_url }}/web/api/v2.1/agents/actions/uninstall "
+        method: POST
+        return_content: true
+        headers:
+          Accept: application/json
+          Authorization: "APIToken {{ api_token }}"
+        body_format: json
+        body:
+          filter:
+            uuid: "{{ agent_uuid.stdout }}"
+        validate_certs: true
+        status_code: 200
+      register: uninstall_agent_response
+      delegate_to: localhost
+      no_log: "{{ hide_sensitive | default(true) }}"
+      until: ((uninstall_agent_response.status == 200) and (uninstall_agent_response.json.data.affected == 1))
+      retries: "3"
+      delay: "20"
+
     - name: "Cleanup: Remove test site"
       sva.sentinelone.sentinelone_sites:
         console_url: "{{ console_url }}"
         token: "{{ api_token }}"
         name: "{{ site }}"
         state: absent
+      retries: "5"
+      delay: "30"
       delegate_to: localhost
