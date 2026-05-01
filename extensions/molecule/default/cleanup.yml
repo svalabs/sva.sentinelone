@@ -35,8 +35,8 @@
       delegate_to: localhost
       no_log: "{{ hide_sensitive | default(true) }}"
       until: ((uninstall_agent_response.status == 200) and (uninstall_agent_response.json.data.affected == 1))
-      retries: "3"
-      delay: "20"
+      retries: 3
+      delay: 20
 
     - name: "Cleanup: Remove test site"
       sva.sentinelone.sentinelone_sites:
@@ -44,6 +44,6 @@
         token: "{{ api_token }}"
         name: "{{ site }}"
         state: absent
-      retries: "5"
-      delay: "30"
+      retries: 5
+      delay: 30
       delegate_to: localhost
