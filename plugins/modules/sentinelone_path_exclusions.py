@@ -62,22 +62,22 @@ options:
     required: true
   include_subfolders:
     description:
-      - "If yes, the exclusion will scope subfolders as well. Is ignored if I(os_path) is not a folder (does not end with / (linux) or \\ (windows))"
+      - "If true, the exclusion will scope subfolders as well. Is ignored if I(os_path) is not a folder (does not end with / (linux) or \\ (windows))"
     type: bool
     required: false
-    default: no
+    default: false
   ef_alerts_mitigation:
     description:
       - "Exclusion Function to exclude I(os_path) for alerts and mitigation"
     type: bool
     required: false
-    default: yes
+    default: true
   ef_binary_vault:
     description:
       - "Exclusion Function to exclude I(os_path) for Binary Vaults"
     type: bool
     required: false
-    default: no
+    default: true
   mode:
     description:
       - "Defines the exclusion mode for this exclusion. Required if I(state=present)"

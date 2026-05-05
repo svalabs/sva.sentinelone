@@ -5,6 +5,20 @@
   become: true
 
   tasks:
+    - name: Enable powershell as default shell on windows
+      ansible.builtin.raw: powershell -Command \"New-ItemProperty -Path 'HKLM:\\SOFTWARE\\OpenSSH' -Name DefaultShell
+        -Value 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -PropertyType String -Force\"
+      changed_when: false
+      register: test
+      when: inventory_hostname | lower is match("windows-.*")
+
+    - name: "Debug:"
+      ansible.builtin.debug:
+        var: test
+
+    - name: Reset SSH connection after shell change
+      ansible.builtin.meta: reset_connection
+
     - name: Wait for connection
       ansible.builtin.wait_for_connection:
         timeout: 120

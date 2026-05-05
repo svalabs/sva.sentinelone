@@ -23,10 +23,9 @@
     token: "{{ api_token }}"
     site_name: "{{ site }}"
     os_path: 'C:\temp\test.exe'
-    description: "[Converge] Test Site exclusion"
+    description: "[Converge] Test site exclusion"
     mode: "interoperability_extended"
     os_type: "windows"
-    include_subfolders: "yes"
 
 - name: "Converge: Add filters to site"
   sva.sentinelone.sentinelone_filters:
@@ -73,11 +72,11 @@
     token: "{{ api_token }}"
     site_name: "{{ site }}"
     groups: "Linux Hosts"
-    os_path: 'root'
-    description: "[Converge] Test Site exclusion"
+    os_path: '/tmp/test/'
+    description: "[Converge] Test group exclusion"
     mode: "performance_focus"
     os_type: "linux"
-    include_subfolders: "yes"
+    include_subfolders: "true"
 
 - name: "Converge: Create config overrides"
   sva.sentinelone.sentinelone_config_overrides:

@@ -23,5 +23,5 @@ scenario:
     - idempotence
     - verify
     - cleanup
-#    - verify verify_cleanup.yml
+    - verify verify_cleanup.yml
     - destroy

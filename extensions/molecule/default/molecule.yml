@@ -8,6 +8,22 @@ platforms:
     config_options:
       ssh.keep_alive: true
 
+  - name: windows-server-2025
+    box: "gusztavvargadr/windows-server-2025-standard"
+    # No selector here. amd64 only box
+    box_architecture: "amd64"
+    memory: 4096
+    cpus: 4
+    config_options:
+      ssh.keep_alive: true
+      # x86 emulation on my setup is really slow
+      vm.boot_timeout: 1800
+      winrm.timeout: 1800
+      winrm.retry_limit: 30
+      winrm.retry_delay: 60
+      #vm.communicator: "winssh"
+      #winssh.shell: ":powershell"
+      #winssh.upload_directory: "C:\\Users\\vagrant"
 provisioner:
   name: ansible
   playbooks:
@@ -19,3 +35,7 @@ provisioner:
     host_vars:
       ubuntu-2404:
         ansible_python_interpreter: /usr/bin/python3
+      windows-server-2025:
+        ansible_shell_type: powershell
+        ansible_become: false
+        ansible_remote_tmp: '%TEMP%'

@@ -92,10 +92,6 @@
       ansible.builtin.set_fact:
         install_agent_siteid: "{{ install_agent_siteobj.json.data.sites[0].id }}"
 
-    - name: "Debug: install_agent_group"
-      ansible.builtin.debug:
-        var: install_agent_group
-
     - name: "Get group id"
       ansible.builtin.uri:
         url: "{{ install_agent_api_url }}groups?name={{ install_agent_group | urlencode }}&siteIds={{ install_agent_siteid }}"

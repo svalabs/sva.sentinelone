@@ -1,10 +1,22 @@
 ---
 - name: Cleanup after tests
   hosts: all
-  strategy: linear
-  gather_facts: true
+  gather_facts: false
 
   tasks:
-    - name: Test
-      ansible.builtin.debug:
-        msg: "Test"
+    - name: "Verify: site is deleted"
+      ansible.builtin.uri:
+        url: "{{ console_url }}/web/api/v2.1/sites?name={{ site }}&state=active"
+        method: GET
+        return_content: true
+        headers:
+          Accept: application/json
+          Authorization: "APIToken {{ api_token }}"
+        validate_certs: true
+        status_code: 200
+      register: get_site_result
+      delegate_to: localhost
+      no_log: "{{ hide_sensitive | default(true) }}"
+      until: get_site_result.status == 200 and get_site_result.json.pagination.totalItems == 0
+      retries: 3
+      delay: 20

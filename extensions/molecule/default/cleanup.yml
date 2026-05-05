@@ -7,19 +7,34 @@
     - ../vars/test_vars.yml
 
   tasks:
-    - name: "Get agent UUID"
+    # TODO Add test if client is registered in API
+    - name: "Get agent UUID Linux"
       ansible.builtin.shell:
         cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | awk -F' ' 'NR == 14 {print $2}'"
         executable: "/bin/bash"
       become: true
-      register: agent_uuid
+      register: lx_agent_uuid
       no_log: "{{ hide_sensitive | default(true) }}"
       changed_when: true
-      failed_when: agent_uuid.rc != 0
+      failed_when: lx_agent_uuid.rc != 0
+      when: ansible_system | lower == 'linux'
+
+    - name: "Get agent UUID Windows"
+      ansible.windows.win_shell:
+        cmd: 'C:\Program Files\SentinelOne\Sentinel*\SentinelCtl.exe agent_id'
+      register: win_agent_uuid
+      no_log: "{{ hide_sensitive | default(true) }}"
+      changed_when: true
+      failed_when: win_agent_uuid
+      when: ansible_os_family | lower == 'windows'
+
+    - name: "Set agent uuid variable"
+      ansible.builtin.set_fact:
+        agent_uuid: "{{ lx_agent_uuid.stdout if ansible_system | lower == 'linux' else win_agent_uuid }}"
 
     - name: "Uninstall agent for site deletion"
       ansible.builtin.uri:
-        url: "{{ console_url }}/web/api/v2.1/agents/actions/uninstall "
+        url: "{{ console_url }}/web/api/v2.1/agents/actions/uninstall"
         method: POST
         return_content: true
         headers:
@@ -28,7 +43,7 @@
         body_format: json
         body:
           filter:
-            uuid: "{{ agent_uuid.stdout }}"
+            uuid: "{{ agent_uuid }}"
         validate_certs: true
         status_code: 200
       register: uninstall_agent_response
