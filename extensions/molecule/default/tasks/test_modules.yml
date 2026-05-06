@@ -66,7 +66,7 @@
       - "Testgroup1"
       - "Testgroup2"
 
-- name: "Converge: Create Exclusions in groups"
+- name: "Converge: Add exclusions in groups"
   sva.sentinelone.sentinelone_path_exclusions:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
@@ -100,15 +100,13 @@
         agentUiOn: false
 
 - name: "Converge: Sentinelone set custom update window"
-  block:
-    - name: "Sentinelone: Set custom update window"
-      sva.sentinelone.sentinelone_upgrade_policies:
-        console_url: "{{ console_url }}"
-        token: "{{ api_token }}"
-        site_name: "{{ site }}"
-        inherit_max_concurrent_downloads: true
-        timezone: "+01:00"
-        maintenance_windows:
-          monday:
-            - from: '08:00 am'
-              to: '04:00 pm'
+  sva.sentinelone.sentinelone_upgrade_policies:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    inherit_max_concurrent_downloads: true
+    timezone: "+01:00"
+    maintenance_windows:
+      monday:
+        - from: '08:00 am'
+          to: '04:00 pm'

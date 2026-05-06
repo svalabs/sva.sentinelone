@@ -151,7 +151,7 @@
   tags:
     - sentinelone_install_agent_mgmt_console_client_verification
   ansible.builtin.uri:
-    url: "{{ install_agent_api_url }}agents?siteIds={{ install_agent_siteid }}&computerName={{ ansible_hostname | urlencode }}&isActive=true"
+    url: "{{ install_agent_api_url }}agents?siteIds={{ install_agent_siteid }}&computerName={{ ansible_facts['hostname'] | urlencode }}&isActive=true"
     method: GET
     return_content: true
     headers:

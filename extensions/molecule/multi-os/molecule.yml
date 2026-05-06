@@ -18,7 +18,7 @@ platforms:
 
   - name: rocky-8
     box: "bento/rockylinux-8"
-    box_architecture: "${ARCH:-amd64}"
+    box_architecture: "amd64" # amd64 support only
     memory: 2048
     cpus: 2
     config_options:
@@ -94,7 +94,7 @@ provisioner:
     prepare: ../default/prepare.yml
     converge: ../default/converge.yml
     verify: ../default/verify.yml
-    cleanup: cleanup.yml
+    cleanup: ../default/cleanup.yml
 
   inventory:
     host_vars:
@@ -120,6 +120,3 @@ provisioner:
         ansible_python_interpreter: /usr/bin/python3
       fedora-43:
         ansible_python_interpreter: /usr/bin/python3
-  env:
-    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/../../roles"
-    ANSIBLE_COLLECTIONS_PATH: "${MOLECULE_PROJECT_DIRECTORY}/../../../.."

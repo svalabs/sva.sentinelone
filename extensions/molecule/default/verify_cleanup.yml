@@ -2,7 +2,8 @@
 - name: Cleanup after tests
   hosts: all
   gather_facts: false
-
+  vars_files:
+    - ../vars/test_vars.yml
   tasks:
     - name: "Verify: site is deleted"
       ansible.builtin.uri:
@@ -16,7 +17,10 @@
         status_code: 200
       register: get_site_result
       delegate_to: localhost
+      run_once: true
       no_log: "{{ hide_sensitive | default(true) }}"
       until: get_site_result.status == 200 and get_site_result.json.pagination.totalItems == 0
       retries: 3
       delay: 20
+
+# TODO totalitem check in assert umwandeln

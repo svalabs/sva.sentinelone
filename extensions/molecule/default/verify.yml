@@ -3,211 +3,318 @@
   hosts: all
   gather_facts: true
 
+  vars_files:
+    - ../vars/test_vars.yml
+
   tasks:
-    - name: "Verify: Get site from API"
-      ansible.builtin.uri:
-        url: "{{ console_url }}/web/api/v2.1/sites?name={{ site }}&state=active"
-        method: GET
-        return_content: true
-        headers:
-          Accept: application/json
-          Authorization: "APIToken {{ api_token }}"
-        validate_certs: true
-        status_code: 200
-      register: get_site_result
+    - name: "Block: Verify Module runs"
       delegate_to: localhost
-      no_log: "{{ hide_sensitive | default(true) }}"
-      until: get_site_result.status == 200
-      retries: 3
-      delay: 20
+      run_once: true
+      block:
+        - name: "Verify: Get site from API"
+          ansible.builtin.uri:
+            url: "{{ console_url }}/web/api/v2.1/sites?name={{ site }}&state=active"
+            method: GET
+            return_content: true
+            headers:
+              Accept: application/json
+              Authorization: "APIToken {{ api_token }}"
+            validate_certs: true
+            status_code: 200
+          register: get_site_result
+          no_log: "{{ hide_sensitive | default(true) }}"
+          until: get_site_result.status == 200
+          retries: 3
+          delay: 20
 
-    - name: "Verify: Site was created"
-      ansible.builtin.assert:
-        that:
-          - get_site_result.json.data.sites | length == 1
-          - get_site_result.json.data.sites[0].name ==  site
-          - get_site_result.json.data.sites[0].siteType | lower == site_type | lower
-          - get_site_result.json.data.sites[0].sku | lower == license_type | lower
-          - get_site_result.json.data.sites[0].totalLicenses == total_agents
-        success_msg: "Verification passed. Site created sucessfully."
-        fail_msg: "Verification failed. Site not created sucessfully. Either site does not exist or one of the parameters were not set correctly."
+        - name: "Verify: Site was created"
+          ansible.builtin.assert:
+            that:
+              - get_site_result.json.data.sites | length == 1
+              - get_site_result.json.data.sites[0].name ==  site
+              - get_site_result.json.data.sites[0].siteType | lower == site_type | lower
+              - get_site_result.json.data.sites[0].sku | lower == license_type | lower
+              - get_site_result.json.data.sites[0].totalLicenses == total_agents
+            success_msg: "Verification passed. Site created sucessfully."
+            fail_msg: "Verification failed. Site not created sucessfully. Either site does not exist or one of the parameters were not set correctly."
 
-    - name: "Set site_id"
-      ansible.builtin.set_fact:
-        site_id: "{{ get_site_result.json.data.sites[0].id }}"
+        - name: "Set site_id"
+          ansible.builtin.set_fact:
+            site_id: "{{ get_site_result.json.data.sites[0].id }}"
 
-    - name: "Verify: Get Site policy"
-      ansible.builtin.uri:
-        url: "{{ console_url }}/web/api/v2.1/sites/{{ site_id }}/policy"
-        method: GET
-        return_content: true
-        headers:
-          Accept: application/json
-          Authorization: "APIToken {{ api_token }}"
-        validate_certs: true
-        status_code: 200
-      register: get_site_policy_result
-      delegate_to: localhost
-      no_log: "{{ hide_sensitive | default(true) }}"
-      until: get_site_policy_result.status == 200
-      retries: 3
-      delay: 20
+        - name: "Verify: Get Site policy from API"
+          ansible.builtin.uri:
+            url: "{{ console_url }}/web/api/v2.1/sites/{{ site_id }}/policy"
+            method: GET
+            return_content: true
+            headers:
+              Accept: application/json
+              Authorization: "APIToken {{ api_token }}"
+            validate_certs: true
+            status_code: 200
+          register: get_site_policy_result
+          no_log: "{{ hide_sensitive | default(true) }}"
+          until: get_site_policy_result.status == 200
+          retries: 3
+          delay: 20
 
-    - name: "Verify: Site policy was updated"
-      ansible.builtin.assert:
-        that:
-          - get_site_policy_result.json.data.scanNewAgents == false
-          - get_site_policy_result.json.data.snapshotsOn ==  false
-        success_msg: "Verification passed. Site policy updated sucessfully."
-        fail_msg: "Verification failed. Site policy was not updated sucessfully. Some or all parameters couldn't be updated."
+        - name: "Verify: Site policy was updated"
+          ansible.builtin.assert:
+            that:
+              - get_site_policy_result.json.data.scanNewAgents == false
+              - get_site_policy_result.json.data.snapshotsOn ==  false
+            success_msg: "Verification passed. Site policy updated sucessfully."
+            fail_msg: "Verification failed. Site policy was not updated sucessfully. Some or all parameters couldn't be updated."
 
-    - name: "Verify: Get site exclusions"
-      ansible.builtin.uri:
-        url: "{{ console_url }}/web/api/v2.1/exclusions?siteIds={{ site_id }}&type=path&value={{ 'C:\temp\test.exe' | urlencode }}"
-        method: GET
-        return_content: true
-        headers:
-          Accept: application/json
-          Authorization: "APIToken {{ api_token }}"
-        validate_certs: true
-        status_code: 200
-      register: get_site_exclusion_result
-      delegate_to: localhost
-      no_log: "{{ hide_sensitive | default(true) }}"
-      until: get_site_exclusion_result.status == 200
-      retries: 3
-      delay: 20
+        - name: "Verify: Get site exclusions from API"
+          ansible.builtin.uri:
+            url: "{{ console_url }}/web/api/v2.1/exclusions?siteIds={{ site_id }}&type=path&value={{ 'C:\\temp\\test.exe' | urlencode }}"
+            method: GET
+            return_content: true
+            headers:
+              Accept: application/json
+              Authorization: "APIToken {{ api_token }}"
+            validate_certs: true
+            status_code: 200
+          register: get_site_exclusion_result
+          no_log: "{{ hide_sensitive | default(true) }}"
+          until: get_site_exclusion_result.status == 200
+          retries: 3
+          delay: 20
 
-    - name: "Verify: site exclusion was created"
-      ansible.builtin.assert:
-        that:
-          - get_site_exclusion_result.json.data | length > 0
-          - get_site_exclusion_result.json.data[0].description == "[Converge] Test Site exclusion"
-          - get_site_exclusion_result.json.data[0].mode == "disable_in_process_monitor_deep" # this is the API representation of "interoperability_extended"
-          - get_site_exclusion_result.json.data[0].osType == "windows"
-          - get_site_exclusion_result.json.data[0].pathExclusionType == "file"
-        success_msg: "Verification passed. Site exclusion created sucessfully."
-        fail_msg: "Verification failed. Site exclusion was not created sucessfully. Either exclusion does not exist or one of the parameters were not set correctly"
+        - name: "Verify: site exclusion was created"
+          ansible.builtin.assert:
+            that:
+              - get_site_exclusion_result.json.data | length > 0
+              - get_site_exclusion_result.json.data[0].description == "[Converge] Test site exclusion"
+              - get_site_exclusion_result.json.data[0].mode == "disable_in_process_monitor_deep" # this is the API representation of "interoperability_extended"
+              - get_site_exclusion_result.json.data[0].osType == "windows"
+              - get_site_exclusion_result.json.data[0].pathExclusionType == "file"
+            success_msg: "Verification passed. Site exclusion created sucessfully."
+            fail_msg: "Verification failed. Site exclusion was not created sucessfully.
+              Either exclusion does not exist or one of the parameters were not set correctly"
 
-    - name: "Verify: Get site filter from API"
-      ansible.builtin.uri:
-        url: "{{ console_url }}/web/api/v2.1/filters?siteIds={{ site_id }}"
-        method: GET
-        return_content: true
-        headers:
-          Accept: application/json
-          Authorization: "APIToken {{ api_token }}"
-        validate_certs: true
-        status_code: 200
-      register: get_site_filter_result
-      delegate_to: localhost
-      no_log: "{{ hide_sensitive | default(true) }}"
-      until: get_site_filter_result.status == 200
-      retries: 3
-      delay: 20
+        - name: "Verify: Get site filter from API"
+          ansible.builtin.uri:
+            url: "{{ console_url }}/web/api/v2.1/filters?siteIds={{ site_id }}"
+            method: GET
+            return_content: true
+            headers:
+              Accept: application/json
+              Authorization: "APIToken {{ api_token }}"
+            validate_certs: true
+            status_code: 200
+          register: get_site_filter_result
+          no_log: "{{ hide_sensitive | default(true) }}"
+          until: get_site_filter_result.status == 200
+          retries: 3
+          delay: 20
 
-    - name: "Verify: Site filters were created"
-      ansible.builtin.assert:
-        that:
-          - item.object.filterFields == filter_fields
-        success_msg: "Verification passed. Site filter created sucessfully."
-        fail_msg: "Verification failed. Site filter was not created sucessfully. Either filter does not exist or one of the parameters were not set correctly"
-      loop:
-        - filter_fields:
-            osTypes:
-              - "linux"
-          object: "{{ get_site_filter_result.json.data | selectattr('name', 'equalto', 'Linux Hosts') | list | first }}"
-        - filter_fields:
-            osTypes:
-              - "windows"
-          object: "{{ get_site_filter_result.json.data | selectattr('name', 'equalto', 'Windows Hosts') | list | first }}"
+        - name: "Verify: Site filters were created"
+          ansible.builtin.assert:
+            that:
+              - item.object.filterFields == item.filter_fields
+            success_msg: "Verification passed. Site filter created sucessfully."
+            fail_msg: "Verification failed. Site filter was not created sucessfully.
+              Either filter does not exist or one of the parameters were not set correctly"
+          loop:
+            - filter_fields:
+                osTypes:
+                  - "linux"
+              object: "{{ get_site_filter_result.json.data | selectattr('name', 'equalto', 'Linux Hosts') | list | first }}"
+            - filter_fields:
+                osTypes:
+                  - "windows"
+              object: "{{ get_site_filter_result.json.data | selectattr('name', 'equalto', 'Windows Hosts') | list | first }}"
 
-    - name: "Verify: Get groups from API"
-      ansible.builtin.uri:
-        url: "{{ console_url }}/web/api/v2.1/groups?siteIds={{ site_id }}&types=dynamic,static"
-        method: GET
-        return_content: true
-        headers:
-          Accept: application/json
-          Authorization: "APIToken {{ api_token }}"
-        validate_certs: true
-        status_code: 200
-      register: get_groups_result
-      delegate_to: localhost
-      no_log: "{{ hide_sensitive | default(true) }}"
-      until: get_groups_result.status == 200
-      retries: 3
-      delay: 20
+        - name: "Verify: Get groups from API"
+          ansible.builtin.uri:
+            url: "{{ console_url }}/web/api/v2.1/groups?siteIds={{ site_id }}&types=dynamic,static"
+            method: GET
+            return_content: true
+            headers:
+              Accept: application/json
+              Authorization: "APIToken {{ api_token }}"
+            validate_certs: true
+            status_code: 200
+          register: get_groups_result
+          no_log: "{{ hide_sensitive | default(true) }}"
+          until: get_groups_result.status == 200
+          retries: 3
+          delay: 20
 
-    - name: "Verify: Groups were created"
-      ansible.builtin.assert:
-        that:
-          - get_groups_result.json.data | selectattr('name', 'equalto', 'Windows Hosts') | selectattr('filterName', 'equalto', 'Windows Hosts') | selectattr('type', 'equalto', 'dynamic') | list | length > 0
-          - get_groups_result.json.data | selectattr('name', 'equalto', 'Linux Hosts') | selectattr('filterName', 'equalto', 'Linux Hosts') | selectattr('type', 'equalto', 'dynamic') | list | length > 0
-          - get_groups_result.json.data | selectattr('name', 'equalto', 'Testgroup1') | selectattr('type', 'equalto', 'static') | list | length > 0
-          - get_groups_result.json.data | selectattr('name', 'equalto', 'Testgroup2') | selectattr('type', 'equalto', 'static') | list | length > 0
-        success_msg: "Verification passed. Groups created sucessfully."
-        fail_msg: "Verification failed. Groups were not created sucessfully. Either a group does not exist or one of the parameters were not set correctly"
+        - name: "Verify: Groups were created"
+          ansible.builtin.assert:
+            that:
+              - get_groups_result.json.data | selectattr('name', 'equalto', 'Windows Hosts') | selectattr('filterName', 'equalto', 'Windows Hosts')
+                | selectattr('type', 'equalto', 'dynamic') | list | length > 0
+              - get_groups_result.json.data | selectattr('name', 'equalto', 'Linux Hosts') | selectattr('filterName', 'equalto', 'Linux Hosts')
+                | selectattr('type', 'equalto', 'dynamic') | list | length > 0
+              - get_groups_result.json.data | selectattr('name', 'equalto', 'Testgroup1') | selectattr('type', 'equalto', 'static') | list | length > 0
+              - get_groups_result.json.data | selectattr('name', 'equalto', 'Testgroup2') | selectattr('type', 'equalto', 'static') | list | length > 0
+            success_msg: "Verification passed. Groups created sucessfully."
+            fail_msg: "Verification failed. Groups were not created sucessfully. Either a group does not exist or one of the parameters were not set correctly"
 
-    - name: "Verify: Get group exclusions"
-      ansible.builtin.uri:
-        url: "{{ console_url }}/web/api/v2.1/exclusions?groupIds={{ (get_groups_result.json.data | selectattr('name', 'equalto', 'Linux Hosts') | list | first).id }}&type=path&value={{ '/tmp/test/' | urlencode }}"
-        method: GET
-        return_content: true
-        headers:
-          Accept: application/json
-          Authorization: "APIToken {{ api_token }}"
-        validate_certs: true
-        status_code: 200
-      register: get_group_exclusion_result
-      delegate_to: localhost
-      no_log: "{{ hide_sensitive | default(true) }}"
-      until: get_group_exclusion_result.status == 200
-      retries: 3
-      delay: 20
+        - name: "Verify: Get group exclusions from API"
+          ansible.builtin.uri:
+            url: "{{ console_url }}/web/api/v2.1/exclusions?groupIds={{ (get_groups_result.json.data | selectattr('name', 'equalto', 'Linux Hosts')
+              | list | first).id }}&type=path&value={{ '/tmp/test/' | urlencode }}"
+            method: GET
+            return_content: true
+            headers:
+              Accept: application/json
+              Authorization: "APIToken {{ api_token }}"
+            validate_certs: true
+            status_code: 200
+          register: get_group_exclusion_result
+          no_log: "{{ hide_sensitive | default(true) }}"
+          until: get_group_exclusion_result.status == 200
+          retries: 3
+          delay: 20
 
-    - name: "Verify: Group exclusion was created"
-      ansible.builtin.assert:
-        that:
-          - get_group_exclusion_result.json.data | length > 0
-          - get_group_exclusion_result.json.data[0].description == "[Converge] Test group exclusion"
-          - get_group_exclusion_result.json.data[0].mode == "disable_all_monitors_deep" # this is the API representation of "performance_focus"
-          - get_group_exclusion_result.json.data[0].osType == "linux"
-          - get_group_exclusion_result.json.data[0].pathExclusionType == "subfolders"
-        success_msg: "Verification passed. Group exclusion created sucessfully."
-        fail_msg: "Verification failed. Group exclusion was not created sucessfully. Either exclusion does not exist or one of the parameters were not set correctly"
+        - name: "Verify: Group exclusion was created"
+          ansible.builtin.assert:
+            that:
+              - get_group_exclusion_result.json.data | length > 0
+              - get_group_exclusion_result.json.data[0].description == "[Converge] Test group exclusion"
+              - get_group_exclusion_result.json.data[0].mode == "disable_all_monitors" # this is the API representation of "performance_focus"
+              - get_group_exclusion_result.json.data[0].osType == "linux"
+              - get_group_exclusion_result.json.data[0].pathExclusionType == "subfolders"
+            success_msg: "Verification passed. Group exclusion created sucessfully."
+            fail_msg: "Verification failed. Group exclusion was not created sucessfully.
+              Either exclusion does not exist or one of the parameters were not set correctly"
 
-- name: "Converge: Create config overrides"
-  sva.sentinelone.sentinelone_config_overrides:
-    console_url: "{{ console_url }}"
-    token: "{{ api_token }}"
-    site_name: "{{ site }}"
-    description: "[Converge] Test config override"
-    name: "[Converge] Test config override"
-    os_type: "windows"
-    config_override:
-      powershellProtection: false
+        - name: "Verify: Get config override from API"
+          ansible.builtin.uri:
+            url: "{{ console_url }}/web/api/v2.1/config-override?name__like={{ '[Converge] Test config override' | urlencode }}&siteIds={{ site_id }}"
+            method: GET
+            return_content: true
+            headers:
+              Accept: application/json
+              Authorization: "APIToken {{ api_token }}"
+            validate_certs: true
+            status_code: 200
+          register: get_config_override_result
+          no_log: "{{ hide_sensitive | default(true) }}"
+          until: get_config_override_result.status == 200
+          retries: 3
+          delay: 20
 
-- name: "Converge: Update group policy"
-  sva.sentinelone.sentinelone_policies:
-    console_url: "{{ console_url }}"
-    token: "{{ api_token }}"
-    site_name: "{{ site }}"
-    groups: "Testgroup1"
-    policy:
-      agentUi:
-        agentUiOn: false
+        - name: "Verify: Config override was created"
+          ansible.builtin.assert:
+            that:
+              - get_config_override_result.json.data | length == 1
+              - get_config_override_result.json.data[0].description == "[Converge] Test config override"
+              - get_config_override_result.json.data[0].osType == "windows"
+              - get_config_override_result.json.data[0].config.powershellProtection == false
+            success_msg: "Verification passed. Config override created sucessfully."
+            fail_msg: "Verification failed. config override was not created sucessfully.
+              Either config override does not exist or one of the parameters were not set correctly"
 
-- name: "Converge: Sentinelone set custom update window"
-  block:
-    - name: "Sentinelone: Set custom update window"
-      sva.sentinelone.sentinelone_upgrade_policies:
-        console_url: "{{ console_url }}"
-        token: "{{ api_token }}"
-        site_name: "{{ site }}"
-        inherit_max_concurrent_downloads: true
-        timezone: "+01:00"
-        maintenance_windows:
-          monday:
-            - from: '08:00 am'
-              to: '04:00 pm'
+
+        - name: "Verify: Get group policy from API"
+          ansible.builtin.uri:
+            url: "{{ console_url }}/web/api/v2.1/groups/{{ (get_groups_result.json.data | selectattr('name', 'equalto', 'Testgroup1')
+              | selectattr('type', 'equalto', 'static') | list | first).id }}/policy"
+            method: GET
+            return_content: true
+            headers:
+              Accept: application/json
+              Authorization: "APIToken {{ api_token }}"
+            validate_certs: true
+            status_code: 200
+          register: get_group_policy_result
+          no_log: "{{ hide_sensitive | default(true) }}"
+          until: get_group_policy_result.status == 200
+          retries: 3
+          delay: 20
+
+        - name: "Verify: Group policy was updated"
+          ansible.builtin.assert:
+            that:
+              - get_group_policy_result.json.data.agentUi.agentUiOn == false
+            success_msg: "Verification passed. Group policy updated sucessfully."
+            fail_msg: "Verification failed. Group policy was not updated sucessfully. Some or all parameters couldn't be updated."
+
+        - name: "Verify: Get update window from API"
+          ansible.builtin.uri:
+            url: "{{ console_url }}/web/api/v2.1/tasks-configuration?taskType=agents_upgrade&siteIds={{ site_id }}"
+            method: GET
+            return_content: true
+            headers:
+              Accept: application/json
+              Authorization: "APIToken {{ api_token }}"
+            validate_certs: true
+            status_code: 200
+          register: get_update_window_result
+          no_log: "{{ hide_sensitive | default(true) }}"
+          until: get_update_window_result.status == 200
+          retries: 3
+          delay: 20
+
+        - name: "Verify: Update window was updated"
+          ansible.builtin.assert:
+            that:
+              - get_update_window_result.json.data.inheritParentMaintenanceConfig == false
+              - get_update_window_result.json.data.maintenanceWindowsByDay.Monday is defined
+              - get_update_window_result.json.data.maintenanceWindowsByDay.Monday.maintenanceHours[0].fromTime == "8:00 am"
+              - get_update_window_result.json.data.maintenanceWindowsByDay.Monday.maintenanceHours[0].toTime == "4:00 pm"
+            success_msg: "Verification passed. Update window updated sucessfully."
+            fail_msg: "Verification failed. Update window was not updated sucessfully. Some or all parameters couldn't be updated."
+
+    - name: "Block: Verify agent installation"
+      block:
+        - name: "Verify: Get SentinelAgent Service info Windows"
+          ansible.windows.win_service_info:
+            name: SentinelAgent
+          register: windows_service_info_result
+          when: ansible_facts['os_family'] | lower == 'windows'
+
+        - name: "Verify: Check agent is installed, started and enabled on Windows"
+          ansible.builtin.assert:
+            that:
+              - windows_service_info_result.services[0].state == "started"
+              - windows_service_info_result.services[0].start_mode == "auto"
+            success_msg: "Verification passed. Sentinelone agent is running and enabled."
+            fail_msg: "Verification failed. Sentinelone agent is either not installed, running or enabled."
+          when: ansible_facts['os_family'] | lower == 'windows'
+
+
+        - name: Populate service facts
+          ansible.builtin.service_facts:
+          when: ansible_facts['system'] | default('') | lower == 'linux'
+
+        - name: "Verify: Check agent is installed, started and enabled on Linux"
+          ansible.builtin.assert:
+            that:
+              - ansible_facts['services']['sentinelone.service'] is defined
+              - ansible_facts['services']['sentinelone.service'].status == "enabled"
+              - ansible_facts['services']['sentinelone.service'].state == "running"
+            success_msg: "Verification passed. Sentinelone agent is running and enabled."
+            fail_msg: "Verification failed. Sentinelone agent is either not installed, running or enabled."
+          when: ansible_facts['system'] | default('') | lower == 'linux'
+
+        - name: "Verify: Agent is present in site get from API"
+          ansible.builtin.uri:
+            url: "{{ console_url }}/web/api/v2.1/agents?siteIds={{ site_id }}&computerName={{ ansible_facts['hostname'] | urlencode }}&isActive=true"
+            method: GET
+            return_content: true
+            headers:
+              Accept: application/json
+              Authorization: "APIToken {{ api_token }}"
+            validate_certs: true
+            status_code: 200
+          register: agent_registrationstatus
+          delegate_to: localhost
+          no_log: "{{ hide_sensitive | default(true) }}"
+          until: agent_registrationstatus.status == 200
+          retries: 3
+          delay: 20
+
+        - name: "Verify: Check agent is present in site"
+          ansible.builtin.assert:
+            that:
+              - agent_registrationstatus.json.pagination.totalItems == 1
+            success_msg: "Verification passed. Sentinelone agent is connected to management console"
+            fail_msg: "Verification failed. Sentinelone agent is not connected to management console."
+          when: ansible_facts['system'] | default('') | lower == 'linux'
