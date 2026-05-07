@@ -16,13 +16,16 @@ platforms:
     config_options:
       ssh.keep_alive: true
 
-  - name: rocky-8
-    box: "bento/rockylinux-8"
-    box_architecture: "amd64" # amd64 support only
-    memory: 2048
-    cpus: 2
-    config_options:
-      ssh.keep_alive: true
+  ### Rocky 8 uses system python 3.6. Ansible dropped Python 3.6 support in 2.17.
+  ### Installing newer python versions work but have limitations especially with selinux and dnf.
+  ### Disabling Molecule test for Rocky 8 for compatibility with newer Ansible Versions
+  # - name: rocky-8
+  #   box: "bento/rockylinux-8"
+  #   box_architecture: "amd64" # amd64 support only
+  #   memory: 2048
+  #   cpus: 2
+  #   config_options:
+  #     ssh.keep_alive: true
 
   - name: rocky-9
     box: "bento/rockylinux-9"
@@ -34,14 +37,6 @@ platforms:
 
   - name: rocky-10
     box: "bento/rockylinux-10"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
-    cpus: 2
-    config_options:
-      ssh.keep_alive: true
-
-  - name: opensuse-leap-15
-    box: "bento/opensuse-leap-15"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
     cpus: 2
@@ -102,13 +97,9 @@ provisioner:
         ansible_python_interpreter: /usr/bin/python3
       ubuntu-2404:
         ansible_python_interpreter: /usr/bin/python3
-      rocky-8:
-        ansible_python_interpreter: /usr/bin/python3
       rocky-9:
         ansible_python_interpreter: /usr/bin/python3
       rocky-10:
-        ansible_python_interpreter: /usr/bin/python3
-      opensuse-leap-15:
         ansible_python_interpreter: /usr/bin/python3
       opensuse-leap-160:
         ansible_python_interpreter: /usr/bin/python3

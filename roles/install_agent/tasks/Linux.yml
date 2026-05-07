@@ -36,9 +36,9 @@
 
         # Workaround for RHEL 10. Wait until fix in https://github.com/ansible/ansible/pull/86237 is
         # backported in all supported ansible releases to go back to rpm_key module
-        - name: "Linux: Try importing RPM GPG key"
+        - name: "Linux: Importing RPM GPG key"
           ansible.builtin.command:
-            cmd: "rpm -i {{ install_agent_remote_gpg_key_path }}"
+            cmd: "rpm --import {{ install_agent_remote_gpg_key_path }}"
           register: install_agent_rpm_import
           changed_when: install_agent_rpm_import.rc == 0
           failed_when: install_agent_signed_package and install_agent_rpm_import.rc != 0
@@ -58,20 +58,22 @@
     - name: "Block: DEB based systems"
       when: install_agent_pkg_format == "deb"
       block:
-        - name: "Install gpg"
-          ansible.builtin.apt:
-            name: gpg
-            update_cache: true
+        ### Debian does not verify gpg key if a package is installed via commandline. Only repo signature verification is enabled.
 
-        - name: "Linux: Copy gpg key to remote server"
-          ansible.builtin.copy:
-            src: "{{ install_agent_gpg_key }}"
-            dest: "{{ install_agent_remote_gpg_key_path }}"
-            mode: "0644"
+        # - name: "Install gpg"
+        #   ansible.builtin.apt:
+        #     name: gpg
+        #     update_cache: true
 
-        - name: "Linux: Import GPG key for apt"
-          ansible.builtin.apt_key:
-            file: "{{ install_agent_remote_gpg_key_path }}"
+        # - name: "Linux: Copy gpg key to remote server"
+        #   ansible.builtin.copy:
+        #     src: "{{ install_agent_gpg_key }}"
+        #     dest: "{{ install_agent_remote_gpg_key_path }}"
+        #     mode: "0644"
+
+        # - name: "Linux: Import GPG key for apt"
+        #   ansible.builtin.apt_key:
+        #     file: "{{ install_agent_remote_gpg_key_path }}"
 
         - name: "Linux: Install deb agent package {{ install_agent_remote_pkg_path }}"
           ansible.builtin.apt:

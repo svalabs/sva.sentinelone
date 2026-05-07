@@ -62,3 +62,4 @@
       retries: 5
       delay: 30
       delegate_to: localhost
+      run_once: true
