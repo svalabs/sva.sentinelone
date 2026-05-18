@@ -77,7 +77,7 @@ options:
       - "Exclusion Function to exclude I(os_path) for Binary Vaults"
     type: bool
     required: false
-    default: true
+    default: false
   mode:
     description:
       - "Defines the exclusion mode for this exclusion. Required if I(state=present)"

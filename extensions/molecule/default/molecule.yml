@@ -41,8 +41,6 @@ provisioner:
     cleanup: cleanup.yml
   inventory:
     host_vars:
-      ubuntu-2404:
-        ansible_python_interpreter: /usr/bin/python3
       windows-server-2025:
         ansible_shell_type: powershell
         ansible_become: false
