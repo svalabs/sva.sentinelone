@@ -1,0 +1,21 @@
+---
+driver:
+  name: default
+
+platforms:
+  - name: winserver
+    managed: false  # Molecule startet/stoppt den Server nicht
+provisioner:
+  name: ansible
+  ANSIBLE_PIPELINING: "False"
+  playbooks:
+    prepare: ../default/prepare.yml
+    converge: ../default/converge.yml
+    verify: ../default/verify.yml
+    cleanup: ../default/cleanup.yml
+  inventory:
+    links:
+      # Copy from template ext_inventory.yml.dist
+      hosts: ../ext_inventory.yml
+verifier:
+  name: ansible

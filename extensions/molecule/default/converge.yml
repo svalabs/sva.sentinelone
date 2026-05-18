@@ -1,7 +1,6 @@
 ---
 - name: Execute Modules and Roles
   hosts: all
-  strategy: linear
   gather_facts: true
 
   vars_files:

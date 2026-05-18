@@ -7,59 +7,104 @@
     - ../vars/test_vars.yml
 
   tasks:
-    # TODO Add test if client is registered in API
-    - name: "Get agent UUID Linux"
-      ansible.builtin.shell:
-        cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | awk -F' ' 'NR == 14 {print $2}'"
-        executable: "/bin/bash"
-      become: true
-      register: lx_agent_uuid
-      no_log: "{{ hide_sensitive | default(true) }}"
-      changed_when: true
-      failed_when: lx_agent_uuid.rc != 0
-      when: ansible_facts['system'] | default('') | lower == 'linux'
-
-    - name: "Get agent UUID Windows"
-      ansible.windows.win_shell:
-        cmd: 'C:\Program Files\SentinelOne\Sentinel*\SentinelCtl.exe agent_id'
-      register: win_agent_uuid
-      no_log: "{{ hide_sensitive | default(true) }}"
-      changed_when: true
-      failed_when: win_agent_uuid
-      when: ansible_facts['os_family'] | default('') | lower == 'windows'
-
-    - name: "Set agent uuid variable"
-      ansible.builtin.set_fact:
-        agent_uuid: "{{ lx_agent_uuid.stdout if ansible_facts['system'] | default('') | lower == 'linux' else win_agent_uuid }}"
-
-    - name: "Uninstall agent for site deletion"
+    - name: "Get site from API"
       ansible.builtin.uri:
-        url: "{{ console_url }}/web/api/v2.1/agents/actions/uninstall"
-        method: POST
+        url: "{{ console_url }}/web/api/v2.1/sites?name={{ site }}&state=active"
+        method: GET
         return_content: true
         headers:
           Accept: application/json
           Authorization: "APIToken {{ api_token }}"
-        body_format: json
-        body:
-          filter:
-            uuid: "{{ agent_uuid }}"
         validate_certs: true
         status_code: 200
-      register: uninstall_agent_response
-      delegate_to: localhost
+      register: get_site_result
       no_log: "{{ hide_sensitive | default(true) }}"
-      until: ((uninstall_agent_response.status == 200) and (uninstall_agent_response.json.data.affected == 1))
+      until: get_site_result.status == 200
       retries: 3
       delay: 20
-
-    - name: "Cleanup: Remove test site"
-      sva.sentinelone.sentinelone_sites:
-        console_url: "{{ console_url }}"
-        token: "{{ api_token }}"
-        name: "{{ site }}"
-        state: absent
-      retries: 5
-      delay: 30
       delegate_to: localhost
       run_once: true
+
+    - name: "Block: Remove site if site still exists"
+      when: get_site_result.json.pagination.totalItems > 0
+      block:
+        - name: "Set site_id"
+          ansible.builtin.set_fact:
+            site_id: "{{ get_site_result.json.data.sites[0].id }}"
+          run_once: true
+
+        - name: "Get registered agent from API"
+          ansible.builtin.uri:
+            url: "{{ console_url }}/web/api/v2.1/agents?siteIds={{ site_id }}&computerName={{ ansible_facts['hostname'] | urlencode }}&isActive=true"
+            method: GET
+            return_content: true
+            headers:
+              Accept: application/json
+              Authorization: "APIToken {{ api_token }}"
+            validate_certs: true
+            status_code: 200
+          register: agent_registrationstatus
+          delegate_to: localhost
+          no_log: "{{ hide_sensitive | default(true) }}"
+          until: agent_registrationstatus.status == 200
+          retries: 3
+          delay: 20
+
+        - name: "Block: Uninstall agent"
+          when: agent_registrationstatus.json.pagination.totalItems > 0
+          block:
+            - name: "Get agent UUID Linux"
+              ansible.builtin.shell:
+                cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | awk -F' ' 'NR == 14 {print $2}'"
+                executable: "/bin/bash"
+              become: true
+              register: lx_agent_uuid
+              no_log: "{{ hide_sensitive | default(true) }}"
+              changed_when: true
+              failed_when: lx_agent_uuid.rc != 0
+              when: ansible_facts['system'] | default('') | lower == 'linux'
+
+            - name: "Get agent UUID Windows"
+              ansible.windows.win_shell:
+                cmd: "& 'C:\\Program Files\\SentinelOne\\Sentinel*\\SentinelCtl.exe' agent_id"
+              register: win_agent_uuid
+              no_log: "{{ hide_sensitive | default(true) }}"
+              changed_when: false
+              failed_when: win_agent_uuid.rc != 0 and win_agent_uuid.result | length > 0
+              when: ansible_facts['os_family'] | default('') | lower == 'windows'
+
+            - name: "Uninstall agent for site deletion"
+              ansible.builtin.uri:
+                url: "{{ console_url }}/web/api/v2.1/agents/actions/uninstall"
+                method: POST
+                return_content: true
+                headers:
+                  Accept: application/json
+                  Authorization: "APIToken {{ api_token }}"
+                body_format: json
+                body:
+                  filter:
+                    uuid: "{{ (lx_agent_uuid.stdout if (ansible_facts['system'] | default('') | lower == 'linux') else win_agent_uuid.stdout) | trim }}"
+                validate_certs: true
+                status_code: 200
+              register: uninstall_agent_response
+              delegate_to: localhost
+              no_log: "{{ hide_sensitive | default(true) }}"
+              until: ((uninstall_agent_response.status == 200) and (uninstall_agent_response.json.data.affected == 1))
+              retries: 3
+              delay: 20
+
+        - name: "Cleanup: Remove test site"
+          sva.sentinelone.sentinelone_sites:
+            console_url: "{{ console_url }}"
+            token: "{{ api_token }}"
+            name: "{{ site }}"
+            state: absent
+          retries: 5
+          delay: 30
+          delegate_to: localhost
+          run_once: true
+
+        - name: Reboot windows machine after agent uninstall
+          ansible.windows.win_reboot:
+          when: ansible_facts['os_family'] | default('') | lower == 'windows' and agent_registrationstatus.json.pagination.totalItems > 0

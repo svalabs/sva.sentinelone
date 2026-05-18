@@ -90,8 +90,3 @@ provisioner:
     converge: ../default/converge.yml
     verify: ../default/verify.yml
     cleanup: ../default/cleanup.yml
-
-  inventory:
-    links:
-      # Copy from template ext_inventory.yml.dist
-      hosts: ../ext_inventory.yml

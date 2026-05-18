@@ -27,9 +27,19 @@
     - name: "Block: RPM based systems"
       when: install_agent_pkg_format == "rpm"
       block:
+        - name: "Download gpg key"
+          ansible.builtin.get_url:
+            url: "{{ install_agent_gpg_key_download_url }}"
+            dest: "./"
+            mode: '0644'
+          delegate_to: localhost
+          become: false
+          register: install_agent_download_gpg_key_result
+          when: install_agent_signed_package and install_agent_gpg_key is not defined
+
         - name: "Linux: Copy GPG key to remote server (RPM)"
           ansible.builtin.copy:
-            src: "{{ install_agent_gpg_key }}"
+            src: "{{ install_agent_gpg_key if install_agent_gpg_key is defined else install_agent_download_gpg_key_result.dest }}"
             dest: "{{ install_agent_remote_gpg_key_path }}"
             mode: "0644"
           when: install_agent_signed_package
@@ -54,6 +64,14 @@
           ansible.builtin.package:
             name: "{{ install_agent_remote_pkg_path }}"
           when: install_agent_signed_package
+
+        - name: "Linux: Remove gpg key from localhost"
+          ansible.builtin.file:
+            path: "{{ install_agent_download_gpg_key_result.dest }}"
+            state: absent
+          delegate_to: localhost
+          become: false
+          when: install_agent_signed_package and install_agent_gpg_key is not defined
 
     - name: "Block: DEB based systems"
       when: install_agent_pkg_format == "deb"
@@ -91,7 +109,8 @@
 
 - name: "Linux: Register agent"
   ansible.builtin.command:
-    cmd: "/opt/sentinelone/bin/sentinelctl management token set {{ install_agent_reg_token_obj.json.data.token }}"
+    cmd: "/opt/sentinelone/bin/sentinelctl management token set {{ install_agent_registration_token if install_agent_registration_token | length > 0
+      else install_agent_reg_token_obj.json.data.token }}"
   become: true
   register: install_agent_token_set_output
   no_log: "{{ install_agent_hide_sensitive }}"

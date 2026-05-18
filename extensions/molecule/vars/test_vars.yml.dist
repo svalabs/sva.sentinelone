@@ -2,7 +2,7 @@
 console_url: "https://your-instance.sentinelone.net"
 api_token: "YOUR_S1_API_TOKEN"
 site: "ansible-test"
-license_type: "core"
+license_type: "complete"
 total_agents: 100
 site_type: Paid
 gpg_key: "/tmp/sentinel_one.gpg"  # optional

@@ -70,7 +70,7 @@ Role Variables
 | `console_url` | https://my-console.sentinelone.net | The URL of the SentinelOne Management Console |
 | `api_token` | XXXXXXXXXXXXXXXXXX | The API token for the API user for authentication |
 | `site` | prod | The site to which the new hosts should be assigned |
-| `gpg_key` | /tmp/sentinel_one.gpg | **Linux** only. Required for .deb based systems. Required for .rpm based systems when agent version >= 23.3.2.12. Path to the gpg key which will be installed and used for package signature verification |
+| `gpg_key` | /tmp/sentinel_one.gpg | **Linux** only. Optional: Provide a local path to a GPG key to be installed and used for package signature verification. If no path is provided, the role will automatically download the required key. This parameter is used exclusively on .rpm-based systems with an agent version of 23.3.2.12 or higher. |
 
 ### Optional Variables
 
@@ -85,7 +85,8 @@ Role Variables
 | `lx_force_new_token` | false | true, false | Linux only: Set the management token on the linux agent even if it is already registered. |
 | `win_use_exe` | false | true, false | Windows only: By default, the .msi package is used for installation. If you prefer to use the .exe file, enable this setting |
 | `win_allow_reboot` | true | true, false | Windows only: After the removal of a Windows Feature (here Windows Defender) and after the agent installation, a reboot is required. The role is set to reboot at the end of the installation by default. Disable this setting if you wish to skip the reboot. |
-| `linux_custom_client_url` | | | Optional Url to a package source to download the SentinelOne client package. If is not set, SentinelOne client will be downloaded by the default SentinelOne API. |
+| `custom_client_url` | | | Optional Url to a package source to download the SentinelOne client package. If is not set, SentinelOne client will be downloaded by via SentinelOne Console. |
+| `registration_token` | | | Optional registration token to manually register the agent. Usefull if no API access is available but a registration token was provided by an administrator. |
 
 ### Variables from `vars.yml`
 

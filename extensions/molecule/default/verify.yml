@@ -279,8 +279,7 @@
             fail_msg: "Verification failed. Sentinelone agent is either not installed, running or enabled."
           when: ansible_facts['os_family'] | lower == 'windows'
 
-
-        - name: Populate service facts
+        - name: "Verify: Gather service_facts"
           ansible.builtin.service_facts:
           when: ansible_facts['system'] | default('') | lower == 'linux'
 
@@ -317,4 +316,3 @@
               - agent_registrationstatus.json.pagination.totalItems == 1
             success_msg: "Verification passed. Sentinelone agent is connected to management console"
             fail_msg: "Verification failed. Sentinelone agent is not connected to management console."
-          when: ansible_facts['system'] | default('') | lower == 'linux'

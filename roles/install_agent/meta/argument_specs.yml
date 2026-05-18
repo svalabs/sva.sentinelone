@@ -88,18 +88,24 @@ argument_specs:
 
       console_url:
         type: "str"
-        required: true
-        description: "The SentinelOne management console URL. E.g. https://my-s1-console.net."
+        required: false
+        description:
+          - "The SentinelOne management console URL. E.g. https://my-s1-console.net."
+          - "Required if registration_token is not provided"
 
       api_token:
         type: "str"
-        required: true
-        description: "The API token to authenticate at the management console."
+        required: false
+        description:
+          - "The API token to authenticate at the management console."
+          - "Required if registration_token is not provided"
 
       site:
         type: "str"
-        required: true
-        description: "The name of the site where the new endpoint should join."
+        required: false
+        description:
+          - "The name of the site where the new endpoint should join."
+          - "Required if registration_token is not provided"
 
       group:
         type: "str"
@@ -111,3 +117,10 @@ argument_specs:
         required: false
         description:
           - "The path to the gpg key to verify the agent package integrity. Required if installing a rpm agent package >= 23.3.2.12"
+
+      registration_token:
+        type: "str"
+        required: false
+        description:
+          - "Optional registration token. Usefull if no API access is available and the agent should be registered manually."
+          - "Mutually exclusive with console_url and site"

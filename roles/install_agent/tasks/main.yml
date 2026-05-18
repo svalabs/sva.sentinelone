@@ -1,5 +1,14 @@
 ---
 # tasks file for install_agent
+
+- name: "Sanity checks"
+  ansible.builtin.assert:
+    that:
+      - (console_url is defined or api_token is defined or site is defined) != (registration_token is defined)
+      - (console_url is defined and api_token is defined and site is defined) or registration_token is defined
+    fail_msg: "Error: Some checks failed. Either define site, api_token and console_url together or use the registration_token variable"
+    success_msg: "All tests passed"
+
 - name: "Gather facts"
   ansible.builtin.setup:
   when: ansible_facts.distribution is not defined
@@ -45,19 +54,20 @@
   throttle: 1
   tags:
     - download_client_from_sentinel_one
-  when: '(not install_agent_agent_installed) and (install_agent_linux_custom_client_url | length == 0)'
+  when: '(not install_agent_agent_installed) and (install_agent_custom_client_url | length == 0)'
 
 - name: "Download agent to localhost from custom source."
   tags:
     - download_client_from_custom_url
-  when: '(not install_agent_agent_installed) and (install_agent_linux_custom_client_url | length > 0)'
+  when: '(not install_agent_agent_installed) and (install_agent_custom_client_url | length > 0)'
   block:
-    - name: "Client Custom Source: Download custom installation package"
+    - name: "Download custom installation package to localhost"
       ansible.builtin.get_url:
-        url: "{{ install_agent_linux_custom_client_url }}"
-        dest: "{{ tmp_dir }}"
+        url: "{{ install_agent_custom_client_url }}"
+        dest: "./"
         mode: '0644'
       register: install_agent_return_download_package
+      delegate_to: localhost
 
     - name: "Client Custom Source: Set path from downloaded agent to variable"
       ansible.builtin.set_fact:
@@ -67,6 +77,7 @@
             filename: "{{ install_agent_return_download_package.dest | basename }}"
 
 - name: "Block: Get registration token from API"
+  when: install_agent_registration_token | length == 0
   run_once: true
   tags:
     - sentinelone_install_agent_get_registration_token
@@ -165,3 +176,4 @@
   until: ((install_agent_registrationstatus.json.data | length) > 0) and (install_agent_registrationstatus.status == 200)
   retries: "{{ install_agent_check_console_retries }}"
   delay: "{{ install_agent_check_console_retry_delay }}"
+  when: install_agent_registration_token | length == 0

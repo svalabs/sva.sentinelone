@@ -7,4 +7,5 @@ dependencies = [
     "argcomplete",
     "deepdiff>=5.6.0",
     "molecule-plugins[vagrant]",
+    "pywinrm[credssp]>=0.5.0",
 ]

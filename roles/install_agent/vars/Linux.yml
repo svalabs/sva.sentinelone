@@ -2,3 +2,5 @@
 install_agent_remote_pkg_path: "{{ install_agent_tmp_dir }}{{ install_agent_return_download_agent.original_message.filename }}"
 install_agent_remote_gpg_key_path: "/tmp/sentinel_one.gpg"
 install_agent_signed_package: "{{ false if install_agent_agent_version == 'custom' and install_agent_custom_version is version('23.3.2.12', '<') else true }}"
+install_agent_gpg_key_download_url:
+  "https://github.com/Sentinel-One/ansible_collection_s1agents/raw/refs/heads/main/roles/s1_import_gpg_key/files/sentinel_one.gpg"
