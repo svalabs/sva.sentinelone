@@ -1,15 +1,7 @@
 ---
 platforms:
-  # - name: ubuntu-2404
-  #   box: "bento/ubuntu-24.04"
-  #   box_architecture: "${ARCH:-amd64}"
-  #   memory: 2048
-  #   cpus: 2
-  #   config_options:
-  #     ssh.keep_alive: true
-
-  - name: rocky-10
-    box: "bento/rockylinux-10"
+  - name: ubuntu-2404
+    box: "bento/ubuntu-24.04"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
     cpus: 2

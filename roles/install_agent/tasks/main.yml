@@ -4,9 +4,8 @@
 - name: "Sanity checks"
   ansible.builtin.assert:
     that:
-      - (console_url is defined or api_token is defined or site is defined) != (registration_token is defined)
-      - (console_url is defined and api_token is defined and site is defined) or registration_token is defined
-    fail_msg: "Error: Some checks failed. Either define site, api_token and console_url together or use the registration_token variable"
+      - console_url is defined and api_token is defined and site is defined and (registration_token is not defined or custom_client_url is not defined)
+    fail_msg: "Error: Some checks failed. site, api_token and console_url must be defined if one of custom_client_url or registration_token is not set"
     success_msg: "All tests passed"
 
 - name: "Gather facts"

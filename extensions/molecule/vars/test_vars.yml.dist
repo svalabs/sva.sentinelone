@@ -5,4 +5,7 @@ site: "ansible-test"
 license_type: "complete"
 total_agents: 100
 site_type: Paid
-gpg_key: "/tmp/sentinel_one.gpg"  # optional
+# gpg_key: "/tmp/sentinel_one.gpg"  # optional
+
+# custom client test
+client_url: "https://url-to-your-client.net"

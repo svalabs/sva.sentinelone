@@ -8,7 +8,3 @@ roles/sentinelone_client_legacy/tasks/install_redhat.yml var-naming[no-role-pref
 roles/sentinelone_client_legacy/tasks/install_suse.yml command-instead-of-module
 roles/sentinelone_client_legacy/tasks/install_suse.yml var-naming[no-role-prefix]
 roles/sentinelone_client_legacy/tasks/main.yml var-naming[no-role-prefix]
-extensions/molecule/default/converge.yml run-once[task]
-extensions/molecule/default/cleanup.yml run-once[task]
-extensions/molecule/default/verify.yml run-once[task]
-extensions/molecule/default/verify_cleanup.yml run-once[task]
