@@ -1,6 +1,6 @@
 ---
 - name: Include distribution-specific variables
-  ansible.builtin.include_vars: "{{ ansible_os_family | regex_replace(' ', '_') | lower }}.yml"
+  ansible.builtin.include_vars: "{{ ansible_facts.os_family | regex_replace(' ', '_') | lower }}.yml"
 
 - name: Get dmesg output
   ansible.builtin.command: dmesg
@@ -29,7 +29,7 @@
   when: "'http' not in sentinelone_client_filename"
 
 - name: Include installation tasks
-  ansible.builtin.include_tasks: "install_{{ ansible_os_family | regex_replace(' ', '_') | lower }}.yml"
+  ansible.builtin.include_tasks: "install_{{ ansible_facts.os_family | regex_replace(' ', '_') | lower }}.yml"
 
 - name: Remove installation package
   ansible.builtin.file:

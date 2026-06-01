@@ -4,9 +4,12 @@
 - name: "Sanity checks"
   ansible.builtin.assert:
     that:
-      - console_url is defined and api_token is defined and site is defined and (registration_token is not defined or custom_client_url is not defined)
+      - console_url is defined
+      - api_token is defined
+      - site is defined
     fail_msg: "Error: Some checks failed. site, api_token and console_url must be defined if one of custom_client_url or registration_token is not set"
     success_msg: "All tests passed"
+  when: registration_token is not defined or custom_client_url is not defined
 
 - name: "Gather facts"
   ansible.builtin.setup:
@@ -67,6 +70,7 @@
         mode: '0644'
       register: install_agent_return_download_package
       delegate_to: localhost
+      throttle: 1
 
     - name: "Client Custom Source: Set path from downloaded agent to variable"
       ansible.builtin.set_fact:

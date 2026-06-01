@@ -35,14 +35,13 @@
           delegate_to: localhost
           become: false
           register: install_agent_download_gpg_key_result
-          when: install_agent_signed_package and install_agent_gpg_key is not defined
+          when: install_agent_gpg_key is not defined
 
         - name: "Linux: Copy GPG key to remote server (RPM)"
           ansible.builtin.copy:
             src: "{{ install_agent_gpg_key if install_agent_gpg_key is defined else install_agent_download_gpg_key_result.dest }}"
             dest: "{{ install_agent_remote_gpg_key_path }}"
             mode: "0644"
-          when: install_agent_signed_package
 
         # Workaround for RHEL 10. Wait until fix in https://github.com/ansible/ansible/pull/86237 is
         # backported in all supported ansible releases to go back to rpm_key module
@@ -51,19 +50,11 @@
             cmd: "rpm --import {{ install_agent_remote_gpg_key_path }}"
           register: install_agent_rpm_import
           changed_when: install_agent_rpm_import.rc == 0
-          failed_when: install_agent_signed_package and install_agent_rpm_import.rc != 0
-          when: install_agent_signed_package
-
-        - name: "Linux: Install unsigned .rpm agent package via rpm"
-          ansible.builtin.command:
-            cmd: "rpm -i --nodigest {{ install_agent_remote_pkg_path }}"
-            creates: "/opt/sentinelone/bin/sentinelctl"
-          when: not install_agent_signed_package
+          failed_when: install_agent_rpm_import.rc != 0
 
         - name: "Linux: Install signed .rpm agent package {{ install_agent_remote_pkg_path }}"
           ansible.builtin.package:
             name: "{{ install_agent_remote_pkg_path }}"
-          when: install_agent_signed_package
 
         - name: "Linux: Remove gpg key from localhost"
           ansible.builtin.file:
@@ -71,7 +62,7 @@
             state: absent
           delegate_to: localhost
           become: false
-          when: install_agent_signed_package and install_agent_gpg_key is not defined
+          when: install_agent_gpg_key is not defined
 
     - name: "Block: DEB based systems"
       when: install_agent_pkg_format == "deb"

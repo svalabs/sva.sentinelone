@@ -82,10 +82,12 @@ platforms:
 
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_TIMEOUT: "300"
   playbooks:
     prepare: ../default/prepare.yml
     converge: converge.yml
-    verify: ../default/verify.yml
+    verify: verify.yml
     cleanup: ../default/cleanup.yml
 
   inventory:

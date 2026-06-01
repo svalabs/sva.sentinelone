@@ -22,5 +22,3 @@
       until: get_site_result.status == 200 and get_site_result.json.pagination.totalItems == 0
       retries: 3
       delay: 20
-
-# TODO totalitem check in assert umwandeln

@@ -1,0 +1,72 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+
+  vars_files:
+    - ../vars/test_vars.yml
+
+  tasks:
+    - name: "Verify: Get site from API"
+      ansible.builtin.uri:
+        url: "{{ console_url }}/web/api/v2.1/sites?name={{ site }}&state=active"
+        method: GET
+        return_content: true
+        headers:
+          Accept: application/json
+          Authorization: "APIToken {{ api_token }}"
+        validate_certs: true
+        status_code: 200
+      register: get_site_result
+      no_log: "{{ hide_sensitive | default(true) }}"
+      until: get_site_result.status == 200
+      retries: 3
+      delay: 20
+      delegate_to: localhost
+      run_once: true
+
+    - name: "Verify: Site was created"
+      ansible.builtin.assert:
+        that:
+          - get_site_result.json.data.sites | length == 1
+          - get_site_result.json.data.sites[0].name ==  site
+          - get_site_result.json.data.sites[0].siteType | lower == site_type | lower
+          - get_site_result.json.data.sites[0].sku | lower == license_type | lower
+          - get_site_result.json.data.sites[0].totalLicenses == total_agents
+        success_msg: "Verification passed. Site created sucessfully."
+        fail_msg: "Verification failed. Site not created sucessfully. Either site does not exist or one of the parameters were not set correctly."
+
+    - name: "Set site_id"
+      ansible.builtin.set_fact:
+        site_id: "{{ get_site_result.json.data.sites[0].id }}"
+
+    - name: "Verify: Gather service_facts"
+      ansible.builtin.service_facts:
+      when: ansible_facts['system'] | default('') | lower == 'linux'
+
+    - name: "Verify: Check agent is installed, started and enabled on Linux"
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['services']['sentinelone.service'] is defined
+          - ansible_facts['services']['sentinelone.service'].status == "enabled"
+          - ansible_facts['services']['sentinelone.service'].state == "running"
+        success_msg: "Verification passed. Sentinelone agent is running and enabled."
+        fail_msg: "Verification failed. Sentinelone agent is either not installed, running or enabled."
+      when: ansible_facts['system'] | default('') | lower == 'linux'
+
+    - name: "Verify: Agent is present in site get from API"
+      ansible.builtin.uri:
+        url: "{{ console_url }}/web/api/v2.1/agents?siteIds={{ site_id }}&computerName={{ ansible_facts['hostname'] | urlencode }}&isActive=true"
+        method: GET
+        return_content: true
+        headers:
+          Accept: application/json
+          Authorization: "APIToken {{ api_token }}"
+        validate_certs: true
+        status_code: 200
+      register: agent_registrationstatus
+      delegate_to: localhost
+      no_log: "{{ hide_sensitive | default(true) }}"
+      until: agent_registrationstatus.status == 200 and agent_registrationstatus.json.pagination.totalItems == 1
+      retries: 90
+      delay: 20

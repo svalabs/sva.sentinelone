@@ -7,7 +7,7 @@ def test_packages(host):
     """
     Ensure that packages are installed
     """
-    os = host.ansible("setup")["ansible_facts"]["ansible_os_family"].lower()
+    os = host.ansible("setup")["ansible_facts"]["os_family"].lower()
     if os == "debian":
         pkg = 'sentinelagent'
     else:

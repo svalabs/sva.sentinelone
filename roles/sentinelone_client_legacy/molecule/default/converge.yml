@@ -5,17 +5,17 @@
     - name: Set SentinelONE client installation file (Debian)
       ansible.builtin.set_fact:
         sentinelone_client_legacy_file: sentinelone_latest.deb
-      when: ansible_os_family == 'Debian'
+      when: ansible_facts.os_family == 'Debian'
 
     - name: Set SentinelONE client installation file (Red Hat)
       ansible.builtin.set_fact:
         sentinelone_client_legacy_file: sentinelone_latest.rpm
-      when: ansible_os_family == 'RedHat'
+      when: ansible_facts.os_family == 'RedHat'
 
     - name: Set SentinelONE client installation file (SUSE)
       ansible.builtin.set_fact:
         sentinelone_client_legacy_file: sentinelone_latest.rpm
-      when: ansible_os_family == 'Suse'
+      when: ansible_facts.os_family == 'Suse'
 
   roles:
     - role: sva.sentinelone.sentinelone_client_legacy
