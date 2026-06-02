@@ -1,10 +1,13 @@
 ---
+scenario:
+  name: windows
+
 driver:
   name: default
 
 platforms:
   - name: winserver
-    managed: false  # Molecule startet/stoppt den Server nicht
+    managed: false  # Molecule doesn't start/stop the server
 provisioner:
   name: ansible
   ANSIBLE_PIPELINING: "False"

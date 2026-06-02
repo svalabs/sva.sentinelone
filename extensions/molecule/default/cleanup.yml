@@ -1,7 +1,7 @@
 ---
 - name: Remove test site
   hosts: all
-  gather_facts: true
+  gather_facts: false
 
   vars_files:
     - ../vars/test_vars.yml
@@ -25,9 +25,20 @@
       delegate_to: localhost
       run_once: true
 
+    - name: "Check if hosts still exists"
+      ansible.builtin.wait_for_connection:
+        timeout: 15
+      ignore_errors: true
+      register: connection_result
+
     - name: "Block: Remove site if site still exists"
       when: get_site_result.json.pagination.totalItems > 0
       block:
+
+        - name: "Gather facts"
+          ansible.builtin.setup:
+          when: connection_result is not failed
+
         - name: "Set site_id"
           ansible.builtin.set_fact:
             site_id: "{{ get_site_result.json.data.sites[0].id }}"
@@ -49,9 +60,10 @@
           until: agent_registrationstatus.status == 200
           retries: 3
           delay: 20
+          when: connection_result is not failed
 
         - name: "Block: Uninstall agent"
-          when: agent_registrationstatus.json.pagination.totalItems > 0
+          when: connection_result is not failed and agent_registrationstatus.json.pagination.totalItems > 0
           block:
             - name: "Get agent UUID Linux"
               ansible.builtin.shell:
@@ -104,6 +116,7 @@
           delay: 30
           delegate_to: localhost
           run_once: true
+          when: get_site_result.json.pagination.totalItems > 0
 
         - name: Reboot windows machine after agent uninstall
           ansible.windows.win_reboot:

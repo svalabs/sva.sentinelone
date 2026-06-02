@@ -1,4 +1,13 @@
 ---
+- name: Deprecation warning
+  ansible.builtin.debug:
+    msg: |
+      [DEPRECATION WARNING]: The role 'sentinelone_client_legacy' will be removed in Release 3.0.0.
+      Please migrate to 'sva.sentinelone.install_agent'. See CHANGELOG.md.
+      Deprecation warnings can be deactivated with deprecation_warnings=False in ansible.cfg.
+  run_once: true
+  when: sentinelone_client_legacy_deprecation_warnings
+
 - name: Include distribution-specific variables
   ansible.builtin.include_vars: "{{ ansible_facts.os_family | regex_replace(' ', '_') | lower }}.yml"
 

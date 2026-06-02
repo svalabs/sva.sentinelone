@@ -146,14 +146,26 @@ releases:
     fragments:
       - v2.0.3.yml
     release_date: '2024-11-21'
+  2.0.4:
+    changes:
+      bugfixes:
+        - 'config_override: Fixed an error where multiple config_override objects where
+          returned by API which caused module to fail in certain situations'
+    fragments:
+      - v2.0.4.yml
+    release_date: '2024-12-03'
   2.0.5:
     changes:
       minor_changes:
         - add filter on os_type while get request on exclusions
         - output URL in failure message of api_call
-        - when updateing s1 exclusions do  put request instead of delete and post
+        - when updating s1 exclusions do put request instead of delete and post
     fragments:
       - v2.0.5.yml
     release_date: '2025-02-21'
   2.0.6:
+    changes:
+      release_summary: Added the ability to install own s1 packaged with the role without API usage
+    fragments:
+      - v2.0.6
     release_date: '2026-03-12'

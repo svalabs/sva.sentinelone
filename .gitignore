@@ -8,3 +8,4 @@ uv.lock
 extensions/molecule/vars/test_vars.yml
 extensions/molecule/ext_inventory.yml
 ansible_collections/
+.DS_Store

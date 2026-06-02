@@ -1,5 +1,25 @@
 ---
 # vars file for install_agent
+# Mandatory variables for API usage
+install_agent_console_url: "{{ console_url }}"
+install_agent_api_token: "{{ api_token }}"
+install_agent_site: "{{ site }}"
+
+# Optional variables
+install_agent_gpg_key: "{{ gpg_key }}"
+install_agent_custom_version: "{{ custom_version | default(omit) }}"
+install_agent_group: "{{ group | default('', true) }}"
+install_agent_win_use_exe: "{{ win_use_exe | default(false) }}"
+install_agent_win_allow_reboot: "{{ win_allow_reboot | default(true) }}"
+install_agent_agent_version: "{{ agent_version | default('latest') }}"
+install_agent_hide_sensitive: "{{ hide_sensitive | default(true) }}"
+install_agent_lx_force_new_token: "{{ lx_force_new_token | default(false) }}"
+install_agent_check_console_retries: "{{ check_console_retries | default(3) }}"
+install_agent_check_console_retry_delay: "{{ check_console_retry_delay | default(20) }}"
+install_agent_custom_client_url: "{{ custom_client_url | default('') }}"
+install_agent_registration_token: "{{ registration_token | default('') }}"
+
+# Internal variabes
 install_agent_pkg_format: "{% if ansible_facts.pkg_mgr | default('') in ['yum', 'dnf', 'zypper', 'dnf5'] %}rpm{%
   elif ansible_facts.pkg_mgr | default('') == 'apt' %}deb{%
   elif ansible_facts.os_family | default('') | lower == 'windows' and not install_agent_win_use_exe %}msi{%

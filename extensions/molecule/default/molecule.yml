@@ -8,6 +8,14 @@ platforms:
     config_options:
       ssh.keep_alive: true
 
+  - name: fedora-43
+    box: "bento/fedora-43"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
+    cpus: 2
+    config_options:
+      ssh.keep_alive: true
+
   # - name: windows-server-2025
   #   box: "gusztavvargadr/windows-server-2025-standard"
   #   # No selector here. amd64 only box

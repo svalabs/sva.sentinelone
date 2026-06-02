@@ -66,6 +66,7 @@
         custom_client_url: "{{ client_url }}"
         registration_token: "{{ get_reg_token_result.json.data.token }}"
 
-    - name: "Pause for 8 minutes to wait for s1 agent to become ready"
-      ansible.builtin.pause:
-        minutes: 8
+    # Extra wait bc my testmachine is slow bc it has to emulate x86_64 (arm based)
+    # - name: "Pause for 8 minutes to wait for s1 agent to become ready"
+    #   ansible.builtin.pause:
+    #     minutes: 8

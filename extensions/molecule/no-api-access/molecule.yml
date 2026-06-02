@@ -1,4 +1,7 @@
 ---
+scenario:
+  name: no-api-access
+
 platforms:
   - name: ubuntu-2204
     box: "bento/ubuntu-22.04"

@@ -1,0 +1,3 @@
+deprecated_features:
+  - "sentinelone_client_legacy - This role is deprecated and will be removed in Release 3.0.0.
+      Please migrate to 'sva.sentinelone.install_agent'. It now supports the same features"
