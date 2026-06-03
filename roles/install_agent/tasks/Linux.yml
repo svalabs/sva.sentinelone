@@ -67,7 +67,8 @@
     - name: "Block: DEB based systems"
       when: install_agent_pkg_format == "deb"
       block:
-        ### Debian does not verify gpg key if a package is installed via commandline. Only repo signature verification is enabled.
+        ### Debian does not verify gpg key if a package is installed via commandline. Only repo signature verification is available.
+        ### No need to import gpg key then
 
         # - name: "Install gpg"
         #   ansible.builtin.apt:

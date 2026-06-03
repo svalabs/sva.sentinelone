@@ -23,14 +23,33 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 
 - **Roles:**
   - [install_agent](roles/install_agent/README.md)
-  - [sentinelone_client_legacy](roles/sentinelone_client_legacy/README.md)
+  - [sentinelone_client_legacy](roles/sentinelone_client_legacy/README.md) *(deprecated – see [Migration](#migration))*
+
+## Migration
+
+### sentinelone_client_legacy → install_agent
+
+> ⚠️ **Deprecated:** The role `sentinelone_client_legacy` is deprecated and will be removed in a future release. Please migrate to the `install_agent` role.
+
+The `install_agent` role now incorporates all functionality previously provided by `sentinelone_client_legacy`, including support for environments **without API access**. `install_agent` role now supports these two cases:
+- Download agent from provided download URL
+- Register agent with a provided registration_token
+
+**If both is provided no API access is needed.**
+
+| `sentinelone_client_legacy` variable | `install_agent` variable | Description |
+|---|---|---|
+| `sentinelone_client_filename` | `custom_client_url` | Direct URL to the SentinelOne agent package |
+| `sentinelone_client_token` | `registration_token` | Registration token provided by an administrator |
+
+Please see [install_agent role documentation](roles/install_agent/README.md) for more details.
 
 ## Requirements
 ### Ansible
-- ansible >= 8 **or** ansible-core >= 2.15 (Lower versions may work but they have not been tested)
+- ansible >= 10 **or** ansible-core >= 2.17 (Lower versions may work but they have not been tested)
 
 ### Python
-- Python >= 3.9 (Ansible control node requirement)
+- Python >= 3.10 (Ansible control node requirement)
 
 ### External
 This collection needs the following Python modules:
@@ -39,15 +58,18 @@ This collection needs the following Python modules:
 ## Tested with Ansible and the following Python versions
 
 Tested Ansible versions:
-- 2.15
-- 2.16
 - 2.17
+- 2.18
+- 2.19
+- 2.20
+- 2.21
 
 Tested Python versions:
-- 3.9
 - 3.10
 - 3.11
 - 3.12
+- 3.13
+- 3.14
 
 ## Using this collection
 ### Installing the collection from Ansible Galaxy
@@ -83,29 +105,6 @@ The module documentation can be found [here](https://svalabs.github.io/sva.senti
 The role documentation can be found [here](https://svalabs.github.io/sva.sentinelone/branch/main/collections/index_role.html).
 
 ## Changelog
-**v2.0.3**: Bugfix release. Fixed OpenSUSE compatibility
-
-**v2.0.2**: Bugfix release. Fixed idempotency bug in install_agent role and reverted changes from v2.0.1
-
-**v2.0.1**: Bugfix release. Fixed a bug where the install_agent role fails on local tasks if "ansible_connection" var is set in playbook.
-
-**v2.0.0**:
-- Added new sentinelone_agent_info module and [@stdevels](https://github.com/stdevel/ansible-sentinelone_client) sentinelone_client role as sentinelone_client_legacy.
-- install_agent role: Added configurable retries and delays in the step which checks if the agent appears in the management console.
-- **Breaking Changes**: The download_agent modules `state` parameter is no longer available. If you used `state: info` please use the new agent_info module instead. `state` parameter has been removed from download_agent module.
-
-**v1.1.1**: Bugfix release. Changed privilege escalation behaviour
-
-**v1.1.0**: Added new sentinelone_download_agent module and install_agent role
-
-**v1.0.3**: Increased request timeout and implemented error handling for requests that timed out
-
-**v1.0.2**: Added detailed error message to module output if an API call fails
-
-**v1.0.1**: Bugfix release
-
-**v1.0.0**: Initial release
-
 Detailed Changelog can be found at [CHANGELOG](CHANGELOG.rst)
 
 ## Todo (help is welcome)
