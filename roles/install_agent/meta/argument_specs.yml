@@ -123,7 +123,7 @@ argument_specs:
         required: false
         description:
           - "Optional registration token. Usefull if no API access is available and the agent should be registered manually."
-          - "console_url and site will be ignored if registration_token, api_token and custom_client_url will be set together"
+          - "console_url, api_token and site will be ignored if registration_token, api_token and custom_client_url will be set together"
 
       custom_client_url:
         type: "str"
@@ -131,4 +131,4 @@ argument_specs:
         description:
           - "Optional URL to a package source to download the SentinelOne client package. If not set, SentinelOne client will be downloaded by via SentinelOne
             Console."
-          - "console_url and site will be ignored if registration_token, api_token and custom_client_url will be set together"
+          - "console_url, api_token and site will be ignored if registration_token, api_token and custom_client_url will be set together"

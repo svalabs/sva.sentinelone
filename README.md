@@ -36,13 +36,7 @@ The `install_agent` role now incorporates all functionality previously provided 
 - Register agent with a provided registration_token
 
 **If both is provided no API access is needed.**
-
-| `sentinelone_client_legacy` variable | `install_agent` variable | Description |
-|---|---|---|
-| `sentinelone_client_filename` | `custom_client_url` | Direct URL to the SentinelOne agent package |
-| `sentinelone_client_token` | `registration_token` | Registration token provided by an administrator |
-
-Please see [install_agent role documentation](roles/install_agent/README.md) for more details.
+Please see [install_agent role documentation](roles/install_agent/README.md#api-less-installation-no-api-token-required) for more details.
 
 ## Requirements
 ### Ansible
