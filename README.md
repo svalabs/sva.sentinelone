@@ -102,7 +102,6 @@ The role documentation can be found [here](https://svalabs.github.io/sva.sentine
 Detailed Changelog can be found at [CHANGELOG](CHANGELOG.rst)
 
 ## Todo (help is welcome)
-- [ ] Make the modules usable on account scope
 - [ ] Unit tests needs to be written
 
 ## Licensing
