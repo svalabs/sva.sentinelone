@@ -24,7 +24,7 @@ The API user requires the following permissions:
 - Read the site or group registration token
 - Read agent information
 
-### GPG Key (Linux only)
+### GPG Key (rpm-based linux only)
 The GPG key is used to validate the package signatures. If the `gpg_key` variable is not provided, the role will **automatically download** the required key. You can optain the key from the SentinelOne Help page ("**How to Install on a Linux Endpoint with Yum**").
 
 If you prefer to provide the key manually, place it on the host executing the playbook and set the `gpg_key` variable accordingly.
@@ -65,7 +65,7 @@ Role Variables
 | `win_use_exe` | false | true, false | Windows only: By default, the .msi package is used for installation. If you prefer to use the .exe file, enable this setting |
 | `win_allow_reboot` | true | true, false | Windows only: After the removal of a Windows Feature (here Windows Defender) and after the agent installation, a reboot is required. The role is set to reboot at the end of the installation by default. Disable this setting if you wish to skip the reboot. |
 | `custom_client_url` | | | Optional URL to a package source to download the SentinelOne client package. If not set, SentinelOne client will be downloaded via SentinelOne Console. When set together with `registration_token`, no API access is required. |
-| `registration_token` | | | Optional registration token to manually register the agent. Useful if no API access is available but a registration token was provided by an administrator. When set together with `custom_client_url`, no API access is required. If not set, the registration token will be gathered from the API. |
+| `registration_token` | | | Optional registration token to manually register the agent. Useful if no API access is available but a registration token was provided by an administrator. If not set, the registration token will be gathered from the API. When set together with `custom_client_url`, no API access is required. |
 
 ### Variables from `vars.yml`
 
