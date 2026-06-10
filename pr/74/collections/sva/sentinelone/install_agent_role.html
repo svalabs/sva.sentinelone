@@ -167,83 +167,8 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--api_token"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-api-token"><strong>api_token</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--api_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The API token to authenticate at the management console.</p>
-<p>Required if registration_token is not provided</p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--check_console_retries"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-check-console-retries"><strong>check_console_retries</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--check_console_retries" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>How many times the ansible role tries to find the agent in the management console after installation</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">3</span></code></p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--check_console_retry_delay"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-check-console-retry-delay"><strong>check_console_retry_delay</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--check_console_retry_delay" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The delay in s between two attempts to find the agent in the management console after installation</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">20</span></code></p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--console_url"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-console-url"><strong>console_url</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--console_url" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The SentinelOne management console URL. E.g. <a class="reference external" href="https://my-s1-console.net">https://my-s1-console.net</a>.</p>
-<p>Required if registration_token is not provided</p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--custom_client_url"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-custom-client-url"><strong>custom_client_url</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--custom_client_url" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Optional URL to a package source to download the SentinelOne client package. If not set, SentinelOne client will be downloaded by via SentinelOne Console.</p>
-<p>console_url, api_token and site will be ignored if registration_token, api_token and custom_client_url will be set together</p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--custom_version"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-custom-version"><strong>custom_version</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--custom_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Required when ‘agent_version’ is set to <strong>custom</strong>.</p>
-<p>Explicit version of the agent to be installed.</p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--gpg_key"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-gpg-key"><strong>gpg_key</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--gpg_key" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The path to the gpg key to verify the agent package integrity. Required if installing a rpm agent package &gt;= 23.3.2.12</p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--group"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-group"><strong>group</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--group" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Optional: The name of the group where the new endpoint should join.</p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--hide_sensitive"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-hide-sensitive"><strong>hide_sensitive</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--hide_sensitive" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>Hide sensitive information like API keys in module output.</p>
-<p>Only change to false for debugging purposes.</p>
-<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
-<ul class="simple">
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
-<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">true</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-</ul>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-main--install_agent_agent_version"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-install-agent-agent-version"><strong>install_agent_agent_version</strong></p>
-<a class="ansibleOptionLink" href="#parameter-main--install_agent_agent_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<div class="ansibleOptionAnchor" id="parameter-main--agent_version"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-agent-version"><strong>agent_version</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--agent_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The agent version string. <strong>default</strong> is to install ‘latest’ version.</p>
 <p><strong>latest:</strong> Install latest GA version.</p>
@@ -254,6 +179,81 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;latest&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;latest_ea&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;custom&quot;</span></code></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--api_token"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-api-token"><strong>api_token</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--api_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The API token to authenticate at the management console.</p>
+<p>Required if registration_token is not provided</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--check_console_retries"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-check-console-retries"><strong>check_console_retries</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--check_console_retries" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>How many times the ansible role tries to find the agent in the management console after installation</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">3</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--check_console_retry_delay"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-check-console-retry-delay"><strong>check_console_retry_delay</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--check_console_retry_delay" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The delay in s between two attempts to find the agent in the management console after installation</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">20</span></code></p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--console_url"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-console-url"><strong>console_url</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--console_url" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The SentinelOne management console URL. E.g. <a class="reference external" href="https://my-s1-console.net">https://my-s1-console.net</a>.</p>
+<p>Required if registration_token is not provided</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--custom_client_url"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-custom-client-url"><strong>custom_client_url</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--custom_client_url" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Optional URL to a package source to download the SentinelOne client package. If not set, SentinelOne client will be downloaded by via SentinelOne Console.</p>
+<p>console_url, api_token and site will be ignored if registration_token, api_token and custom_client_url will be set together</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--custom_version"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-custom-version"><strong>custom_version</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--custom_version" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Required when ‘agent_version’ is set to <strong>custom</strong>.</p>
+<p>Explicit version of the agent to be installed.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--gpg_key"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-gpg-key"><strong>gpg_key</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--gpg_key" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The path to the gpg key to verify the agent package integrity. Required if installing a rpm agent package &gt;= 23.3.2.12</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--group"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-group"><strong>group</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--group" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Optional: The name of the group where the new endpoint should join.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--hide_sensitive"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-hide-sensitive"><strong>hide_sensitive</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--hide_sensitive" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Hide sensitive information like API keys in module output.</p>
+<p>Only change to false for debugging purposes.</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">true</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 </ul>
 </div></td>
 </tr>
