@@ -187,7 +187,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <a class="ansibleOptionLink" href="#parameter-main--api_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The API token to authenticate at the management console.</p>
-<p>Required if registration_token is not provided</p>
+<p>Required if registration_token and custom_client_url both are not provided</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -211,7 +211,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <a class="ansibleOptionLink" href="#parameter-main--console_url" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The SentinelOne management console URL. E.g. <a class="reference external" href="https://my-s1-console.net">https://my-s1-console.net</a>.</p>
-<p>Required if registration_token is not provided</p>
+<p>Required if registration_token and custom_client_url both are not provided</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -219,7 +219,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <a class="ansibleOptionLink" href="#parameter-main--custom_client_url" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Optional URL to a package source to download the SentinelOne client package. If not set, SentinelOne client will be downloaded by via SentinelOne Console.</p>
-<p>console_url, api_token and site will be ignored if registration_token, api_token and custom_client_url will be set together</p>
+<p>‘console_url’, ‘api_token’ and ‘site’ will be ignored if registration_token and custom_client_url are both set</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -234,7 +234,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <div class="ansibleOptionAnchor" id="parameter-main--gpg_key"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-gpg-key"><strong>gpg_key</strong></p>
 <a class="ansibleOptionLink" href="#parameter-main--gpg_key" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The path to the gpg key to verify the agent package integrity. Required if installing a rpm agent package &gt;= 23.3.2.12</p>
+<td><div class="ansible-option-cell"><p>The path to the gpg key to verify the agent package integrity on rpm based systems.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -274,7 +274,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <a class="ansibleOptionLink" href="#parameter-main--registration_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Optional registration token. Usefull if no API access is available and the agent should be registered manually.</p>
-<p>console_url, api_token and site will be ignored if registration_token, api_token and custom_client_url will be set together</p>
+<p>‘console_url’, ‘api_token’ and ‘site’ will be ignored if registration_token and custom_client_url are both set</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -282,7 +282,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <a class="ansibleOptionLink" href="#parameter-main--site" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The name of the site where the new endpoint should join.</p>
-<p>Required if registration_token is not provided</p>
+<p>Required if registration_token and custom_client_url both are not provided</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
