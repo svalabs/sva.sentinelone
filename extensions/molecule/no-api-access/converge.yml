@@ -12,7 +12,7 @@
       delegate_to: localhost
       block:
         - name: "Converge: Create a site"
-          sva.sentinelone.sentinelone_sites:
+          sva.sentinelone.sites:
             console_url: "{{ console_url }}"
             token: "{{ api_token }}"
             name: "{{ site }}"

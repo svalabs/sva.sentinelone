@@ -1,6 +1,6 @@
 ---
 - name: "Converge: Create a site"
-  sva.sentinelone.sentinelone_sites:
+  sva.sentinelone.sites:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     name: "{{ site }}"
@@ -9,7 +9,7 @@
     site_type: "{{ site_type }}"
 
 - name: "Converge: Update site policy"
-  sva.sentinelone.sentinelone_policies:
+  sva.sentinelone.policies:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site_name: "{{ site }}"
@@ -18,7 +18,7 @@
       snapshotsOn: false
 
 - name: "Converge: Add exclusion to site"
-  sva.sentinelone.sentinelone_path_exclusions:
+  sva.sentinelone.path_exclusions:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site_name: "{{ site }}"
@@ -28,7 +28,7 @@
     os_type: "windows"
 
 - name: "Converge: Add filters to site"
-  sva.sentinelone.sentinelone_filters:
+  sva.sentinelone.filters:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site_name: "{{ site }}"
@@ -45,7 +45,7 @@
           - "windows"
 
 - name: "Converge: Add dynamic groups to site"
-  sva.sentinelone.sentinelone_groups:
+  sva.sentinelone.groups:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site_name: "{{ site }}"
@@ -58,7 +58,7 @@
       filter_name: "Windows Hosts"
 
 - name: "Converge: Add static groups to site"
-  sva.sentinelone.sentinelone_groups:
+  sva.sentinelone.groups:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site_name: "{{ site }}"
@@ -67,7 +67,7 @@
       - "Testgroup2"
 
 - name: "Converge: Add exclusions in groups"
-  sva.sentinelone.sentinelone_path_exclusions:
+  sva.sentinelone.path_exclusions:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site_name: "{{ site }}"
@@ -79,7 +79,7 @@
     include_subfolders: "true"
 
 - name: "Converge: Create config overrides"
-  sva.sentinelone.sentinelone_config_overrides:
+  sva.sentinelone.config_overrides:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site_name: "{{ site }}"
@@ -90,7 +90,7 @@
       powershellProtection: false
 
 - name: "Converge: Update group policy"
-  sva.sentinelone.sentinelone_policies:
+  sva.sentinelone.policies:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site_name: "{{ site }}"
@@ -100,7 +100,7 @@
         agentUiOn: false
 
 - name: "Converge: Sentinelone set custom update window"
-  sva.sentinelone.sentinelone_upgrade_policies:
+  sva.sentinelone.upgrade_policies:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
     site_name: "{{ site }}"

@@ -8,7 +8,7 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: sentinelone_groups
+module: groups
 short_description: "Manage SentinelOne Groups"
 version_added: "1.0.0"
 description:
@@ -65,7 +65,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Create single static group
-  sva.sentinelone.sentinelone_groups:
+  sva.sentinelone.groups:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -73,7 +73,7 @@ EXAMPLES = r'''
     name: "MyGroup"
 
 - name: Create single dynamic group
-  sva.sentinelone.sentinelone_groups:
+  sva.sentinelone.groups:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -82,7 +82,7 @@ EXAMPLES = r'''
     filter_name: "MyFilter"
 
 - name: Create multiple static groups
-  sva.sentinelone.sentinelone_groups:
+  sva.sentinelone.groups:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -93,7 +93,7 @@ EXAMPLES = r'''
       - "MyGroup3"
 
 - name: Delete single static/dynamic group
-  sva.sentinelone.sentinelone_groups:
+  sva.sentinelone.groups:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -101,7 +101,7 @@ EXAMPLES = r'''
     name: "MyGroup"
 
 - name: Delete multiple static/dynamic groups
-  sva.sentinelone.sentinelone_groups:
+  sva.sentinelone.groups:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"

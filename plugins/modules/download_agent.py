@@ -9,7 +9,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: sentinelone_download_agent
+module: download_agent
 short_description: "Download SentinelOne agent from Management Console"
 version_added: "1.1.0"
 description:
@@ -102,7 +102,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Download latest agent for linux
-  sva.sentinelone.sentinelone_download_agent:
+  sva.sentinelone.download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Linux"
@@ -110,7 +110,7 @@ EXAMPLES = r'''
     download_dir: "/tmp"
     architecture: "64_bit"
 - name: Download latest agent for linux and include EA packages
-  sva.sentinelone.sentinelone_download_agent:
+  sva.sentinelone.download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Linux"
@@ -119,7 +119,7 @@ EXAMPLES = r'''
     architecture: "64_bit"
     agent_version: "latest_ea"
 - name: Download specific agent version
-  sva.sentinelone.sentinelone_download_agent:
+  sva.sentinelone.download_agent:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Windows"

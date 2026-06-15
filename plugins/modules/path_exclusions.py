@@ -8,7 +8,7 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: sentinelone_path_exclusions
+module: path_exclusions
 short_description: "Manage SentinelOne Path Exclusions"
 version_added: "1.0.0"
 description:
@@ -110,7 +110,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Create exclusion in site scope
-  sva.sentinelone.sentinelone_path_exclusions:
+  sva.sentinelone.path_exclusions:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -118,7 +118,7 @@ EXAMPLES = r'''
     mode: "performance_focus"
     os_type: "windows"
 - name: Create exclusion in single group
-  sva.sentinelone.sentinelone_path_exclusions:
+  sva.sentinelone.path_exclusions:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -127,7 +127,7 @@ EXAMPLES = r'''
     mode: "interoperability_extended"
     os_type: "windows"
 - name: Create exclusion in multiple groups
-  sva.sentinelone.sentinelone_path_exclusions:
+  sva.sentinelone.path_exclusions:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -139,7 +139,7 @@ EXAMPLES = r'''
     mode: "performance_focus_extended"
     os_type: "windows"
 - name: Create exclusion in multiple groups and disable automatic upload to Binary Vault
-  sva.sentinelone.sentinelone_path_exclusions:
+  sva.sentinelone.path_exclusions:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -153,14 +153,14 @@ EXAMPLES = r'''
     os_type: "windows"
     ef_binary_vault: true
 - name: Delete exclusion in site scope
-  sva.sentinelone.sentinelone_path_exclusions:
+  sva.sentinelone.path_exclusions:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "msd"
     os_path: "C:\\Test1234\\"
 - name: Delete exclusion in group scope
-  sva.sentinelone.sentinelone_path_exclusions:
+  sva.sentinelone.path_exclusions:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"

@@ -11,15 +11,15 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 ## Included content
 
 - **Modules**:
-  - [sentinelone_agent_info](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_agent_info_module.html)
-  - [sentinelone_config_overrides](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_config_overrides_module.html)
-  - [sentinelone_download_agent](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_download_agent_module.html)
-  - [sentinelone_filters](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_filters_module.html)
-  - [sentinelone_groups](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_groups_module.html)
-  - [sentinelone_sites](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_sites_module.html)
-  - [sentinelone_upgrade_policies](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_upgrade_policies_module.html)
-  - [sentinelone_path_exclusions](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_path_exclusions_module.html)
-  - [sentinelone_policies](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sentinelone_policies_module.html)
+  - [agent_info](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/agent_info_module.html)
+  - [config_overrides](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/config_overrides_module.html)
+  - [download_agent](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/download_agent_module.html)
+  - [filters](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/filters_module.html)
+  - [groups](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/groups_module.html)
+  - [sites](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/sites_module.html)
+  - [upgrade_policies](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/upgrade_policies_module.html)
+  - [path_exclusions](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/path_exclusions_module.html)
+  - [policies](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/policies_module.html)
 
 - **Roles:**
   - [install_agent](roles/install_agent/README.md)

@@ -42,7 +42,7 @@
       or install_agent_sentinelagent_service.exists | default(false) else false }}"
 
 - name: "Download agent to localhost from SentinelOne. Version: {{ install_agent_agent_version }}"
-  sva.sentinelone.sentinelone_download_agent:
+  sva.sentinelone.download_agent:
     console_url: "{{ install_agent_console_url }}"
     token: "{{ install_agent_api_token }}"
     site: "{{ install_agent_site }}"

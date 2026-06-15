@@ -1,2 +1,49 @@
 ---
-requires_ansible: '>=2.15.0'
+requires_ansible: '>=2.16.0'
+plugin_routing:
+  modules:
+    sentinelone_agent_info:
+      redirect: sva.sentinelone.agent_info
+      deprecation:
+        removal_version: "3.0.0"
+        warning_text: "Please use sva.sentinelone.agent_info instead."
+    sentinelone_config_overrides:
+      redirect: sva.sentinelone.config_overrides
+      deprecation:
+        removal_version: "3.0.0"
+        warning_text: "Please use sva.sentinelone.config_overrides instead."
+    sentinelone_download_agent:
+      redirect: sva.sentinelone.download_agent
+      deprecation:
+        removal_version: "3.0.0"
+        warning_text: "Please use sva.sentinelone.download_agent instead."
+    sentinelone_filters:
+      redirect: sva.sentinelone.filters
+      deprecation:
+        removal_version: "3.0.0"
+        warning_text: "Please use sva.sentinelone.filters instead."
+    sentinelone_groups:
+      redirect: sva.sentinelone.groups
+      deprecation:
+        removal_version: "3.0.0"
+        warning_text: "Please use sva.sentinelone.groups instead."
+    sentinelone_path_exclusions:
+      redirect: sva.sentinelone.path_exclusions
+      deprecation:
+        removal_version: "3.0.0"
+        warning_text: "Please use sva.sentinelone.path_exclusions instead."
+    sentinelone_policies:
+      redirect: sva.sentinelone.policies
+      deprecation:
+        removal_version: "3.0.0"
+        warning_text: "Please use sva.sentinelone.policies instead."
+    sentinelone_sites:
+      redirect: sva.sentinelone.sites
+      deprecation:
+        removal_version: "3.0.0"
+        warning_text: "Please use sva.sentinelone.sites instead."
+    sentinelone_upgrade_policies:
+      redirect: sva.sentinelone.upgrade_policies
+      deprecation:
+        removal_version: "3.0.0"
+        warning_text: "Please use sva.sentinelone.upgrade_policies instead."

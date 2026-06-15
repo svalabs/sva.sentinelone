@@ -107,7 +107,7 @@
               delay: 20
 
         - name: "Cleanup: Remove test site"
-          sva.sentinelone.sentinelone_sites:
+          sva.sentinelone.sites:
             console_url: "{{ console_url }}"
             token: "{{ api_token }}"
             name: "{{ site }}"

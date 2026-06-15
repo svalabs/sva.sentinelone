@@ -8,7 +8,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: sentinelone_upgrade_policies
+module: upgrade_policies
 short_description: "Manage SentinelOne Upgrade Policies"
 version_added: "1.0.0"
 description:
@@ -86,7 +86,7 @@ notes:
 
 EXAMPLES = r'''
 - name: Set custom 'Maximum Concurrent Downloads' on multiple groups
-  sva.sentinelone.sentinelone_upgrade_policies:
+  sva.sentinelone.upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -95,14 +95,14 @@ EXAMPLES = r'''
       - group2
     max_concurrent_downloads: 1000
 - name: Enable inheritance for 'Maximum Concurrent Downloads' and for 'Maintenance Windows Settings' on site scope
-  sva.sentinelone.sentinelone_upgrade_policies:
+  sva.sentinelone.upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
     inherit_max_concurrent_downloads: true
     inherit_maintenance_windows: true
 - name: Set custom 'Maintenance Windows' for monday and tuesday on single group
-  sva.sentinelone.sentinelone_upgrade_policies:
+  sva.sentinelone.upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -120,7 +120,7 @@ EXAMPLES = r'''
         - from: "3:00 pm"
           to: "7:00 pm"
 - name: Set custom 'Maintenance Windows' for monday on single group and use specific timezone
-  sva.sentinelone.sentinelone_upgrade_policies:
+  sva.sentinelone.upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -134,7 +134,7 @@ EXAMPLES = r'''
           to: "11:00 pm"
     timezone: "+02:00"
 - name: Set custom 'Maintenance Windows' for whole wednesday on site scope
-  sva.sentinelone.sentinelone_upgrade_policies:
+  sva.sentinelone.upgrade_policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
