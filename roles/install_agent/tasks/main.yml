@@ -53,12 +53,14 @@
     custom_version: "{{ install_agent_custom_version | default(omit) }}"
   register: install_agent_return_download_agent
   delegate_to: localhost
+  become: false
   throttle: 1
   tags:
     - download_client_from_sentinel_one
   when: '(not install_agent_agent_installed) and (install_agent_custom_client_url | length == 0)'
 
 - name: "Download agent to localhost from custom source."
+  become: false
   tags:
     - download_client_from_custom_url
   when: '(not install_agent_agent_installed) and (install_agent_custom_client_url | length > 0)'
@@ -82,6 +84,7 @@
 - name: "Block: Get registration token from API"
   when: install_agent_registration_token | length == 0
   run_once: true
+  become: false
   tags:
     - sentinelone_install_agent_get_registration_token
   block:
@@ -159,6 +162,7 @@
     path: "{{ install_agent_return_download_agent.original_message.full_path }}"
     state: absent
   delegate_to: localhost
+  become: false
   when: not install_agent_agent_installed
 
 - name: "Fail if new client does not appear in management console"
@@ -175,8 +179,9 @@
     status_code: 200
   register: install_agent_registrationstatus
   delegate_to: localhost
+  become: false
   no_log: "{{ install_agent_hide_sensitive }}"
-  until: ((install_agent_registrationstatus.json.data | length) > 0) and (install_agent_registrationstatus.status == 200)
+  until: ((install_agent_registrationstatus.json.data | default([]) | length) > 0) and (install_agent_registrationstatus.status | default(0) == 200)
   retries: "{{ install_agent_check_console_retries }}"
   delay: "{{ install_agent_check_console_retry_delay }}"
   when: install_agent_registration_token | length == 0
