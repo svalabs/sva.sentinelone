@@ -107,7 +107,7 @@ EXAMPLES = r'''
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Linux"
     packet_format: "rpm"
-    download_path: "/tmp"
+    download_dir: "/tmp"
     architecture: "64_bit"
 - name: Download latest agent for linux and include EA packages
   sva.sentinelone.sentinelone_download_agent:
@@ -115,7 +115,7 @@ EXAMPLES = r'''
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Linux"
     packet_format: "rpm"
-    download_path: "/tmp"
+    download_dir: "/tmp"
     architecture: "64_bit"
     agent_version: "latest_ea"
 - name: Download specific agent version
