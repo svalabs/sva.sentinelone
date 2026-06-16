@@ -8,7 +8,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: sentinelone_policies
+module: policies
 short_description: "Manage SentinelOne Policies"
 version_added: "1.0.0"
 description:
@@ -65,7 +65,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Set custom policy on multiple groups
-  sva.sentinelone.sentinelone_policies:
+  sva.sentinelone.policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -77,7 +77,7 @@ EXAMPLES = r'''
       agentUi:
         agentUiOn: false
 - name: Set custom policy on site
-  sva.sentinelone.sentinelone_policies:
+  sva.sentinelone.policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -86,7 +86,7 @@ EXAMPLES = r'''
       agentUi:
         agentUiOn: false
 - name: Revert to group default policy inherited from site
-  sva.sentinelone.sentinelone_policies:
+  sva.sentinelone.policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -95,7 +95,7 @@ EXAMPLES = r'''
       - group1
       - group2
 - name: Revert to site default policy inherited from account
-  sva.sentinelone.sentinelone_policies:
+  sva.sentinelone.policies:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"

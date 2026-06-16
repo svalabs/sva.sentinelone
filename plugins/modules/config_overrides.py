@@ -9,7 +9,7 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: sentinelone_config_overrides
+module: config_overrides
 short_description: "Manage SentinelOne Config Overrides"
 version_added: "1.0.0"
 description:
@@ -109,7 +109,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Create/Update config_override for all agents on site
-  sva.sentinelone.sentinelone_config_overrides:
+  sva.sentinelone.config_overrides:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -117,7 +117,7 @@ EXAMPLES = r'''
     os_type: "windows"
     config_override: { powershellProtection: true }
 - name: Create/Update config_override for all agents on group
-  sva.sentinelone.sentinelone_config_overrides:
+  sva.sentinelone.config_overrides:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -127,7 +127,7 @@ EXAMPLES = r'''
     config_override:
       powershellProtection: true
 - name: Create/Update config_override for specific agent version on group
-  sva.sentinelone.sentinelone_config_overrides:
+  sva.sentinelone.config_overrides:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -138,7 +138,7 @@ EXAMPLES = r'''
     config_override:
       powershellProtection: true
 - name: Delete config_override for all agents on group
-  sva.sentinelone.sentinelone_config_overrides:
+  sva.sentinelone.config_overrides:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -146,7 +146,7 @@ EXAMPLES = r'''
     group: "testgroup"
     os_type: "windows"
 - name: Delete config_override for specific agent version on site
-  sva.sentinelone.sentinelone_config_overrides:
+  sva.sentinelone.config_overrides:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"

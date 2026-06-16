@@ -9,7 +9,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: sentinelone_agent_info
+module: agent_info
 short_description: "Get info about the SentinelOne agent package"
 version_added: "2.0.0"
 description:
@@ -93,7 +93,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Get info about specified package
-  sva.sentinelone.sentinelone_agent_info:
+  sva.sentinelone.agent_info:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     os_type: "Windows"

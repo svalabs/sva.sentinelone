@@ -8,7 +8,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: sentinelone_filters
+module: filters
 short_description: "Manage SentinelOne Filters"
 version_added: "1.0.0"
 description:
@@ -62,7 +62,7 @@ notes:
 EXAMPLES = r'''
 ---
 - name: Create filter
-  sva.sentinelone.sentinelone_filters:
+  sva.sentinelone.filters:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     site_name: "test"
@@ -73,7 +73,7 @@ EXAMPLES = r'''
       osTypes:
         - windows
 - name: Update filter
-  sva.sentinelone.sentinelone_filters:
+  sva.sentinelone.filters:
     state: "present"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -86,7 +86,7 @@ EXAMPLES = r'''
       osTypes:
         - windows
 - name: Delete filter
-  sva.sentinelone.sentinelone_filters:
+  sva.sentinelone.filters:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"

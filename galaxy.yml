@@ -39,15 +39,17 @@ tags:
   - install_agent
   - security
   - sentinelone
-  - sentinelone_client
-  - sentinelone_client_legacy
-  - sentinelone_config_overrides
-  - sentinelone_filters
-  - sentinelone_groups
-  - sentinelone_path_exclusions
-  - sentinelone_policies
-  - sentinelone_sites
-  - sentinelone_upgrade_policies
+  - client
+  - client_legacy
+  - config_overrides
+  - filters
+  - groups
+  - path_exclusions
+  - policies
+  - sites
+  - upgrade_policies
+  - agent_info
+  - download_agent
 
 dependencies:
   ansible.windows: "*"

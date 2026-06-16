@@ -8,7 +8,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: sentinelone_sites
+module: sites
 short_description: "Manage SentinelOne Sites"
 version_added: "1.0.0"
 description:
@@ -88,13 +88,13 @@ requirements:
 notes:
   - "Python module deepdiff. Tested with version >=5.6. Lower version may work too"
   - "Currently only supported in single-account management consoles"
-  - "Policy is always inherited from Account scope. If you want to change the policy please use sentinelone_policies module"
+  - "Policy is always inherited from Account scope. If you want to change the policy please use policies module"
 '''
 
 EXAMPLES = r'''
 ---
 - name: Create / update site
-  sva.sentinelone.sentinelone_sites:
+  sva.sentinelone.sites:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
     name: "test"
@@ -102,7 +102,7 @@ EXAMPLES = r'''
     expiration_date: "2022-06-01T12:00+01:00"
     description: "Testsite"
 - name: Delete site
-  sva.sentinelone.sentinelone_sites:
+  sva.sentinelone.sites:
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
