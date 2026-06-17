@@ -4,6 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
     "ansible-dev-tools",
+    "antsibull-changelog",
     "argcomplete",
     "deepdiff>=5.6.0",
     "molecule-plugins[vagrant]",

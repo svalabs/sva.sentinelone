@@ -1,61 +1,72 @@
-objects: {}
+objects:
+  role:
+    install_agent:
+      description: Entrypoint for install_agent role
+      name: install_agent
+      version_added: null
+    sentinelone_client_legacy:
+      description: Entrypoint for sentinelone_client_legacy role
+      name: sentinelone_client_legacy
+      version_added: 2.0.0
 plugins:
   become: {}
   cache: {}
   callback: {}
   cliconf: {}
   connection: {}
+  filter: {}
   httpapi: {}
   inventory: {}
   lookup: {}
   module:
-    sentinelone_agent_info:
+    agent_info:
       description: Get info about the SentinelOne agent package
-      name: sentinelone_agent_info
+      name: agent_info
       namespace: ''
       version_added: 2.0.0
-    sentinelone_config_overrides:
+    config_overrides:
       description: Manage SentinelOne Config Overrides
-      name: sentinelone_config_overrides
+      name: config_overrides
       namespace: ''
       version_added: 1.0.0
-    sentinelone_download_agent:
+    download_agent:
       description: Download SentinelOne agent from Management Console
-      name: sentinelone_download_agent
+      name: download_agent
       namespace: ''
       version_added: 1.1.0
-    sentinelone_filters:
+    filters:
       description: Manage SentinelOne Filters
-      name: sentinelone_filters
+      name: filters
       namespace: ''
       version_added: 1.0.0
-    sentinelone_groups:
+    groups:
       description: Manage SentinelOne Groups
-      name: sentinelone_groups
+      name: groups
       namespace: ''
       version_added: 1.0.0
-    sentinelone_path_exclusions:
+    path_exclusions:
       description: Manage SentinelOne Path Exclusions
-      name: sentinelone_path_exclusions
+      name: path_exclusions
       namespace: ''
       version_added: 1.0.0
-    sentinelone_policies:
+    policies:
       description: Manage SentinelOne Policies
-      name: sentinelone_policies
+      name: policies
       namespace: ''
       version_added: 1.0.0
-    sentinelone_sites:
+    sites:
       description: Manage SentinelOne Sites
-      name: sentinelone_sites
+      name: sites
       namespace: ''
       version_added: 1.0.0
-    sentinelone_upgrade_policies:
+    upgrade_policies:
       description: Manage SentinelOne Upgrade Policies
-      name: sentinelone_upgrade_policies
+      name: upgrade_policies
       namespace: ''
       version_added: 1.0.0
   netconf: {}
   shell: {}
   strategy: {}
+  test: {}
   vars: {}
-version: 2.0.6
+version: 2.1.0

@@ -96,6 +96,10 @@ When both `custom_client_url` and `registration_token` are defined, the role ope
 
 > **Note:** If only one of the two variables is set, API access is still required and `console_url`, `api_token`, and `site` remain mandatory.
 
+Note for Windows-Defender on Windows Servers
+----------------
+This role will remove the `Windows-Defender` feature on Windows Server systems. On desktop systems `Windows-Defender` goes into bypass mode when an antivirus software is detected. This is not the case for Windows Server systems which makes it necessary to remove it.
+
 Example Playbook
 ----------------
 
