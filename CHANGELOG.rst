@@ -41,7 +41,7 @@ Minor Changes
 Deprecated Features
 -------------------
 
-- sentinelone_client_legacy role - The ``sentinelone_client_legacy`` role is deprecated and will be removed in release. 3.0.0. Please migrate to the ``install_agent`` role as documented in the ``README.md``.
+- sentinelone_client_legacy role - The ``sentinelone_client_legacy`` role is deprecated and will be removed in release 3.0.0. Please migrate to the ``install_agent`` role as documented in the ``README.md``.
 
 Bugfixes
 --------
