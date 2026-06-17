@@ -149,8 +149,9 @@ releases:
   2.0.4:
     changes:
       bugfixes:
-        - 'config_override: Fixed an error where multiple config_override objects where
-          returned by API which caused module to fail in certain situations'
+        - 'config_override: Fixed an error where multiple config_override objects
+          where returned by API which caused module to fail in certain situations'
+      release_summary: This is a bugfix release
     fragments:
       - v2.0.4.yml
     release_date: '2024-12-03'
@@ -165,7 +166,82 @@ releases:
     release_date: '2025-02-21'
   2.0.6:
     changes:
-      release_summary: Added the ability to install own s1 packaged with the role without API usage
+      release_summary: Added the ability to install own s1 packaged with the role
+        without API usage
     fragments:
       - v2.0.6
     release_date: '2026-03-12'
+  2.1.0:
+    changes:
+      bugfixes:
+        - general - Fixed multiple linting errors across roles and removed previous
+          linting exclusions.
+        - install_agent role - Clarified exact API role permissions required in documentation.
+        - 'install_agent role - Explicitly set ``become: false`` for localhost tasks
+          to prevent failures when a global ``ansible.cfg`` specifies ``become: true``
+          (https://github.com/svalabs/sva.sentinelone/pull/72).'
+        - install_agent role - Fixed compatibility with newer Ansible versions where
+          OS fact values are no longer capitalized; added ``| lower`` filter for robust
+          matching.
+        - install_agent role - Fixed error handling when waiting for the agent to
+          appear; authentication failures or unexpected response formats now surface
+          the real error instead of a parsing error.
+        - install_agent role - Fixed nested variable expansion when constructing the
+          endpoint URL; previously the URL still contained unexpanded strings like
+          ``/api/{{ siteid }}/path``.
+        - upgrade_policies module - Fixed idempotency issue that caused unnecessary
+          task re-runs.
+        - upgrade_policies module - Fixed locale issue that caused failures on systems
+          using a 24h locale.
+      deprecated_features:
+        - sentinelone_client_legacy role - The ``sentinelone_client_legacy`` role
+          is deprecated and will be removed in release 3.0.0. Please migrate to the
+          ``install_agent`` role as documented in the ``README.md``.
+      major_changes:
+        - general - Implemented full Molecule test coverage for Linux and Windows
+          targets using Vagrant VirtualBox machines for modules and the ``install_agent``
+          role.
+        - install_agent role - Added support for installing agents from a custom source
+          via ``custom_client_url`` variable.
+        - install_agent role - Added token-based registration support via ``registration_token``
+          variable, enabling agent installation and registration without API access
+          when combined with ``custom_client_url``.
+        - install_agent role - If both ``custom_client_url`` and ``registration_token``
+          are set, no API access is required and ``api_token`` does not need to be
+          provided.
+      minor_changes:
+        - general - Added ``tox-ansible.ini`` to fix sanity check runs.
+        - general - Added dedicated ``README.md`` for Molecule tests.
+        - install_agent role - GPG key is now downloaded automatically if ``gpg_key``
+          is not provided.
+        - install_agent role - Renamed internal variables to meet Ansible best practices
+          and linting requirements (added install_agent variable prefix).
+        - install_agent role - Switched from bare Ansible facts (e.g. ``ansible_os_family``)
+          to the ``ansible_facts`` dictionary to comply with ansible-core 2.20 deprecation.
+        - install_agent role - Updated ``README.md`` with current usage instructions
+          and variable reference.
+        - 'modules - Renaming: Removed ``sentinelone_`` prefix from module names;
+          old names remain available as aliases via ``meta/runtime.yml``.'
+        - modules - Updated inline module documentation.
+        - sentinelone_download_agent module - Fixed wrong variable used in task example
+          (https://github.com/svalabs/sva.sentinelone/issues/64).
+      release_summary: 'This release introduces token-based agent registration and
+        custom source installation
+
+        for the ``install_agent`` role, eliminating the API access requirement when
+        both
+
+        features are combined. Full Molecule test coverage for Linux and Windows targets
+        has
+
+        been added. Additionally, various minor improvements, bug fixes, compatibility
+        updates
+
+        for ansible-core 2.20, and a deprecation notice for the ``sentinelone_client_legacy``
+
+        role are included.
+
+        '
+    fragments:
+      - v2.1.0.yml
+    release_date: '2026-06-17'
