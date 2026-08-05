@@ -2,12 +2,14 @@
 scenario:
   name: windows
 
-driver:
-  name: default
-
 platforms:
-  - name: winserver
-    managed: false  # Molecule doesn't start/stop the server
+  - name: windows-11-25h2
+    box: "gusztavvargadr/windows-11-25h2-professional"
+    # No selector here. arm64 only box
+    box_architecture: "arm64"
+    memory: 4096
+    cpus: 4
+
 provisioner:
   name: ansible
   ANSIBLE_PIPELINING: "False"
@@ -17,8 +19,15 @@ provisioner:
     verify: ../default/verify.yml
     cleanup: ../default/cleanup.yml
   inventory:
-    links:
-      # Copy from template ext_inventory.yml.dist
-      hosts: ../ext_inventory.yml
+    host_vars:
+      windows-11-25h2:
+        ansible_become: false
+        ansible_remote_tmp: '%TEMP%'
+        ansible_connection: winrm
+        ansible_winrm_transport: ntlm
+        ansible_winrm_scheme: http
+        ansible_port: 55985
+        ansible_user: vagrant
+        ansible_password: vagrant
 verifier:
   name: ansible

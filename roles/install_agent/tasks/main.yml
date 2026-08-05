@@ -20,11 +20,13 @@
     msg: "The package management system on this system is unknown. This can happen if the role runs on an unsupported os."
   when: install_agent_pkg_format == 'unknown'
 
-- name: "Linux: Install python bindings for package managers"
-  ansible.builtin.package:
-    name: "{{ 'python3-rpm' if ansible_facts.os_family == 'Suse' else 'python-apt-common' }}"
+# Removed Debian bootrstrapping because the apt modul installs the requirements automatically
+- name: "Linux: Install python bindings for SUSEs zypper package manager"
+  ansible.builtin.command: zypper --non-interactive install python3-rpm
   become: true
-  when: ansible_facts.os_family == 'Suse' or ansible_facts.os_family == 'Debian'
+  when: ansible_facts.os_family == 'Suse'
+  register: install_agent_zypper_bootstrap
+  changed_when: "'already installed' not in install_agent_zypper_bootstrap.stdout"
 
 - name: "Linux: Gather package facts"
   ansible.builtin.package_facts:

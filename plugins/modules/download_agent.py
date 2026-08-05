@@ -72,8 +72,7 @@ options:
   architecture:
     description:
       - "Architecture of the packet which should be downloaded"
-      - "Windows: Only B(32_bit) and B(64_bit) are allowed"
-      - "Linux: If not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM agent will be downloaded"
+      - "If not set 64 bit agent will be downloaded. If set to B(aarch64) the ARM64 agent will be downloaded"
     type: str
     required: false
     default: 64_bit

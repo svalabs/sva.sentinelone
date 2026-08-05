@@ -51,4 +51,5 @@
 - name: "Windos: Reboot after agent installation or Windows Feature removal"
   ansible.windows.win_reboot:
     post_reboot_delay: 60
-  when: (install_agent_installation_result.changed | default(false) or install_agent_win_feature_remove.reboot_required) and install_agent_win_allow_reboot
+  when: (install_agent_installation_result.changed | default(false) or install_agent_win_feature_remove.reboot_required | default(false)) and
+    install_agent_win_allow_reboot

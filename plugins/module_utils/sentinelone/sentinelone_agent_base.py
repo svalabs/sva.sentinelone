@@ -45,9 +45,6 @@ class SentineloneAgentBase(SentineloneBase):
         :type module: AnsibleModule
         """
 
-        if architecture == "aarch64" and os_type != "Linux":
-            module.fail_json(msg="Error: architecture 'aarch64' needs os_type to be 'Linux'")
-
         if os_type == 'Windows':
             if packet_format not in ['exe', 'msi']:
                 module.fail_json(msg="Error: 'packet_format' needs to be 'exe' or 'msi' if os_type is 'Windows'")
@@ -100,9 +97,12 @@ class SentineloneAgentBase(SentineloneBase):
             else:
                 query_params['query'] = 'SentinelAgent_linux'
         else:
-            query_params['packageType'] = 'AgentAndRanger'
             # osArches is only supported if you query windows packaes
-            query_params['osArches'] = architecture.replace('_', ' ')
+            query_params['packageType'] = 'AgentAndRanger'
+            if architecture == 'aarch64':
+                query_params['osArches'] = 'ARM64'
+            else:
+                query_params['osArches'] = architecture.replace('_', ' ')
 
         # translate dictionary to URI argurments and build full query
         query_params_encoded = urlencode(query_params)
