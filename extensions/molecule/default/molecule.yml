@@ -1,7 +1,7 @@
 ---
 platforms:
-  - name: ubuntu-2404
-    box: "bento/ubuntu-24.04"
+  - name: ubuntu-2604
+    box: "bento/ubuntu-26.04"
     box_architecture: "${ARCH:-amd64}"
     memory: 2048
     cpus: 2
@@ -15,6 +15,13 @@ platforms:
     cpus: 2
     config_options:
       ssh.keep_alive: true
+
+  - name: windows-11-25h2
+    box: "gusztavvargadr/windows-11-25h2-professional"
+    # No selector here. arm64 only box
+    box_architecture: "arm64"
+    memory: 4096
+    cpus: 4
 
   # - name: windows-server-2025
   #   box: "gusztavvargadr/windows-server-2025-standard"
@@ -45,3 +52,12 @@ provisioner:
         ansible_shell_type: powershell
         ansible_become: false
         ansible_remote_tmp: '%TEMP%'
+      windows-11-25h2:
+        ansible_become: false
+        ansible_remote_tmp: '%TEMP%'
+        ansible_connection: winrm
+        ansible_winrm_transport: ntlm
+        ansible_winrm_scheme: http
+        ansible_port: 55985
+        ansible_user: vagrant
+        ansible_password: vagrant
