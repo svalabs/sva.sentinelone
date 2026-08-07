@@ -4,6 +4,26 @@ Sva.Sentinelone Release Notes
 
 .. contents:: Topics
 
+v2.2.0
+======
+
+Release Summary
+---------------
+
+Implemented support for Windows ARM machines and more
+
+Major Changes
+-------------
+
+- Added molecule tests for ARM Windows machines
+- Added molecule tests for Ubuntu 26.04
+- download_agent module: Added support for downloading ARM Windows agents
+
+Bugfixes
+--------
+
+- install_agent role: Fixed installation of zypper bindings
+
 v2.1.0
 ======
 
