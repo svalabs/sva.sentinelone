@@ -288,30 +288,30 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-dow
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download latest agent for linux</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.download_agent</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
-<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Linux&quot;</span>
-<span class="w">    </span><span class="nt">packet_format</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;rpm&quot;</span>
-<span class="w">    </span><span class="nt">download_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp&quot;</span>
-<span class="w">    </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;64_bit&quot;</span>
+<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://XXXXX.sentinelone.net"</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">"XXXXXXXXXXXXXXXXXXXXXXXXXXX"</span>
+<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">"Linux"</span>
+<span class="w">    </span><span class="nt">packet_format</span><span class="p">:</span><span class="w"> </span><span class="s">"rpm"</span>
+<span class="w">    </span><span class="nt">download_dir</span><span class="p">:</span><span class="w"> </span><span class="s">"/tmp"</span>
+<span class="w">    </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="s">"64_bit"</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download latest agent for linux and include EA packages</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.download_agent</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
-<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Linux&quot;</span>
-<span class="w">    </span><span class="nt">packet_format</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;rpm&quot;</span>
-<span class="w">    </span><span class="nt">download_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp&quot;</span>
-<span class="w">    </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;64_bit&quot;</span>
-<span class="w">    </span><span class="nt">agent_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;latest_ea&quot;</span>
+<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://XXXXX.sentinelone.net"</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">"XXXXXXXXXXXXXXXXXXXXXXXXXXX"</span>
+<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">"Linux"</span>
+<span class="w">    </span><span class="nt">packet_format</span><span class="p">:</span><span class="w"> </span><span class="s">"rpm"</span>
+<span class="w">    </span><span class="nt">download_dir</span><span class="p">:</span><span class="w"> </span><span class="s">"/tmp"</span>
+<span class="w">    </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="s">"64_bit"</span>
+<span class="w">    </span><span class="nt">agent_version</span><span class="p">:</span><span class="w"> </span><span class="s">"latest_ea"</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Download specific agent version</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.download_agent</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
-<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Windows&quot;</span>
-<span class="w">    </span><span class="nt">packet_format</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;msi&quot;</span>
-<span class="w">    </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;64_bit&quot;</span>
-<span class="w">    </span><span class="nt">agent_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;custom&quot;</span>
-<span class="w">    </span><span class="nt">custom_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;23.2.3.358&quot;</span>
+<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://XXXXX.sentinelone.net"</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">"XXXXXXXXXXXXXXXXXXXXXXXXXXX"</span>
+<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">"Windows"</span>
+<span class="w">    </span><span class="nt">packet_format</span><span class="p">:</span><span class="w"> </span><span class="s">"msi"</span>
+<span class="w">    </span><span class="nt">architecture</span><span class="p">:</span><span class="w"> </span><span class="s">"64_bit"</span>
+<span class="w">    </span><span class="nt">agent_version</span><span class="p">:</span><span class="w"> </span><span class="s">"custom"</span>
+<span class="w">    </span><span class="nt">custom_version</span><span class="p">:</span><span class="w"> </span><span class="s">"23.2.3.358"</span>
 </pre></div>
 </div>
 </section>

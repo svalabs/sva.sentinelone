@@ -314,64 +314,64 @@ see <a class="reference internal" href="#ansible-collections-sva-sentinelone-pat
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create exclusion in site scope</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.path_exclusions</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
-<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
-<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;C:\\Test1234\\&quot;</span>
-<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;performance_focus&quot;</span>
-<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;windows&quot;</span>
+<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://XXXXX.sentinelone.net"</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">"XXXXXXXXXXXXXXXXXXXXXXXXXXX"</span>
+<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">"test"</span>
+<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">"C:\\Test1234\\"</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">"performance_focus"</span>
+<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">"windows"</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create exclusion in single group</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.path_exclusions</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
-<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
-<span class="w">    </span><span class="nt">groups</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;MariaDB&quot;</span>
-<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;C:\\Test1234\\&quot;</span>
-<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;interoperability_extended&quot;</span>
-<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;windows&quot;</span>
+<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://XXXXX.sentinelone.net"</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">"XXXXXXXXXXXXXXXXXXXXXXXXXXX"</span>
+<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">"test"</span>
+<span class="w">    </span><span class="nt">groups</span><span class="p">:</span><span class="w"> </span><span class="s">"MariaDB"</span>
+<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">"C:\\Test1234\\"</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">"interoperability_extended"</span>
+<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">"windows"</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create exclusion in multiple groups</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.path_exclusions</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;present&quot;</span>
-<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
-<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">"present"</span>
+<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://XXXXX.sentinelone.net"</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">"XXXXXXXXXXXXXXXXXXXXXXXXXXX"</span>
+<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">"test"</span>
 <span class="w">    </span><span class="nt">groups</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;MariaDB&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;MaxDB&quot;</span>
-<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;C:\\Test1234\\&quot;</span>
-<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;performance_focus_extended&quot;</span>
-<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;windows&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"MariaDB"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"MaxDB"</span>
+<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">"C:\\Test1234\\"</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">"performance_focus_extended"</span>
+<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">"windows"</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create exclusion in multiple groups and disable automatic upload to Binary Vault</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.path_exclusions</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;present&quot;</span>
-<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
-<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;test&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">"present"</span>
+<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://XXXXX.sentinelone.net"</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">"XXXXXXXXXXXXXXXXXXXXXXXXXXX"</span>
+<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">"test"</span>
 <span class="w">    </span><span class="nt">groups</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;MariaDB&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;MaxDB&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"MariaDB"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"MaxDB"</span>
 <span class="w">    </span><span class="nt">include_subfolders</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;C:\\Test1234\\&quot;</span>
-<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;performance_focus_extended&quot;</span>
-<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;windows&quot;</span>
+<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">"C:\\Test1234\\"</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="s">"performance_focus_extended"</span>
+<span class="w">    </span><span class="nt">os_type</span><span class="p">:</span><span class="w"> </span><span class="s">"windows"</span>
 <span class="w">    </span><span class="nt">ef_binary_vault</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete exclusion in site scope</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.path_exclusions</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;absent&quot;</span>
-<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
-<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;msd&quot;</span>
-<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;C:\\Test1234\\&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">"absent"</span>
+<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://XXXXX.sentinelone.net"</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">"XXXXXXXXXXXXXXXXXXXXXXXXXXX"</span>
+<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">"msd"</span>
+<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">"C:\\Test1234\\"</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete exclusion in group scope</span>
 <span class="w">  </span><span class="nt">sva.sentinelone.path_exclusions</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;absent&quot;</span>
-<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://XXXXX.sentinelone.net&quot;</span>
-<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;</span>
-<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;msd&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">"absent"</span>
+<span class="w">    </span><span class="nt">console_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://XXXXX.sentinelone.net"</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">"XXXXXXXXXXXXXXXXXXXXXXXXXXX"</span>
+<span class="w">    </span><span class="nt">site_name</span><span class="p">:</span><span class="w"> </span><span class="s">"msd"</span>
 <span class="w">    </span><span class="nt">groups</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;MariaDB&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;MaxDB&quot;</span>
-<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;C:\\Test1234\\&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"MariaDB"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"MaxDB"</span>
+<span class="w">    </span><span class="nt">os_path</span><span class="p">:</span><span class="w"> </span><span class="s">"C:\\Test1234\\"</span>
 </pre></div>
 </div>
 </section>
