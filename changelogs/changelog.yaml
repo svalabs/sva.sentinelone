@@ -257,3 +257,19 @@ releases:
     fragments:
       - v2.2.0.yml
     release_date: '2026-08-07'
+  2.3.0:
+    changes:
+      minor_changes:
+        - Added a new optional variable `win_msi_no_connection_from_installer_to_mgmt`
+          that can be set to true to prevent the MSI installer from checking the connection
+          to the management console during installation. This is useful in scenarios
+          where the installer may fail the connection check but the agent can still
+          connect to the management console after installation.
+      release_summary: 'This release includes a new feature that allows the SentinelOne
+        agent to be installed on Windows systems without requiring a direct connection
+        from the installer to the management console.
+
+        '
+    fragments:
+      - v2.3.0.yml
+    release_date: '2026-08-24'
