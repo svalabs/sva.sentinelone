@@ -18,6 +18,7 @@ install_agent_check_console_retries: "{{ check_console_retries | default(3) }}"
 install_agent_check_console_retry_delay: "{{ check_console_retry_delay | default(20) }}"
 install_agent_custom_client_url: "{{ custom_client_url | default('') }}"
 install_agent_registration_token: "{{ registration_token | default('') }}"
+install_agent_win_msi_no_connection_from_installer_to_mgmt: "{{ win_msi_no_connection_from_installer_to_mgmt | default(false) }}"
 
 # Internal variabes
 install_agent_pkg_format: "{% if ansible_facts.pkg_mgr | default('') in ['yum', 'dnf', 'zypper', 'dnf5'] %}rpm{%

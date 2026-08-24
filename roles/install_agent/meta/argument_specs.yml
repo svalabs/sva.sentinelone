@@ -132,3 +132,15 @@ argument_specs:
           - "Optional URL to a package source to download the SentinelOne client package. If not set, SentinelOne client will be downloaded by via SentinelOne
             Console."
           - "'console_url', 'api_token' and 'site' will be ignored if registration_token and custom_client_url are both set"
+
+      win_msi_no_connection_from_installer_to_mgmt:
+        type: "bool"
+        required: false
+        description:
+          - "Optional flag to prevent the MSI installer from checking the connection to the management console during installation."
+          - "In some cases the installer may fail checking the connection but the agent will still be able to connect to the management console after
+            installation. This flag can be used to skip the connection check during installation."
+        default: false
+        choices:
+          - true
+          - false
