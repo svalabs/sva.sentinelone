@@ -3,4 +3,5 @@ install_agent_remote_pkg_path: "{{ install_agent_tmp_dir }}{{ install_agent_retu
 install_agent_exe_parameters: "-t {{ install_agent_registration_token if install_agent_registration_token | length > 0
   else install_agent_reg_token_obj.json.data.token }} -q"
 install_agent_msi_parameters: "SITE_TOKEN={{ install_agent_registration_token if install_agent_registration_token | length > 0
-  else install_agent_reg_token_obj.json.data.token }} /QUIET"
+  else install_agent_reg_token_obj.json.data.token }} NO_CONNECTION_FROM_INSTALLER_TO_MGMT={{ install_agent_win_msi_no_connection_from_installer_to_mgmt }}
+  /QUIET"

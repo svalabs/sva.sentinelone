@@ -65,6 +65,7 @@ Role Variables
 | `lx_force_new_token` | false | true, false | Linux only: Set the management token on the linux agent even if it is already registered. |
 | `win_use_exe` | false | true, false | Windows only: By default, the .msi package is used for installation. If you prefer to use the .exe file, enable this setting |
 | `win_allow_reboot` | true | true, false | Windows only: After the removal of a Windows Feature (here Windows Defender) and after the agent installation, a reboot is required. The role is set to reboot at the end of the installation by default. Disable this setting if you wish to skip the reboot. |
+| `win_msi_no_connection_from_installer_to_mgmt` | false | true, false | Windows only: Skip connection check to the management console during installation via MSI. In some cases the installer may fail checking the connection but the agent will still be able to connect to the management console after installation. |
 | `custom_client_url` | | | Optional URL to a package source to download the SentinelOne client package. If not set, SentinelOne client will be downloaded via SentinelOne Console. When set together with `registration_token`, no API access is required. |
 | `registration_token` | | | Optional registration token to manually register the agent. Useful if no API access is available but a registration token was provided by an administrator. If not set, the registration token will be gathered from the API. When set together with `custom_client_url`, no API access is required. |
 
