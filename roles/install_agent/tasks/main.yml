@@ -47,7 +47,7 @@
   sva.sentinelone.download_agent:
     console_url: "{{ install_agent_console_url }}"
     token: "{{ install_agent_api_token }}"
-    site: "{{ install_agent_site }}"
+    site_name: "{{ install_agent_site }}"
     os_type: "{{ install_agent_custom_os_family }}"
     packet_format: "{{ install_agent_pkg_format }}"
     architecture: "{{ install_agent_pkg_arch }}"

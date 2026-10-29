@@ -1,0 +1,13 @@
+---
+custom_rules_test_definitions:
+  - name: molecule-custom-rules-event
+    event_query: 'event.type = "Process Creation" AND tgt.process.name = "molecule-custom-rules-test.exe"'
+  - name: molecule-custom-rules-correlation
+    correlation_query:
+      entity: endpoint
+      matchInOrder: false
+      subQueries:
+        - subQuery: 'event.type = "Process Creation" AND tgt.process.name = "molecule-custom-rules-test.exe"'
+          matchesRequired: 2
+      timeWindow:
+        windowMinutes: 10

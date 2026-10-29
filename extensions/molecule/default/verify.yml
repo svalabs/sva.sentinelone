@@ -42,6 +42,16 @@
           ansible.builtin.set_fact:
             site_id: "{{ get_site_result.json.data.sites[0].id }}"
 
+        - name: "Verify: Load custom rule test definitions"
+          ansible.builtin.include_vars: ../vars/custom_rules.yml
+
+        - name: "Verify: Custom rule lifecycle"
+          ansible.builtin.include_tasks: tasks/test_custom_rules.yml
+          loop: "{{ custom_rules_test_definitions }}"
+          loop_control:
+            loop_var: custom_rule
+            label: "{{ custom_rule.name }}"
+
         - name: "Verify: Get Site policy from API"
           ansible.builtin.uri:
             url: "{{ console_url }}/web/api/v2.1/sites/{{ site_id }}/policy"

@@ -12,9 +12,6 @@ from ansible.module_utils.basic import AnsibleModule
 
 class SentineloneAgentBase(SentineloneBase):
     def __init__(self, module: AnsibleModule):
-        module.params['site_name'] = module.params['site']
-
-        module.params['site_name'] = module.params['site']
         # self.token, self.console_url, self.site_name, self.state, self.api_endpoint_*, self.group_names will be set in
         # super Class
         super().__init__(module)

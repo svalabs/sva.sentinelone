@@ -20,12 +20,13 @@ options:
       - "Insert your management console URL"
     type: str
     required: true
-  site:
+  site_name:
     description:
       - "Name of the site from which to download the agent"
       - "If omitted the scope will be on account level"
     type: str
     required: false
+    aliases: [site]
   token:
     description:
       - "SentinelOne API auth token to authenticate at the management API"
@@ -168,7 +169,7 @@ def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
         console_url=dict(type='str', required=True),
-        site=dict(type='str', required=False),
+        site_name=dict(type='str', required=False, aliases=['site']),
         token=dict(type='str', required=True, no_log=True),
         agent_version=dict(type='str', required=False, default='latest', choices=['latest', 'latest_ea', 'custom']),
         custom_version=dict(type='str', required=False),
