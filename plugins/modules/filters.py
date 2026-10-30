@@ -273,7 +273,7 @@ def run_module():
             diff = filter_obj.merge_compare(current_filter_fields, desired_state_filter_fields)[0]
             if diff:
                 # Update filter if it is not up-to-date
-                diffs = {'changes': dict(diff), 'siteName': site_name}
+                diffs = {'changes': filter_obj.diff_to_dict(diff), 'siteName': site_name}
                 basic_message = f'Filter exists in site {site_name} but is not up-to-date. Updating Filter.'
                 if not module.check_mode:
                     filter_obj.update_filter(module)

@@ -89,6 +89,13 @@
           ansible.builtin.apt:
             deb: "{{ install_agent_remote_pkg_path }}"
 
+- name: "Linux: Start and enable service 'sentinelone' if necessary"
+  ansible.builtin.service:
+    name: sentinelone
+    state: started
+    enabled: true
+  become: true
+
 - name: "Linux: Check if agent is already registered"
   ansible.builtin.shell:
     # \\s needed because yaml interprets \s as escape sequence
@@ -110,12 +117,18 @@
   failed_when: '"Registration token successfully set" not in install_agent_token_set_output.stdout'
   when: install_agent_agent_status.stdout == 'Off' or install_agent_lx_force_new_token
 
-- name: "Linux: Start and enable service 'sentinelone' if neccessary"
-  ansible.builtin.service:
-    name: sentinelone
-    state: started
-    enabled: true
+- name: "Linux: Wait until agent connectivity is on after registration"
+  ansible.builtin.shell:
+    cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | grep -E '^Connectivity\\s+(On|Off)$' | awk '{ print $2 }'"
+    executable: "/bin/bash"
   become: true
+  register: install_agent_agent_connectivity
+  changed_when: false
+  failed_when: false
+  until: install_agent_agent_connectivity.stdout == 'On'
+  retries: 24
+  delay: 5
+  when: install_agent_agent_status.stdout == 'Off' or install_agent_lx_force_new_token
 
 - name: "Linux: Remove agent install package from target machine"
   ansible.builtin.file:

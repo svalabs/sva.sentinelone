@@ -447,7 +447,7 @@ def run_module():
             if current_config_override_obj:
                 if diff:
                     # if group config override is different from desired state, update it
-                    diffs = {'changes': dict(diff), 'groupId': group_id}
+                    diffs = {'changes': config_override_obj.diff_to_dict(diff), 'groupId': group_id}
                     basic_message = f"Config override {override_name} for group {group_name} updated"
             else:
                 diffs = {'changes': f"Non existing config override {override_name} created",
@@ -465,7 +465,7 @@ def run_module():
             if current_config_override_obj:
                 if diff:
                     # if site config override is different from desired state, update it
-                    diffs = {'changes': dict(diff), 'SiteId': site_id}
+                    diffs = {'changes': config_override_obj.diff_to_dict(diff), 'SiteId': site_id}
                     basic_message = f"Config override {override_name} for site {site_name} updated"
             else:
                 diffs = {'changes': f"Non existing config override {override_name} created",
@@ -504,13 +504,13 @@ def run_module():
                     config_override_obj.recreate_config_override(current_config_override_id, new_config_override_obj,
                                                                  module)
                 if group_id:
-                    diffs = {'changes': dict(diff), 'groupId': group_id}
+                    diffs = {'changes': config_override_obj.diff_to_dict(diff), 'groupId': group_id}
                     basic_message = f"Config override settings from existing config override for " \
                                     f"group {group_id} removed"
                 else:
                     site_name = config_override_obj.site_name
                     site_id = config_override_obj.site_id
-                    diffs = {'changes': dict(diff), 'siteId': site_id}
+                    diffs = {'changes': config_override_obj.diff_to_dict(diff), 'siteId': site_id}
                     basic_message = f"Config override settings from existing config override for " \
                                     f"site {site_name} removed"
     else:

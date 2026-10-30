@@ -527,7 +527,11 @@ def run_module():
                         # Get name for group with group_id
                         group_name = list(filter(lambda filterobj: filterobj[0] == group_id,
                                                  current_group_ids_names))[0][1]
-                        diffs.append({'changes': dict(diff), 'groupId': group_id, "exclusion_id": current_exclusion['id']})
+                        diffs.append({
+                            'changes': exclusion_obj.diff_to_dict(diff),
+                            'groupId': group_id,
+                            "exclusion_id": current_exclusion['id'],
+                        })
                         basic_message.append(f"Exclusion exists in group {group_name} but is not up-to-date. "
                                              f"Updating exclusion.")
             else:
@@ -547,7 +551,7 @@ def run_module():
                 current_exclusion = current_exclusions['data'][0]
                 diff = exclusion_obj.merge_compare(current_exclusion, desired_state_exclusion['data'])[0]
                 if diff:
-                    diffs.append({'changes': dict(diff),
+                    diffs.append({'changes': exclusion_obj.diff_to_dict(diff),
                                   'siteId': current_exclusion['scope']['siteIds'],
                                   'exclusion_id': current_exclusion['id']
                                   })
@@ -573,6 +577,7 @@ def run_module():
             # Exclusions should be deleted
             if not module.check_mode:
                 exclusion_obj.delete_exclusions(module)
+            basic_message.append("Exclusions exist in scope. Deleting all exclusions.")
             diffs.append({'changes': 'Deleted all exclusions in Scope'})
         else:
             basic_message.append("Nothing to change, exclusion does not exist")

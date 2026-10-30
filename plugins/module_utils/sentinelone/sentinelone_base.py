@@ -94,6 +94,10 @@ class SentineloneBase:
             return f"Would change: {message}"
         return "Would change: changes are required."
 
+    @staticmethod
+    def diff_to_dict(diff):
+        return json.loads(diff.to_json())
+
     def api_call(self, module: AnsibleModule, api_endpoint: str, http_method: str = "get", parse_response: bool = True,
                  **kwargs):
         """

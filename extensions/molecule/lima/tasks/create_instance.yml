@@ -83,6 +83,10 @@
       - molecule_instance_config_records[-1].port > 0
       - molecule_instance_config_records[-1].user | length > 0
       - molecule_instance_config_records[-1].identity_file | length > 0
+    fail_msg: >-
+      Could not resolve all SSH connection details for Lima platform
+      {{ lima_platform.name }}. Check the instance's ssh.config and confirm that
+      ssh -G returns hostname, port, user, and identityfile.
 
 - name: Write Molecule instance configuration
   ansible.builtin.copy:

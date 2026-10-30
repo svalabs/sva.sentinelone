@@ -286,7 +286,7 @@ def run_module():
                 if diff:
                     # if group policy is different from desired state, update it
                     current_group_name = current_group_id_name[1]
-                    diffs.append({'changes': dict(diff), 'groupId': current_group_id})
+                    diffs.append({'changes': policy_obj.diff_to_dict(diff), 'groupId': current_group_id})
                     basic_message.append(f"Updating policy for group {current_group_name}")
                     update_body = policy_obj.get_update_body(merged_policy)
                     if not module.check_mode:
@@ -301,7 +301,7 @@ def run_module():
             diff, merged_policy = policy_obj.merge_compare(current_policy['data'], desired_state_policy)
             if diff:
                 # if site policy is different from desired state, update it
-                diffs.append({'changes': dict(diff), 'SiteId': site_id})
+                diffs.append({'changes': policy_obj.diff_to_dict(diff), 'SiteId': site_id})
                 basic_message.append(f"Updating policy for site {site_name}")
                 update_body = policy_obj.get_update_body(merged_policy)
                 if not module.check_mode:

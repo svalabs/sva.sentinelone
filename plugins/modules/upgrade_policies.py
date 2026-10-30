@@ -524,7 +524,7 @@ def run_module():
             if diff:
                 # if upgrade policy is different from desired state, update it
                 current_group_name = current_group_id_name[1]
-                diffs.append({'changes': dict(diff), 'groupId': current_group_id})
+                diffs.append({'changes': upgrade_policy_obj.diff_to_dict(diff), 'groupId': current_group_id})
                 basic_message.append(f"Updating upgrade policy for group {current_group_name}")
                 update_body = upgrade_policy_obj.get_update_body(desired_state_upgrade_policy, current_group_id)
                 if not module.check_mode:
@@ -548,7 +548,7 @@ def run_module():
                                           exclude_path=exclude_path)
         if diff:
             # if upgrade policy is different from desired state, update it
-            diffs.append({'changes': dict(diff), 'SiteId': site_id})
+            diffs.append({'changes': upgrade_policy_obj.diff_to_dict(diff), 'SiteId': site_id})
             basic_message.append(f"Updating upgrade policy for site {site_name}")
             update_body = upgrade_policy_obj.get_update_body(desired_state_upgrade_policy, site_id)
             if not module.check_mode:

@@ -5,8 +5,8 @@ platforms:
     memory: 2
     cpus: 2
 
-  - name: fedora-43
-    lima_template: fedora-43
+  - name: fedora-44
+    lima_template: fedora-44
     memory: 2
     cpus: 2
 

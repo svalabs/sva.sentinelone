@@ -20,6 +20,9 @@
           - lima_platform.name | length > 0
           - lima_platform.lima_template is defined
           - lima_platform.lima_template | length > 0
+        fail_msg: >-
+          Lima platform {{ lima_platform.name | default('unnamed') }} must define
+          a non-empty name and lima_template in its platform configuration.
       loop: "{{ molecule_yml.platforms }}"
       loop_control:
         loop_var: lima_platform
@@ -30,6 +33,9 @@
         that:
           - generated_lima_name | length <= 63
           - generated_lima_name is match('^[a-zA-Z0-9][a-zA-Z0-9.-]*$')
+        fail_msg: >-
+          Generated Lima instance name '{{ generated_lima_name }}' is invalid.
+          Use a shorter platform name and only letters, numbers, dots, or hyphens.
       vars:
         generated_lima_name: "molecule-{{ lima_scenario_name }}-{{ lima_platform.name }}"
       loop: "{{ molecule_yml.platforms }}"

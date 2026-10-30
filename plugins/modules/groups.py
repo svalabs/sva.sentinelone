@@ -347,7 +347,7 @@ def run_module():
                         if not module.check_mode:
                             groups_obj.update_group(desired_state_group, group_id, error_msg, module)
                         basic_message.append(f"Group {group_name} updated")
-                        diffs.append({'changes': dict(diff), 'groupName': group_name})
+                        diffs.append({'changes': groups_obj.diff_to_dict(diff), 'groupName': group_name})
                     else:
                         basic_message.append("Can not convert dynamic to static group and vice versa. Nothing changed.")
             else:

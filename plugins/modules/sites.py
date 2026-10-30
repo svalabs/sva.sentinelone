@@ -355,7 +355,7 @@ def run_module():
             diff = site_obj.merge_compare(current_site, desired_state_site, exclude_path)[0]
             if diff:
                 # Update site if it is not up-to-date
-                diffs = {'changes': dict(diff), 'siteName': site_name}
+                diffs = {'changes': site_obj.diff_to_dict(diff), 'siteName': site_name}
                 basic_message = 'Site exists but is not up-to-date. Updating site.'
                 if not module.check_mode:
                     site_obj.update_site(desired_state_site, module)
