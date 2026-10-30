@@ -6,9 +6,10 @@ This document explains how to set up and run the [Molecule](https://ansible.read
 
 ## Prerequisites
 
-- Python 3.9+
+- Python 3.11+
 - [`uv`](https://github.com/astral-sh/uv) (Python package manager)
-- [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/)
+- [Lima](https://lima-vm.io/) 2.2 or newer
+- [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/) for the Windows scenario
 - [`direnv`](https://direnv.net/) *(optional but recommended)*
 
 ***
@@ -98,11 +99,14 @@ Once the environment is active, you can run Molecule tests from the repository r
 
 | Scenario | Description |
 |---|---|
-| `default` | Tests install_agent against against the current Ubuntu and Fedora release aswell as every module|
-| `multi-os` | Same but with all current versions of Ubuntu, Debian, Fedora, Rocky Linux, and SUSE |
-| `windows` | Same but tests against Windows systems (check `molecule.yml` and re-enable the relevant code if needed) |
+| `default` | Tests install_agent against current Ubuntu and Fedora releases, as well as every module including check-mode behavior |
+| `multi-os` | Same tests across current Ubuntu, Debian, Fedora, Rocky Linux, and SUSE releases |
+| `windows` | Runs the Windows tests using the existing Vagrant/VirtualBox setup |
 | `no-api-access` | Tests the parts of the `install_agent` role that work without API access — a custom download URL and a registration token are provided manually |
 
+The `default` scenario also exercises every SentinelOne module in check mode. It verifies that planned API changes are reported without changing SentinelOne resources or downloading agent files.
+
+The Linux scenarios create and destroy their own Lima instances through local playbooks and `extensions/molecule/lima/manage.py`. The Windows scenario remains on the existing Vagrant/VirtualBox setup for now; it is deliberately excluded from the Lima-backed Linux scenarios.
 
 ### Run the Default Scenario
 
@@ -136,32 +140,22 @@ molecule create      # Provision test instances
 molecule converge    # Apply the role
 molecule verify      # Run assertions/tests
 molecule destroy     # Tear down instances
-molecule login       # SSH/shell into a running instance
+molecule login       # SSH into a running Linux instance
 ```
 
 ***
 
-## Architecture Selection (ARM64 / AMD64)
+## Guest Architecture
 
-Molecule uses [Vagrant](https://www.vagrantup.com/) with [VirtualBox](https://www.virtualbox.org/) as the driver. By default, AMD64 Vagrant boxes are used.
-
-If you are running tests on an ARM-based machine (e.g., an Apple Silicon Mac), set the `ARCH` environment variable to `ARM64` so that the appropriate Vagrant boxes are selected:
+Lima uses the host architecture by default, so Apple Silicon hosts run Linux guests natively. The `rocky-8` test explicitly requests `x86_64` to preserve its existing platform coverage; this guest is emulated on ARM hosts and may be slow. The Windows scenario keeps using its existing ARM64 Vagrant box.
 
 ```bash
-# Default (AMD64 — standard x86_64 machines)
+# Lima selects the native host architecture
 molecule test
 
-# ARM64 (e.g., Apple Silicon Mac)
-ARCH=ARM64 molecule test
-
-# Works with any scenario
-ARCH=ARM64 molecule test -s multi-os
+# Windows scenario (requires Vagrant and VirtualBox)
+molecule test -s windows
 ```
-
-| Value | Description |
-|---|---|
-| `AMD64` | x86_64 Vagrant boxes *(default)* |
-| `ARM64` | ARM64 Vagrant boxes — use this on Apple Silicon or other ARM hosts |
 
 ***
 
@@ -185,24 +179,13 @@ This **is covered** if you use the ansible.env file in this repository as descri
 
 ***
 
-### Using VirtualBox with AMD64 VMs on Apple Silicon
+### Windows guest access
 
-VirtualBox on Apple Silicon supports running **x86_64 (AMD64) virtual machines** via software emulation as of VirtualBox 7.1+. This allows you to use the same AMD64 Vagrant boxes as on standard Intel/AMD machines, at the cost of significantly reduced performance due to emulation.
-
-Before x86_64 VMs can be started, you must explicitly enable AMD64 emulation once via the `VBoxManage` CLI:
+The Windows scenario continues to use Vagrant and VirtualBox. To open a shell for troubleshooting, use Molecule's login command:
 
 ```bash
-VBoxManage setextradata global "VBoxInternal2/EnableX86OnArm" 1
+molecule login -s windows
 ```
-
-This sets a global VirtualBox flag persistently. After enabling it, proceed normally with `ARCH=AMD64` (or omit the variable):
-
-```bash
-# Run with AMD64 boxes on Apple Silicon (after enabling x86 emulation above)
-ARCH=AMD64 molecule test
-```
-
-> **Note:** x86_64 emulation on Apple Silicon is **not officially supported** by Oracle and is considered experimental. Expect significantly lower performance compared to native ARM64 VMs. For best results, prefer `ARCH=ARM64` with native ARM64 Vagrant boxes whenever possible.
 
 ***
 
@@ -219,16 +202,12 @@ direnv allow
 # 2b. Set up environment (without direnv)
 uv sync --all-extras && source .venv/bin/activate && source ansible.env
 
-# 3a. Run default scenario (AMD64)
+# 3a. Run default scenario (native Lima architecture)
 molecule test --report --command-borders
 
-# 3b. Run default scenario (ARM64, e.g. Apple Silicon Mac)
-ARCH=ARM64 molecule test --report --command-borders
-
-# 3c. Run all necessary scenarios (AMD64)
+# 3b. Run all necessary scenarios
 molecule test --all -e default --report --command-borders
 
-# 3d. Run tests (AMD64 emulated on Apple Silicon — enable x86 emulation first)
-VBoxManage setextradata global "VBoxInternal2/EnableX86OnArm" 1
-ARCH=AMD64 molecule test --report --command-borders
+# 3c. Run the Windows scenario (requires Vagrant and VirtualBox)
+molecule test -s windows --report --command-borders
 ```

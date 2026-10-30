@@ -310,7 +310,7 @@ def run_module():
 
     module = AnsibleModule(
         argument_spec=module_args,
-        supports_check_mode=False
+        supports_check_mode=True
     )
 
     if not lib_imp_errors['has_lib']:
@@ -344,7 +344,8 @@ def run_module():
                         # Removing the key because if not the module will update the inherintance property
                         del desired_state_group['data']['inherits']
                         error_msg = f"Failed to update group {group_name}."
-                        groups_obj.update_group(desired_state_group, group_id, error_msg, module)
+                        if not module.check_mode:
+                            groups_obj.update_group(desired_state_group, group_id, error_msg, module)
                         basic_message.append(f"Group {group_name} updated")
                         diffs.append({'changes': dict(diff), 'groupName': group_name})
                     else:
@@ -352,7 +353,8 @@ def run_module():
             else:
                 # Group does not exist. Creating the group
                 error_msg = f"Failed to create group {group_name}."
-                groups_obj.create_group(desired_state_group, error_msg, module)
+                if not module.check_mode:
+                    groups_obj.create_group(desired_state_group, error_msg, module)
                 basic_message.append(f"Group {group_name} created.")
                 diffs.append({'changes': "Group created", 'groupName': group_name})
     else:
@@ -364,7 +366,8 @@ def run_module():
                 # if group exists delete it
                 error_msg = f"Failed to delete group {group_name}."
                 group_id = current_group[0]['id']
-                groups_obj.delete_group(group_id, error_msg, module)
+                if not module.check_mode:
+                    groups_obj.delete_group(group_id, error_msg, module)
                 basic_message.append(f"Group {group_name} deleted.")
                 diffs.append({'changes': 'Group deleted', 'groupName': group_name})
 
@@ -378,6 +381,8 @@ def run_module():
     # So we can use it to update result['changes'] to True if necessary
     if diffs:
         result['changed'] = True
+
+    result['message'] = groups_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results

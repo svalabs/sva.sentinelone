@@ -492,7 +492,7 @@ def run_module():
         required_if=[
             ('state', 'present', ('mode', 'os_type'))
         ],
-        supports_check_mode=False
+        supports_check_mode=True
     )
 
     if not lib_imp_errors['has_lib']:
@@ -557,11 +557,13 @@ def run_module():
         if diffs:
             if diffs[0].get('exclusion_id'):
                 # Update Exclusions
-                exclusion_obj.update_exclusions(module, exclusion_id=diffs[0]['exclusion_id'])
+                if not module.check_mode:
+                    exclusion_obj.update_exclusions(module, exclusion_id=diffs[0]['exclusion_id'])
 
             else:
                 # Create Exclusions
-                exclusion_obj.create_exclusions(module)
+                if not module.check_mode:
+                    exclusion_obj.create_exclusions(module)
 
         else:
             basic_message.append("Nothing to change, all desired changes are already set")
@@ -569,7 +571,8 @@ def run_module():
     else:
         if current_exclusions['pagination']['totalItems'] != 0:
             # Exclusions should be deleted
-            exclusion_obj.delete_exclusions(module)
+            if not module.check_mode:
+                exclusion_obj.delete_exclusions(module)
             diffs.append({'changes': 'Deleted all exclusions in Scope'})
         else:
             basic_message.append("Nothing to change, exclusion does not exist")
@@ -584,6 +587,8 @@ def run_module():
     # So we can use it to update result['changes'] to True if necessary
     if diffs:
         result['changed'] = True
+
+    result['message'] = exclusion_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results
