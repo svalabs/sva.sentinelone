@@ -6,7 +6,9 @@ dependency:
     role-file: requirements.yml
 
 driver:
-  name: default
+  name: vagrant
+  provider:
+    name: virtualbox
 
 verifier:
   name: ansible

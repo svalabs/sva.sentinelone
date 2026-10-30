@@ -4,72 +4,95 @@ scenario:
 
 platforms:
   - name: ubuntu-2204
-    lima_template: ubuntu-22.04
-    memory: 2
+    box: "bento/ubuntu-22.04"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
     cpus: 2
+    config_options:
+      ssh.keep_alive: true
 
   - name: ubuntu-2404
-    lima_template: ubuntu-24.04
-    memory: 2
+    box: "bento/ubuntu-24.04"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
     cpus: 2
+    config_options:
+      ssh.keep_alive: true
 
   - name: rocky-8
-    lima_template: rocky-8
-    arch: x86_64
-    memory: 2
+    box: "bento/rockylinux-8"
+    box_architecture: "amd64" # amd64 support only
+    memory: 2048
     cpus: 2
+    config_options:
+      ssh.keep_alive: true
 
   - name: rocky-9
-    lima_template: rocky-9
-    memory: 2
+    box: "bento/rockylinux-9"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
     cpus: 2
+    config_options:
+      ssh.keep_alive: true
 
   - name: rocky-10
-    lima_template: rocky-10
-    memory: 2
+    box: "bento/rockylinux-10"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
     cpus: 2
+    config_options:
+      ssh.keep_alive: true
 
   - name: opensuse-leap-160
-    lima_template: opensuse-leap-16
-    memory: 2
+    box: "bento/opensuse-leap-16.0"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
     cpus: 2
+    config_options:
+      ssh.keep_alive: true
 
   - name: debian-12
-    lima_template: debian-12
-    memory: 2
+    box: "bento/debian-12"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
     cpus: 2
+    config_options:
+      ssh.keep_alive: true
 
   - name: debian-13
-    lima_template: debian-13
-    memory: 2
+    box: "bento/debian-13"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
     cpus: 2
+    config_options:
+      ssh.keep_alive: true
 
   - name: fedora-42
-    lima_template: fedora-42
-    memory: 2
+    box: "bento/fedora-42"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
     cpus: 2
+    config_options:
+      ssh.keep_alive: true
 
   - name: fedora-43
-    lima_template: fedora-43
-    memory: 2
+    box: "bento/fedora-43"
+    box_architecture: "${ARCH:-amd64}"
+    memory: 2048
     cpus: 2
+    config_options:
+      ssh.keep_alive: true
 
-driver:
-  options:
-    managed: true
-
-ansible:
+provisioner:
+  name: ansible
   env:
     ANSIBLE_TIMEOUT: "300"
   playbooks:
-    create: ../lima/create.yml
-    destroy: ../lima/destroy.yml
     prepare: ../default/prepare.yml
     converge: converge.yml
     verify: verify.yml
     cleanup: ../default/cleanup.yml
 
-provisioner:
   inventory:
     host_vars:
       rocky-8:
