@@ -2,10 +2,14 @@
 scenario:
   name: windows
 
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+
 platforms:
   - name: windows-11-25h2
     box: "gusztavvargadr/windows-11-25h2-professional"
-    # No selector here. arm64 only box
     box_architecture: "arm64"
     memory: 4096
     cpus: 4

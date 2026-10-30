@@ -4,108 +4,69 @@ scenario:
 
 platforms:
   - name: ubuntu-2204
-    box: "bento/ubuntu-22.04"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+    lima_template: ubuntu-22.04
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
 
   - name: ubuntu-2404
-    box: "bento/ubuntu-24.04"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+    lima_template: ubuntu-24.04
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
 
   - name: ubuntu-2604
-    box: "bento/ubuntu-26.04"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+    lima_template: ubuntu-26.04
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
-
-#  - name: rocky-8
-#    box: "bento/rockylinux-8"
-#    box_architecture: "amd64" # amd64 support only
-#    memory: 2048
-#    cpus: 2
-#    config_options:
-#      ssh.keep_alive: true
 
   - name: rocky-9
-    box: "bento/rockylinux-9"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+    lima_template: rocky-9
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
 
   - name: rocky-10
-    box: "bento/rockylinux-10"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+    lima_template: rocky-10
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
 
   - name: opensuse-leap-160
-    box: "bento/opensuse-leap-16.0"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+    lima_template: opensuse-leap-16
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
 
   - name: debian-12
-    box: "bento/debian-12"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+    lima_template: debian-12
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
 
   - name: debian-13
-    box: "bento/debian-13"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+    lima_template: debian-13
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
 
   - name: fedora-42
-    box: "bento/fedora-42"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+    lima_template: fedora-42
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
 
   - name: fedora-43
-    box: "bento/fedora-43"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+    lima_template: fedora-43
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
 
-  - name: windows-11-25h2
-    box: "gusztavvargadr/windows-11-25h2-professional"
-    # No selector here. arm64 only box
-    box_architecture: "arm64"
-    memory: 4096
-    cpus: 4
+driver:
+  options:
+    managed: true
 
-provisioner:
-  name: ansible
+ansible:
   playbooks:
+    create: ../lima/create.yml
+    destroy: ../lima/destroy.yml
     prepare: ../default/prepare.yml
     converge: ../default/converge.yml
     verify: ../default/verify.yml
     cleanup: ../default/cleanup.yml
 
+provisioner:
   inventory:
     host_vars:
       rocky-8:
@@ -113,12 +74,6 @@ provisioner:
       windows-11-25h2:
         ansible_become: false
         ansible_remote_tmp: '%TEMP%'
-        ansible_connection: winrm
-        ansible_winrm_transport: ntlm
         ansible_winrm_scheme: http
-        ansible_port: 55985
-        ansible_user: vagrant
-        ansible_password: vagrant
-    # links:
-    #   # Copy from template ext_inventory.yml.dist
-    #   hosts: ../ext_inventory.yml
+        ansible_winrm_operation_timeout_sec: 60
+        ansible_winrm_read_timeout_sec: 70
