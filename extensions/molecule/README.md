@@ -106,7 +106,7 @@ Once the environment is active, you can run Molecule tests from the repository r
 
 The `default` scenario also exercises every SentinelOne module in check mode. It verifies that planned API changes are reported without changing SentinelOne resources or downloading agent files.
 
-The Linux scenarios create and destroy their own Lima instances through local playbooks and `extensions/molecule/lima/manage.py`. The Windows scenario remains on the existing Vagrant/VirtualBox setup for now; it is deliberately excluded from the Lima-backed Linux scenarios.
+The Linux scenarios create and destroy their Lima instances using native Ansible tasks in local playbooks. Those tasks write the connection details Molecule needs to its instance configuration. The Windows scenario remains on the existing Vagrant/VirtualBox setup for now; it is deliberately excluded from the Lima-backed Linux scenarios.
 
 ### Run the Default Scenario
 

@@ -3,11 +3,122 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  vars:
+    lima_home: "{{ lookup('env', 'LIMA_HOME') | default(lookup('env', 'HOME') ~ '/.lima', true) }}"
+    lima_scenario_name: "{{ molecule_yml.scenario.name | regex_replace('[^a-zA-Z0-9-]', '-') | regex_replace('^-+|-+$', '') }}"
   tasks:
-    - name: Create test instances with Lima
+    - name: Validate Lima platform definitions
+      ansible.builtin.assert:
+        that:
+          - molecule_yml.platforms | length > 0
+        fail_msg: "At least one Lima platform must be configured."
+
+    - name: Validate each Lima platform
+      ansible.builtin.assert:
+        that:
+          - lima_platform.name is defined
+          - lima_platform.name | length > 0
+          - lima_platform.lima_template is defined
+          - lima_platform.lima_template | length > 0
+      loop: "{{ molecule_yml.platforms }}"
+      loop_control:
+        loop_var: lima_platform
+        label: "{{ lima_platform.name | default('unnamed') }}"
+
+    - name: Validate generated Lima instance names
+      ansible.builtin.assert:
+        that:
+          - generated_lima_name | length <= 63
+          - generated_lima_name is match('^[a-zA-Z0-9][a-zA-Z0-9.-]*$')
+      vars:
+        generated_lima_name: "molecule-{{ lima_scenario_name }}-{{ lima_platform.name }}"
+      loop: "{{ molecule_yml.platforms }}"
+      loop_control:
+        loop_var: lima_platform
+        label: "{{ lima_platform.name }}"
+
+    - name: Validate platform names are unique
+      ansible.builtin.assert:
+        that:
+          - molecule_yml.platforms | map(attribute='name') | list | unique | length == molecule_yml.platforms | length
+        fail_msg: "Lima platform names must be unique."
+
+    - name: List existing Lima instances
       ansible.builtin.command:
         argv:
-          - "{{ ansible_playbook_python }}"
-          - "{{ lookup('env', 'MOLECULE_SCENARIO_DIRECTORY') }}/../lima/manage.py"
-          - create
-      changed_when: true
+          - limactl
+          - list
+          - --format
+          - "{% raw %}{{.Name}}{% endraw %}"
+      register: existing_lima_instances
+      changed_when: false
+
+    - name: Initialize Lima lifecycle state
+      ansible.builtin.set_fact:
+        created_lima_instances: []
+        molecule_instance_config_records: []
+
+    - name: Create Lima instances
+      block:
+        - name: Create configured Lima platforms
+          ansible.builtin.include_tasks: tasks/create_instance.yml
+          loop: "{{ molecule_yml.platforms }}"
+          loop_control:
+            loop_var: lima_platform
+            label: "{{ lima_platform.name }}"
+      rescue:
+        - name: Refresh Lima instances before rollback
+          ansible.builtin.command:
+            argv:
+              - limactl
+              - list
+              - --format
+              - "{% raw %}{{.Name}}{% endraw %}"
+          register: rollback_inventory
+          changed_when: false
+          failed_when: false
+
+        - name: Delete instances created by this playbook
+          ansible.builtin.command:
+            argv:
+              - limactl
+              - delete
+              - --force
+              - "{{ rollback_instance }}"
+          async: 600
+          poll: 5
+          loop: "{{ created_lima_instances | intersect(rollback_inventory.stdout_lines | default([])) | reverse | list }}"
+          loop_control:
+            loop_var: rollback_instance
+            label: "{{ rollback_instance }}"
+          register: rollback_command
+          changed_when: rollback_command.rc | default(1) == 0
+          failed_when: rollback_command.rc | default(1) != 0
+          ignore_errors: true
+
+        - name: Collect Lima rollback errors
+          ansible.builtin.set_fact:
+            rollback_errors: >-
+              {{
+                (['Could not list Lima instances: ' ~ rollback_inventory.stderr] if rollback_inventory.failed else [])
+                + (
+                    rollback_command.results | default([])
+                    | selectattr('failed', 'defined')
+                    | selectattr('failed')
+                    | map(attribute='stderr', default='command failed')
+                    | list
+                  )
+              }}
+
+        - name: Remove stale instance configuration after successful rollback
+          ansible.builtin.file:
+            path: "{{ molecule_instance_config }}"
+            state: absent
+          when:
+            - rollback_errors | length == 0
+
+        - name: Report Lima creation failure
+          ansible.builtin.fail:
+            msg: >-
+              Creation failed: {{ ansible_failed_result.msg | default('unknown error') }}.
+              Rollback errors: {{ rollback_errors }}

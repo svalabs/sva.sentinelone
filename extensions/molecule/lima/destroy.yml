@@ -3,11 +3,36 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  vars:
+    lima_scenario_name: "{{ molecule_yml.scenario.name | regex_replace('[^a-zA-Z0-9-]', '-') | regex_replace('^-+|-+$', '') }}"
   tasks:
-    - name: Destroy test instances with Lima
+    - name: List existing Lima instances
       ansible.builtin.command:
         argv:
-          - "{{ ansible_playbook_python }}"
-          - "{{ lookup('env', 'MOLECULE_SCENARIO_DIRECTORY') }}/../lima/manage.py"
-          - destroy
-      changed_when: true
+          - limactl
+          - list
+          - --format
+          - "{% raw %}{{.Name}}{% endraw %}"
+      register: existing_lima_instances
+      changed_when: false
+
+    - name: Initialize Lima cleanup state
+      ansible.builtin.set_fact:
+        failed_lima_deletions: []
+
+    - name: Destroy configured Lima platforms
+      ansible.builtin.include_tasks: tasks/destroy_instance.yml
+      loop: "{{ molecule_yml.platforms | reverse | list }}"
+      loop_control:
+        loop_var: lima_platform
+        label: "{{ lima_platform.name }}"
+
+    - name: Report Lima deletion failures
+      ansible.builtin.fail:
+        msg: "Could not delete Lima instances: {{ failed_lima_deletions }}"
+      when: failed_lima_deletions | length > 0
+
+    - name: Remove Molecule instance configuration
+      ansible.builtin.file:
+        path: "{{ molecule_instance_config }}"
+        state: absent
