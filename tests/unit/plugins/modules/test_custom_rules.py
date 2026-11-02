@@ -257,7 +257,7 @@ def test_rule_lookup_name_prefilter(api, run_module, name):
     assert not run_module(name=name, event_query=QUERY)["changed"]
     queries = [
         parse_qs(urlparse(endpoint).query)
-        for method, endpoint, _ in api.calls
+        for method, endpoint, unused_body in api.calls
         if method == "GET" and "/cloud-detection/rules?" in endpoint
     ]
     assert queries
@@ -299,8 +299,8 @@ def test_pagination_exact_name_and_scope(api, run_module):
     ]
     assert not run_module(event_query=QUERY)["changed"]
     assert not api.writes
-    assert any("cursor=1" in endpoint for _, endpoint, _ in api.calls)
-    for _, endpoint, _ in api.calls:
+    assert any("cursor=1" in endpoint for unused_method, endpoint, unused_body in api.calls)
+    for unused_method, endpoint, unused_body in api.calls:
         if "/cloud-detection/rules?" in endpoint:
             assert parse_qs(urlparse(endpoint).query)["name__contains"] == ["Test rule"]
 
