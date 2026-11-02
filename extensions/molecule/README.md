@@ -103,6 +103,18 @@ Once the environment is active, you can run Molecule tests from the repository r
 | `windows` | Same but tests against Windows systems (check `molecule.yml` and re-enable the relevant code if needed) |
 | `no-api-access` | Tests the parts of the `install_agent` role that work without API access — a custom download URL and a registration token are provided manually |
 
+Module check-mode tests run together from `default/tasks/check_mode.yml` during
+verification. Custom rule coverage includes event and correlation rules, planned
+creation, cool-off removal, deletion, and unchanged rules. Tests assert consistent
+messages and verify through API reads that no resources were modified.
+
+For API-enabled scenarios, `prepare` creates the test site and separate event and
+correlation rule fixtures for updates, cool-off removal/default field resets, and
+deletion. `converge` creates the regular rules and applies the desired final state
+to each fixture. `idempotence` repeats converge without recreating or resetting the
+fixtures, so all these operations must report no changes on the second run.
+`verify` only reads custom rules and checks their final configuration or absence.
+The custom rule preparation block is skipped in the `no-api-access` scenario.
 
 ### Run the Default Scenario
 
@@ -133,6 +145,7 @@ For development and debugging, you can run individual lifecycle steps instead of
 
 ```bash
 molecule create      # Provision test instances
+molecule prepare     # Prepare instances and API lifecycle fixtures
 molecule converge    # Apply the role
 molecule verify      # Run assertions/tests
 molecule destroy     # Tear down instances

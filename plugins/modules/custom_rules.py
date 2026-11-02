@@ -392,6 +392,7 @@ def run_module():
         diffs = {'changes': message, 'siteName': rule_obj.site_name}
         if not module.check_mode:
             rule_obj.delete_rule(module)
+    message = rule_obj.format_check_mode_message(message, bool(diffs))
     module.exit_json(changed=bool(diffs), original_message=diffs, message=message)
 
 
