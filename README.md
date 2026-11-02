@@ -13,7 +13,7 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 - **Modules**:
   - [agent_info](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/agent_info_module.html)
   - [config_overrides](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/config_overrides_module.html)
-  - [custom_rules](plugins/modules/custom_rules.py)
+  - [custom_rules](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/custom_rules.html)
   - [download_agent](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/download_agent_module.html)
   - [filters](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/filters_module.html)
   - [groups](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/groups_module.html)
