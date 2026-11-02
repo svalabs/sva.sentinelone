@@ -1,0 +1,152 @@
+---
+- name: "Verify: Custom rule {{ custom_rule.name }}"
+  no_log: "{{ hide_sensitive | default(true) }}"
+  module_defaults:
+    sva.sentinelone.custom_rules:
+      console_url: "{{ console_url }}"
+      token: "{{ api_token }}"
+      site_name: "{{ site }}"
+      name: "{{ custom_rule.name }}"
+    ansible.builtin.uri:
+      url: >-
+        {{ console_url }}/web/api/v2.1/cloud-detection/rules?scopes=site&siteIds={{ site_id
+        }}&name__contains={{ custom_rule.name | urlencode }}&limit=1000
+      method: GET
+      return_content: true
+      headers:
+        Accept: application/json
+        Authorization: "APIToken {{ api_token }}"
+      validate_certs: true
+      status_code: 200
+  block:
+    - name: "Verify: Read converged rule from API"
+      ansible.builtin.uri: {}
+      register: custom_rule_api
+
+    - name: "Verify: Converged rule fields"
+      ansible.builtin.assert:
+        that:
+          - custom_rule_api.json.pagination.nextCursor == none
+          - custom_rule_api.json.data | length == 1
+          - custom_rule_api.json.data[0].name == custom_rule.name
+          - custom_rule_api.json.data[0].siteId == site_id
+          - custom_rule_api.json.data[0].status == 'Draft'
+          - custom_rule_api.json.data[0].queryType == ('events' if custom_rule.event_query is defined else 'correlation')
+          - custom_rule_api.json.data[0].coolOffSettings.renotifyMinutes == 60
+          - custom_rule_api.json.data[0].queryLang == '2.0'
+          - custom_rule_api.json.data[0].networkQuarantine == false
+          - custom_rule_api.json.data[0].get('treatAsThreat') in [none, 'UNDEFINED']
+          - >-
+            (custom_rule_api.json.data[0].s1ql == custom_rule.event_query) if custom_rule.event_query is defined
+            else (custom_rule_api.json.data[0].correlationParams == custom_rule.correlation_query)
+
+    - name: "Verify: Plan cool-off removal in check mode"
+      sva.sentinelone.custom_rules:
+        event_query: "{{ custom_rule.event_query | default(omit) }}"
+        correlation_query: "{{ custom_rule.correlation_query | default(omit) }}"
+        description: Molecule custom rule test
+        status: Draft
+      check_mode: true
+      register: custom_rule_check
+
+    - name: "Verify: Read rule after check mode"
+      ansible.builtin.uri: {}
+      register: custom_rule_api
+
+    - name: "Verify: Check mode planned but did not change cool-off"
+      ansible.builtin.assert:
+        that:
+          - custom_rule_check.changed
+          - custom_rule_api.json.data[0].coolOffSettings.renotifyMinutes == 60
+          - custom_rule_api.json.data[0].status == 'Draft'
+
+    - name: "Verify: Update cool-off and rule status"
+      sva.sentinelone.custom_rules:
+        event_query: "{{ custom_rule.event_query | default(omit) }}"
+        correlation_query: "{{ custom_rule.correlation_query | default(omit) }}"
+        description: Molecule updated custom rule
+        severity: High
+        status: Disabled
+        cool_off_minutes: 5
+      register: custom_rule_update
+
+    - name: "Verify: Read updated rule"
+      ansible.builtin.uri: {}
+      register: custom_rule_api
+
+    - name: "Verify: API confirms update"
+      ansible.builtin.assert:
+        that:
+          - custom_rule_update.changed
+          - custom_rule_api.json.data[0].status in ['Disabled', 'Disabling']
+          - custom_rule_api.json.data[0].coolOffSettings.renotifyMinutes == 5
+          - custom_rule_api.json.data[0].description == 'Molecule updated custom rule'
+          - custom_rule_api.json.data[0].severity == 'High'
+
+    - name: "Verify: Remove cool-off and restore default fields"
+      sva.sentinelone.custom_rules:
+        event_query: "{{ custom_rule.event_query | default(omit) }}"
+        correlation_query: "{{ custom_rule.correlation_query | default(omit) }}"
+        status: Draft
+      register: custom_rule_reset
+
+    - name: "Verify: Read rule after reset"
+      ansible.builtin.uri: {}
+      register: custom_rule_api
+
+    - name: "Verify: API confirms cool-off removal and defaults"
+      ansible.builtin.assert:
+        that:
+          - custom_rule_reset.changed
+          - custom_rule_api.json.data[0].get('coolOffSettings') == none
+          - custom_rule_api.json.data[0].description == ''
+          - custom_rule_api.json.data[0].severity == 'Medium'
+          - custom_rule_api.json.data[0].status == 'Draft'
+
+    - name: "Verify: Plan deletion in check mode"
+      sva.sentinelone.custom_rules:
+        console_url: "{{ console_url }}"
+        token: "{{ api_token }}"
+        site_name: "{{ site }}"
+        name: "{{ custom_rule.name }}"
+        state: absent
+      check_mode: true
+      register: custom_rule_delete_check
+
+    - name: "Verify: Read rule after planned deletion"
+      ansible.builtin.uri: {}
+      register: custom_rule_api
+
+    - name: "Verify: Check mode did not delete rule"
+      ansible.builtin.assert:
+        that:
+          - custom_rule_delete_check.changed
+          - custom_rule_api.json.data | length == 1
+
+    - name: "Verify: Delete custom rule"
+      sva.sentinelone.custom_rules:
+        console_url: "{{ console_url }}"
+        token: "{{ api_token }}"
+        site_name: "{{ site }}"
+        name: "{{ custom_rule.name }}"
+        state: absent
+      register: custom_rule_delete
+
+    - name: "Verify: Read API after deletion"
+      ansible.builtin.uri: {}
+      register: custom_rule_api
+
+    - name: "Verify: Rule was deleted"
+      ansible.builtin.assert:
+        that:
+          - custom_rule_delete.changed
+          - custom_rule_api.json.data | length == 0
+
+  always:
+    - name: "Verify: Restore converged custom rule"
+      sva.sentinelone.custom_rules:
+        event_query: "{{ custom_rule.event_query | default(omit) }}"
+        correlation_query: "{{ custom_rule.correlation_query | default(omit) }}"
+        description: Molecule custom rule test
+        status: Draft
+        cool_off_minutes: 60

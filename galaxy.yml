@@ -50,6 +50,8 @@ tags:
   - upgrade_policies
   - agent_info
   - download_agent
+  - custom_rules
+  - star_rules
 
 dependencies:
   ansible.windows: "*"

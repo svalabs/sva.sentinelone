@@ -110,7 +110,7 @@
           sva.sentinelone.sites:
             console_url: "{{ console_url }}"
             token: "{{ api_token }}"
-            name: "{{ site }}"
+            site_name: "{{ site }}"
             state: absent
           retries: 5
           delay: 30

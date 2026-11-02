@@ -42,6 +42,7 @@ class SentineloneBase:
         api_uri_config_overrides = "/web/api/v2.1/config-override"
         api_uri_upgrade_policy = "/web/api/v2.1/tasks-configuration"
         api_uri_update_agent_packages = "/web/api/v2.1/update/agent/packages"
+        api_uri_custom_rules = "/web/api/v2.1/cloud-detection/rules"
 
         # Build full API endpoint from base console URL and API URI
         self.api_endpoint_groups = module.params["console_url"] + api_uri_groups
@@ -52,6 +53,7 @@ class SentineloneBase:
         self.api_endpoint_config_overrides = module.params["console_url"] + api_uri_config_overrides
         self.api_endpoint_upgrade_policy = module.params["console_url"] + api_uri_upgrade_policy
         self.api_endpoint_update_agent_packages = module.params["console_url"] + api_uri_update_agent_packages
+        self.api_endpoint_custom_rules = module.params["console_url"] + api_uri_custom_rules
 
         # Assign passed parameters to class variables
         self.token = module.params["token"]
