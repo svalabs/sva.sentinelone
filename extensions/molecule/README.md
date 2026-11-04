@@ -110,17 +110,13 @@ The Windows scenario remains on the existing Vagrant/VirtualBox setup for now;
 it is deliberately excluded from the Lima-backed Linux scenarios.
 
 Module check-mode tests run together from `default/tasks/check_mode.yml` during
-verification. Custom rule coverage includes event and correlation rules, planned
-creation, cool-off removal, deletion, and unchanged rules. Tests assert consistent
-messages and verify through API reads that no resources were modified.
+verification. Tests assert consistent messages and verify through API reads that
+no resources were modified.
 
-For API-enabled scenarios, `prepare` creates the test site and separate event and
-correlation rule fixtures for updates, cool-off removal/default field resets, and
-deletion. `converge` creates the regular rules and applies the desired final state
-to each fixture. `idempotence` repeats converge without recreating or resetting the
-fixtures, so all these operations must report no changes on the second run.
-`verify` only reads custom rules and checks their final configuration or absence.
-The custom rule preparation block is skipped in the `no-api-access` scenario.
+The converge playbooks also run `install_agent` in check mode **before** the real
+installation. The shared `default/tasks/check_install_agent_role.yml` tests cover
+Linux and Windows in the API-enabled scenarios and custom URL/token installation
+in `no-api-access`.
 
 
 ### Run the Default Scenario
