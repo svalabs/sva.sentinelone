@@ -1,0 +1,95 @@
+---
+- name: Generate the Lima instance name
+  ansible.builtin.set_fact:
+    lima_instance_name: "molecule-{{ lima_scenario_name }}-{{ lima_platform.name }}"
+
+- name: Refuse to reuse an existing Lima instance
+  ansible.builtin.assert:
+    that:
+      - lima_instance_name not in existing_lima_instances.stdout_lines
+    fail_msg: "Lima instance {{ lima_instance_name }} already exists; run molecule destroy first."
+
+- name: Track instance for rollback
+  ansible.builtin.set_fact:
+    created_lima_instances: "{{ created_lima_instances + [lima_instance_name] }}"
+
+- name: Start Lima instance
+  ansible.builtin.command:
+    argv: >-
+      {{
+        [
+          'limactl', '--tty=false', 'start',
+          '--name', lima_instance_name,
+          '--cpus', lima_platform.cpus | default(2) | string,
+          '--memory', lima_platform.memory | default(2) | string,
+          '--disk', lima_platform.disk | default(20) | string
+        ]
+        + (['--arch', lima_platform.arch] if lima_platform.arch is defined else [])
+        + ['template:' ~ lima_platform.lima_template]
+      }}
+  async: 1200
+  poll: 5
+  changed_when: true
+
+- name: Read Lima-generated SSH configuration
+  ansible.builtin.set_fact:
+    lima_ssh_config_path: "{{ lima_home }}/{{ lima_instance_name }}/ssh.config"
+    lima_ssh_host_aliases: >-
+      {{
+        lookup('file', lima_home ~ '/' ~ lima_instance_name ~ '/ssh.config')
+        | regex_findall('(?m)^Host\s+([^\s#]+)')
+        | reject('search', '[*?!]')
+        | list
+      }}
+
+- name: Validate generated SSH configuration
+  ansible.builtin.assert:
+    that:
+      - lima_ssh_host_aliases | length > 0
+    fail_msg: "No concrete SSH host alias found in {{ lima_ssh_config_path }}."
+
+- name: Resolve Lima SSH connection settings
+  ansible.builtin.command:
+    argv:
+      - ssh
+      - -F
+      - "{{ lima_ssh_config_path }}"
+      - -G
+      - "{{ lima_ssh_host_aliases | first }}"
+  register: lima_ssh_options
+  changed_when: false
+
+- name: Add Lima connection details to Molecule instance configuration
+  ansible.builtin.set_fact:
+    molecule_instance_config_records: >-
+      {{
+        molecule_instance_config_records
+        + [
+            {
+              'instance': lima_platform.name,
+              'address': lima_ssh_options.stdout | regex_findall('(?m)^hostname\s+(\S+)') | first | default(''),
+              'port': lima_ssh_options.stdout | regex_findall('(?m)^port\s+(\S+)') | first | default('0') | int,
+              'user': lima_platform.lima_user | default(lima_ssh_options.stdout | regex_findall('(?m)^user\s+(\S+)') | first | default('')),
+              'identity_file': lima_ssh_options.stdout | regex_findall('(?m)^identityfile\s+(\S+)') | first | default(''),
+              'connection': 'ssh'
+            }
+          ]
+      }}
+
+- name: Validate resolved Lima connection details
+  ansible.builtin.assert:
+    that:
+      - molecule_instance_config_records[-1].address | length > 0
+      - molecule_instance_config_records[-1].port > 0
+      - molecule_instance_config_records[-1].user | length > 0
+      - molecule_instance_config_records[-1].identity_file | length > 0
+    fail_msg: >-
+      Could not resolve all SSH connection details for Lima platform
+      {{ lima_platform.name }}. Check the instance's ssh.config and confirm that
+      ssh -G returns hostname, port, user, and identityfile.
+
+- name: Write Molecule instance configuration
+  ansible.builtin.copy:
+    content: "{{ molecule_instance_config_records | to_nice_yaml }}"
+    dest: "{{ molecule_instance_config }}"
+    mode: "0600"

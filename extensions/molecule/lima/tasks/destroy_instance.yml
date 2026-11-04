@@ -1,0 +1,32 @@
+---
+- name: Generate the Lima instance name
+  ansible.builtin.set_fact:
+    lima_instance_name: "molecule-{{ lima_scenario_name }}-{{ lima_platform.name }}"
+
+- name: Delete Lima instance
+  ansible.builtin.command:
+    argv:
+      - limactl
+      - delete
+      - --force
+      - "{{ lima_instance_name }}"
+  async: 600
+  poll: 5
+  when: lima_instance_name in existing_lima_instances.stdout_lines
+  register: lima_delete_result
+  changed_when: not (lima_delete_result.failed | default(false))
+  ignore_errors: true
+
+- name: Track Lima deletion failure
+  ansible.builtin.set_fact:
+    failed_lima_deletions: >-
+      {{
+        failed_lima_deletions
+        + [
+            {
+              'instance': lima_instance_name,
+              'error': lima_delete_result.stderr | default('command failed')
+            }
+          ]
+      }}
+  when: lima_delete_result.failed | default(false)

@@ -1,63 +1,34 @@
 ---
 platforms:
   - name: ubuntu-2604
-    box: "bento/ubuntu-26.04"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+    lima_template: ubuntu-26.04
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
 
-  - name: fedora-43
-    box: "bento/fedora-43"
-    box_architecture: "${ARCH:-amd64}"
-    memory: 2048
+  - name: fedora-44
+    lima_template: fedora-44
+    memory: 2
     cpus: 2
-    config_options:
-      ssh.keep_alive: true
 
-  - name: windows-11-25h2
-    box: "gusztavvargadr/windows-11-25h2-professional"
-    # No selector here. arm64 only box
-    box_architecture: "arm64"
-    memory: 4096
-    cpus: 4
+driver:
+  options:
+    managed: true
 
-  # - name: windows-server-2025
-  #   box: "gusztavvargadr/windows-server-2025-standard"
-  #   # No selector here. amd64 only box
-  #   box_architecture: "amd64"
-  #   memory: 4096
-  #   cpus: 4
-  #   config_options:
-  #     ssh.keep_alive: true
-  #     # x86 emulation on my setup is really slow
-  #     vm.boot_timeout: 1800
-  #     winrm.timeout: 1800
-  #     winrm.retry_limit: 30
-  #     winrm.retry_delay: 60
-  #     #vm.communicator: "winssh"
-  #     #winssh.shell: ":powershell"
-  #     #winssh.upload_directory: "C:\\Users\\vagrant"
-provisioner:
-  name: ansible
+ansible:
   playbooks:
+    create: ../lima/create.yml
+    destroy: ../lima/destroy.yml
     prepare: prepare.yml
     converge: converge.yml
     verify: verify.yml
     cleanup: cleanup.yml
+
+provisioner:
   inventory:
     host_vars:
-      windows-server-2025:
-        ansible_shell_type: powershell
-        ansible_become: false
-        ansible_remote_tmp: '%TEMP%'
       windows-11-25h2:
         ansible_become: false
         ansible_remote_tmp: '%TEMP%'
-        ansible_connection: winrm
-        ansible_winrm_transport: ntlm
         ansible_winrm_scheme: http
-        ansible_port: 55985
-        ansible_user: vagrant
-        ansible_password: vagrant
+        ansible_winrm_operation_timeout_sec: 60
+        ansible_winrm_read_timeout_sec: 70
