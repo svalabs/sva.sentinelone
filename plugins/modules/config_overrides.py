@@ -419,7 +419,7 @@ def run_module():
             ('state', 'present', ('name', 'config_override')),
             ('state', 'absent', ('config_override',))
         ],
-        supports_check_mode=True
+        supports_check_mode=False
     )
 
     if not lib_imp_errors['has_lib']:
@@ -447,7 +447,7 @@ def run_module():
             if current_config_override_obj:
                 if diff:
                     # if group config override is different from desired state, update it
-                    diffs = {'changes': config_override_obj.diff_to_dict(diff), 'groupId': group_id}
+                    diffs = {'changes': dict(diff), 'groupId': group_id}
                     basic_message = f"Config override {override_name} for group {group_name} updated"
             else:
                 diffs = {'changes': f"Non existing config override {override_name} created",
@@ -465,7 +465,7 @@ def run_module():
             if current_config_override_obj:
                 if diff:
                     # if site config override is different from desired state, update it
-                    diffs = {'changes': config_override_obj.diff_to_dict(diff), 'SiteId': site_id}
+                    diffs = {'changes': dict(diff), 'SiteId': site_id}
                     basic_message = f"Config override {override_name} for site {site_name} updated"
             else:
                 diffs = {'changes': f"Non existing config override {override_name} created",
@@ -474,8 +474,7 @@ def run_module():
 
         if diffs:
             # Delete and recreate the config override object if changes were made to the object
-            if not module.check_mode:
-                config_override_obj.recreate_config_override(current_config_override_id, merged_config_override, module)
+            config_override_obj.recreate_config_override(current_config_override_id, merged_config_override, module)
 
     elif state == "absent":
         if current_config_override_obj:
@@ -491,38 +490,28 @@ def run_module():
             if not new_config_override:
                 # Delete the whole config override object if new_config_override is empty. This meens the passed
                 # config_override parameter deletes all Settings in the object. So deletion is necessary
-                if module.check_mode:
-                    diffs = {'changes': f"Config override: {current_config_override_obj['name']} pruned"}
-                    basic_message = f"Config override {current_config_override_obj['name']} pruned"
-                else:
-                    basic_message, diffs = config_override_obj.prune_config_override(current_config_override_id,
-                                                                                     current_config_override_obj,
-                                                                                     module)
+                basic_message, diffs = config_override_obj.prune_config_override(current_config_override_id,
+                                                                                 current_config_override_obj, module)
             elif diff:
                 # Delete and recreate the config override object if changes were made to the object
-                if not module.check_mode:
-                    config_override_obj.recreate_config_override(current_config_override_id, new_config_override_obj,
-                                                                 module)
+                config_override_obj.recreate_config_override(current_config_override_id, new_config_override_obj,
+                                                             module)
                 if group_id:
-                    diffs = {'changes': config_override_obj.diff_to_dict(diff), 'groupId': group_id}
+                    diffs = {'changes': dict(diff), 'groupId': group_id}
                     basic_message = f"Config override settings from existing config override for " \
                                     f"group {group_id} removed"
                 else:
                     site_name = config_override_obj.site_name
                     site_id = config_override_obj.site_id
-                    diffs = {'changes': config_override_obj.diff_to_dict(diff), 'siteId': site_id}
+                    diffs = {'changes': dict(diff), 'siteId': site_id}
                     basic_message = f"Config override settings from existing config override for " \
                                     f"site {site_name} removed"
     else:
         # if we want to delete config_override (state = prune)
         if current_config_override_obj:
-            if module.check_mode:
-                diffs = {'changes': f"Config override: {current_config_override_obj['name']} pruned"}
-                basic_message = f"Config override {current_config_override_obj['name']} pruned"
-            else:
-                basic_message, diffs = config_override_obj.prune_config_override(current_config_override_id,
-                                                                                 current_config_override_obj,
-                                                                                 module)
+            basic_message, diffs = config_override_obj.prune_config_override(current_config_override_id,
+                                                                             current_config_override_obj,
+                                                                             module)
 
     result = dict(
         changed=False,
@@ -534,8 +523,6 @@ def run_module():
     # So we can use it to update result['changes'] to True if necessary
     if diffs:
         result['changed'] = True
-
-    result['message'] = config_override_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results

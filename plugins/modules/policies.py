@@ -260,7 +260,7 @@ def run_module():
         required_if=[
             ('inherit', False, ('policy',))
         ],
-        supports_check_mode=True
+        supports_check_mode=False
     )
 
     if not lib_imp_errors['has_lib']:
@@ -286,11 +286,10 @@ def run_module():
                 if diff:
                     # if group policy is different from desired state, update it
                     current_group_name = current_group_id_name[1]
-                    diffs.append({'changes': policy_obj.diff_to_dict(diff), 'groupId': current_group_id})
+                    diffs.append({'changes': dict(diff), 'groupId': current_group_id})
                     basic_message.append(f"Updating policy for group {current_group_name}")
                     update_body = policy_obj.get_update_body(merged_policy)
-                    if not module.check_mode:
-                        policy_obj.update_policy(current_group_id, update_body, module)
+                    policy_obj.update_policy(current_group_id, update_body, module)
         else:
             # if scope is site level
             # check if site has the desired settings already
@@ -301,11 +300,10 @@ def run_module():
             diff, merged_policy = policy_obj.merge_compare(current_policy['data'], desired_state_policy)
             if diff:
                 # if site policy is different from desired state, update it
-                diffs.append({'changes': policy_obj.diff_to_dict(diff), 'SiteId': site_id})
+                diffs.append({'changes': dict(diff), 'SiteId': site_id})
                 basic_message.append(f"Updating policy for site {site_name}")
                 update_body = policy_obj.get_update_body(merged_policy)
-                if not module.check_mode:
-                    policy_obj.update_policy(site_id, update_body, module)
+                policy_obj.update_policy(site_id, update_body, module)
     else:
         # if we want to enable inheritance
         if current_group_ids_names:
@@ -318,8 +316,7 @@ def run_module():
                     current_group_name = current_group_id_name[1]
                     diffs.append({'changes': "Inheritance from site scope enabled", 'groupId': current_group_id})
                     basic_message.append(f"Enable inheritance from site scope in group {current_group_name}")
-                    if not module.check_mode:
-                        policy_obj.revert_policy(current_group_id, module)
+                    policy_obj.revert_policy(current_group_id, module)
         else:
             # if scope is site level
             site_name = policy_obj.site_name
@@ -329,8 +326,7 @@ def run_module():
                 # If inheritedFrom is "None" it will enable inheritance
                 diffs.append({'changes': "Inheritance from account scope enabled", 'siteId': site_id})
                 basic_message.append(f"Enable inheritance from account scope in site {site_name}")
-                if not module.check_mode:
-                    policy_obj.revert_policy(site_id, module)
+                policy_obj.revert_policy(site_id, module)
 
     result = dict(
         changed=False,
@@ -342,8 +338,6 @@ def run_module():
     # So we can use it to update result['changes'] to True if necessary
     if diffs:
         result['changed'] = True
-
-    result['message'] = policy_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results

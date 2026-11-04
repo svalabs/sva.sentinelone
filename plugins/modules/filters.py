@@ -250,7 +250,7 @@ def run_module():
         required_if=[
             ('state', 'present', ('filter_fields',))
         ],
-        supports_check_mode=True
+        supports_check_mode=False
     )
 
     if not lib_imp_errors['has_lib']:
@@ -273,16 +273,14 @@ def run_module():
             diff = filter_obj.merge_compare(current_filter_fields, desired_state_filter_fields)[0]
             if diff:
                 # Update filter if it is not up-to-date
-                diffs = {'changes': filter_obj.diff_to_dict(diff), 'siteName': site_name}
+                diffs = {'changes': dict(diff), 'siteName': site_name}
                 basic_message = f'Filter exists in site {site_name} but is not up-to-date. Updating Filter.'
-                if not module.check_mode:
-                    filter_obj.update_filter(module)
+                filter_obj.update_filter(module)
         else:
             # Creates the filter if it is missing
             basic_message = f'Filter is missing in site {site_name}. Adding filter'
             diffs = {'changes': basic_message}
-            if not module.check_mode:
-                filter_obj.create_filter(module)
+            filter_obj.create_filter(module)
 
     else:
         # Filter should be deleted
@@ -290,8 +288,7 @@ def run_module():
             # Check if it exists
             basic_message = f'Filter exists in site {site_name}. Deleting filter'
             diffs = {'changes': basic_message}
-            if not module.check_mode:
-                filter_obj.delete_filter(module)
+            filter_obj.delete_filter(module)
 
     result = dict(
         changed=False,
@@ -303,8 +300,6 @@ def run_module():
     # So we can use it to update result['changes'] to True if necessary
     if diffs:
         result['changed'] = True
-
-    result['message'] = filter_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results

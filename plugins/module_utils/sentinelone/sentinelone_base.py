@@ -79,25 +79,6 @@ class SentineloneBase:
 
         self.module = module
 
-    def format_check_mode_message(self, message, changed: bool):
-        if not self.module.check_mode:
-            return message
-        if not changed:
-            if isinstance(message, list) and message:
-                return [f"No changes would be made: {item}" for item in message]
-            if message:
-                return f"No changes would be made: {message}"
-            return "No changes would be made."
-        if isinstance(message, list):
-            return [f"Would change: {item}" for item in message]
-        if message:
-            return f"Would change: {message}"
-        return "Would change: changes are required."
-
-    @staticmethod
-    def diff_to_dict(diff):
-        return json.loads(diff.to_json())
-
     def api_call(self, module: AnsibleModule, api_endpoint: str, http_method: str = "get", parse_response: bool = True,
                  **kwargs):
         """

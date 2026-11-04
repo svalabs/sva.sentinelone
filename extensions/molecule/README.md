@@ -99,12 +99,10 @@ Once the environment is active, you can run Molecule tests from the repository r
 
 | Scenario | Description |
 |---|---|
-| `default` | Tests install_agent against current Ubuntu and Fedora releases, as well as every module including check-mode behavior |
+| `default` | Tests install_agent against current Ubuntu and Fedora releases, as well as every module |
 | `multi-os` | Same tests across current Ubuntu, Debian, Fedora, Rocky Linux, and SUSE releases |
 | `windows` | Runs the Windows tests using the existing Vagrant/VirtualBox setup |
 | `no-api-access` | Tests the parts of the `install_agent` role that work without API access — a custom download URL and a registration token are provided manually |
-
-The `default` scenario also exercises every SentinelOne module in check mode. It verifies that planned API changes are reported without changing SentinelOne resources or downloading agent files.
 
 The Linux scenarios create and destroy their Lima instances using native Ansible tasks in local playbooks. Those tasks write the connection details Molecule needs to its instance configuration. The Windows scenario remains on the existing Vagrant/VirtualBox setup for now; it is deliberately excluded from the Lima-backed Linux scenarios.
 

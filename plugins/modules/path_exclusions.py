@@ -492,7 +492,7 @@ def run_module():
         required_if=[
             ('state', 'present', ('mode', 'os_type'))
         ],
-        supports_check_mode=True
+        supports_check_mode=False
     )
 
     if not lib_imp_errors['has_lib']:
@@ -527,11 +527,7 @@ def run_module():
                         # Get name for group with group_id
                         group_name = list(filter(lambda filterobj: filterobj[0] == group_id,
                                                  current_group_ids_names))[0][1]
-                        diffs.append({
-                            'changes': exclusion_obj.diff_to_dict(diff),
-                            'groupId': group_id,
-                            "exclusion_id": current_exclusion['id'],
-                        })
+                        diffs.append({'changes': dict(diff), 'groupId': group_id, "exclusion_id": current_exclusion['id']})
                         basic_message.append(f"Exclusion exists in group {group_name} but is not up-to-date. "
                                              f"Updating exclusion.")
             else:
@@ -551,7 +547,7 @@ def run_module():
                 current_exclusion = current_exclusions['data'][0]
                 diff = exclusion_obj.merge_compare(current_exclusion, desired_state_exclusion['data'])[0]
                 if diff:
-                    diffs.append({'changes': exclusion_obj.diff_to_dict(diff),
+                    diffs.append({'changes': dict(diff),
                                   'siteId': current_exclusion['scope']['siteIds'],
                                   'exclusion_id': current_exclusion['id']
                                   })
@@ -561,13 +557,11 @@ def run_module():
         if diffs:
             if diffs[0].get('exclusion_id'):
                 # Update Exclusions
-                if not module.check_mode:
-                    exclusion_obj.update_exclusions(module, exclusion_id=diffs[0]['exclusion_id'])
+                exclusion_obj.update_exclusions(module, exclusion_id=diffs[0]['exclusion_id'])
 
             else:
                 # Create Exclusions
-                if not module.check_mode:
-                    exclusion_obj.create_exclusions(module)
+                exclusion_obj.create_exclusions(module)
 
         else:
             basic_message.append("Nothing to change, all desired changes are already set")
@@ -575,9 +569,7 @@ def run_module():
     else:
         if current_exclusions['pagination']['totalItems'] != 0:
             # Exclusions should be deleted
-            if not module.check_mode:
-                exclusion_obj.delete_exclusions(module)
-            basic_message.append("Exclusions exist in scope. Deleting all exclusions.")
+            exclusion_obj.delete_exclusions(module)
             diffs.append({'changes': 'Deleted all exclusions in Scope'})
         else:
             basic_message.append("Nothing to change, exclusion does not exist")
@@ -592,8 +584,6 @@ def run_module():
     # So we can use it to update result['changes'] to True if necessary
     if diffs:
         result['changed'] = True
-
-    result['message'] = exclusion_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results

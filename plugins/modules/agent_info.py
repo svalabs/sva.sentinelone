@@ -185,7 +185,6 @@ def run_module():
         original_message=original_message,
         message=basic_message
     )
-    result['message'] = agent_info_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results

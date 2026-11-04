@@ -478,7 +478,7 @@ def run_module():
             ('inherit_maintenance_windows', False, ('maintenance_windows',)),
             ('inherit_max_concurrent_downloads', False, ('max_concurrent_downloads',))
         ],
-        supports_check_mode=True
+        supports_check_mode=False
     )
 
     if not lib_imp_errors['has_lib']:
@@ -524,11 +524,10 @@ def run_module():
             if diff:
                 # if upgrade policy is different from desired state, update it
                 current_group_name = current_group_id_name[1]
-                diffs.append({'changes': upgrade_policy_obj.diff_to_dict(diff), 'groupId': current_group_id})
+                diffs.append({'changes': dict(diff), 'groupId': current_group_id})
                 basic_message.append(f"Updating upgrade policy for group {current_group_name}")
                 update_body = upgrade_policy_obj.get_update_body(desired_state_upgrade_policy, current_group_id)
-                if not module.check_mode:
-                    upgrade_policy_obj.update_upgrade_policy(current_group_id, update_body, module)
+                upgrade_policy_obj.update_upgrade_policy(current_group_id, update_body, module)
     else:
         # if scope is site level
         # check if site has the desired settings already
@@ -548,11 +547,10 @@ def run_module():
                                           exclude_path=exclude_path)
         if diff:
             # if upgrade policy is different from desired state, update it
-            diffs.append({'changes': upgrade_policy_obj.diff_to_dict(diff), 'SiteId': site_id})
+            diffs.append({'changes': dict(diff), 'SiteId': site_id})
             basic_message.append(f"Updating upgrade policy for site {site_name}")
             update_body = upgrade_policy_obj.get_update_body(desired_state_upgrade_policy, site_id)
-            if not module.check_mode:
-                upgrade_policy_obj.update_upgrade_policy(site_id, update_body, module)
+            upgrade_policy_obj.update_upgrade_policy(site_id, update_body, module)
 
     result = dict(
         changed=False,
@@ -564,8 +562,6 @@ def run_module():
     # So we can use it to update result['changes'] to True if necessary
     if diffs:
         result['changed'] = True
-
-    result['message'] = upgrade_policy_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results

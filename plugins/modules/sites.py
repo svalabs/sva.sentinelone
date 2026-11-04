@@ -326,7 +326,7 @@ def run_module():
 
     module = AnsibleModule(
         argument_spec=module_args,
-        supports_check_mode=True
+        supports_check_mode=False
     )
 
     if not lib_imp_errors['has_lib']:
@@ -355,24 +355,21 @@ def run_module():
             diff = site_obj.merge_compare(current_site, desired_state_site, exclude_path)[0]
             if diff:
                 # Update site if it is not up-to-date
-                diffs = {'changes': site_obj.diff_to_dict(diff), 'siteName': site_name}
+                diffs = {'changes': dict(diff), 'siteName': site_name}
                 basic_message = 'Site exists but is not up-to-date. Updating site.'
-                if not module.check_mode:
-                    site_obj.update_site(desired_state_site, module)
+                site_obj.update_site(desired_state_site, module)
         else:
             # Creates the site if it is missing
             basic_message = f'Site is missing. Adding site {site_name}'
             diffs = {'changes': basic_message}
-            if not module.check_mode:
-                site_obj.create_site(desired_state_site, module)
+            site_obj.create_site(desired_state_site, module)
     else:
         # Site should be deleted
         if site_id is not None:
             # Check if site exists
             basic_message = f'Site {site_name} exists. Deleting site'
             diffs = {'changes': basic_message}
-            if not module.check_mode:
-                site_obj.delete_site(module)
+            site_obj.delete_site(module)
 
     result = dict(
         changed=False,
@@ -384,8 +381,6 @@ def run_module():
     # So we can use it to update result['changes'] to True if necessary
     if diffs:
         result['changed'] = True
-
-    result['message'] = site_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results
