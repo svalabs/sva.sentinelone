@@ -1,2 +1,3 @@
 ---
 # defaults file for install_agent
+install_agent_check_mode: "{{ ansible_check_mode }}"

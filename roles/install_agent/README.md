@@ -86,6 +86,28 @@ Dependencies
 
 If this role is used for Windows hosts, the `ansible.windows` collection needs to be installed.
 
+## Check Mode
+
+The role supports `--check` on both Linux and Windows, including API-less installations.
+It checks the current installation state and reports a planned installation if the agent
+is missing. API GET requests for site, group and registration token lookup still run
+to validate the configuration. Installer downloads, package installation and cleanup
+are skipped because their files do not exist during a dry run.
+
+When enabling check mode only for an `include_role` task use `apply` and also set
+`install_agent_check_mode: true`: Ansible's `ansible_check_mode` variable reflects
+the CLI flag, not task-level overrides.
+
+```yaml
+- name: Preview the agent installation
+  ansible.builtin.include_role:
+    name: sva.sentinelone.install_agent
+    apply:
+      check_mode: true
+  vars:
+    install_agent_check_mode: true
+```
+
 ## API-less Installation (no API token required)
 
 When both `custom_client_url` and `registration_token` are defined, the role operates completely without API access. In this mode, the mandatory variables `console_url`, `api_token`, and `site` are **not required**.

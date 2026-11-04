@@ -1,0 +1,53 @@
+---
+- name: "Check mode: Read Linux agent executable before role execution"
+  ansible.builtin.stat:
+    path: /opt/sentinelone/bin/sentinelctl
+    get_checksum: false
+    get_mime: false
+  become: true
+  register: check_mode_agent_before
+  when: ansible_facts['system'] | default('') == 'Linux'
+
+- name: "Check mode: Read Windows agent service before role execution"
+  ansible.windows.win_service_info:
+    name: SentinelAgent
+  register: check_mode_service_before
+  when: ansible_facts['os_family'] == 'Windows'
+
+- name: "Check mode: Run agent installation role"
+  ansible.builtin.include_tasks:
+    file: test_install_agent_role.yml
+  vars:
+    install_agent_test_check_mode: true
+
+- name: "Check mode: Read Linux agent executable after role execution"
+  ansible.builtin.stat:
+    path: /opt/sentinelone/bin/sentinelctl
+    get_checksum: false
+    get_mime: false
+  become: true
+  register: check_mode_agent_after
+  when: ansible_facts['system'] | default('') == 'Linux'
+
+- name: "Check mode: Verify Linux agent installation was not changed"
+  ansible.builtin.assert:
+    that:
+      - check_mode_agent_before.stat.exists == check_mode_agent_after.stat.exists
+      - install_agent_agent_installed == check_mode_agent_before.stat.exists
+    fail_msg: "Check mode must not install or remove the Linux agent."
+  when: ansible_facts['system'] | default('') == 'Linux'
+
+- name: "Check mode: Read Windows agent service after role execution"
+  ansible.windows.win_service_info:
+    name: SentinelAgent
+  register: check_mode_service_after
+  when: ansible_facts['os_family'] == 'Windows'
+
+- name: "Check mode: Verify Windows agent installation was not changed"
+  ansible.builtin.assert:
+    that:
+      - check_mode_service_before.exists == check_mode_service_after.exists
+      - check_mode_service_before.services == check_mode_service_after.services
+      - install_agent_agent_installed == check_mode_service_before.exists
+    fail_msg: "Check mode must not install, remove or reconfigure the Windows agent service."
+  when: ansible_facts['os_family'] == 'Windows'

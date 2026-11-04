@@ -4,7 +4,7 @@
     file: Linux.yml
 
 - name: "Linux Block: Skip if sentinelagent is already installed."
-  when: not install_agent_agent_installed
+  when: not install_agent_check_mode and not install_agent_agent_installed
   become: true
   block:
     - name: Get dmesg output
@@ -95,8 +95,10 @@
     state: started
     enabled: true
   become: true
+  when: not install_agent_check_mode or install_agent_agent_installed
 
 - name: "Linux: Check if agent is already registered"
+  check_mode: false
   ansible.builtin.shell:
     # \\s needed because yaml interprets \s as escape sequence
     cmd: "set -o pipefail && /opt/sentinelone/bin/sentinelctl management status | grep -E '^Connectivity\\s+(On|Off)$' | awk '{ print $2 }'"
@@ -105,6 +107,7 @@
   register: install_agent_agent_status
   failed_when: install_agent_agent_status.stdout is not regex("On|Off")
   changed_when: install_agent_agent_status.stdout is not regex("On|Off")
+  when: not install_agent_check_mode or install_agent_agent_installed
 
 - name: "Linux: Register agent"
   ansible.builtin.command:
@@ -115,7 +118,9 @@
   no_log: "{{ install_agent_hide_sensitive }}"
   changed_when: true
   failed_when: '"Registration token successfully set" not in install_agent_token_set_output.stdout'
-  when: install_agent_agent_status.stdout == 'Off' or install_agent_lx_force_new_token
+  when:
+    - not install_agent_check_mode or install_agent_agent_installed
+    - install_agent_agent_status.stdout == 'Off' or install_agent_lx_force_new_token
 
 - name: "Linux: Wait until agent connectivity is on after registration"
   ansible.builtin.shell:
@@ -128,17 +133,20 @@
   until: install_agent_agent_connectivity.stdout == 'On'
   retries: 24
   delay: 5
-  when: install_agent_agent_status.stdout == 'Off' or install_agent_lx_force_new_token
+  when:
+    - not install_agent_check_mode
+    - install_agent_agent_status.stdout == 'Off' or install_agent_lx_force_new_token
 
 - name: "Linux: Remove agent install package from target machine"
   ansible.builtin.file:
     path: "{{ install_agent_remote_pkg_path }}"
     state: absent
   become: true
-  when: not install_agent_agent_installed
+  when: not install_agent_check_mode and not install_agent_agent_installed
 
 - name: "Linux: Remove gpg key from target machine"
   ansible.builtin.file:
     path: "{{ install_agent_remote_gpg_key_path }}"
     state: absent
   become: true
+  when: not install_agent_check_mode

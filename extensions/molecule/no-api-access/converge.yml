@@ -57,6 +57,12 @@
           retries: 3
           delay: 20
 
+    - name: "Converge: Test custom agent installation in check mode"
+      ansible.builtin.include_tasks: ../default/tasks/check_install_agent_role.yml
+      vars:
+        custom_client_url: "{{ client_url }}"
+        registration_token: "{{ get_reg_token_result.json.data.token }}"
+
     - name: "Converge: Install custom agent"
       ansible.builtin.include_role:
         name: sva.sentinelone.install_agent
