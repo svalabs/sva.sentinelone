@@ -1,0 +1,453 @@
+---
+- name: "Check mode: Load custom rule test definitions"
+  ansible.builtin.include_vars: ../../vars/custom_rules.yml
+
+- name: "Check mode: Get custom rule site"
+  ansible.builtin.uri:
+    url: "{{ console_url }}/web/api/v2.1/sites?name={{ site | urlencode }}&state=active"
+    method: GET
+    return_content: true
+    headers:
+      Accept: application/json
+      Authorization: "APIToken {{ api_token }}"
+    validate_certs: true
+    status_code: 200
+  register: check_mode_custom_rule_site
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Validate custom rule site"
+  ansible.builtin.assert:
+    that:
+      - check_mode_custom_rule_site.json.data.sites | length == 1
+    fail_msg: "Run converge first to create exactly one test site before checking custom rules."
+
+- name: "Check mode: Get custom rules before planned changes"
+  ansible.builtin.uri:
+    url: >-
+      {{ console_url }}/web/api/v2.1/cloud-detection/rules?scopes=site&siteIds={{
+      check_mode_custom_rule_site.json.data.sites[0].id
+      }}&name__contains={{ item.name | urlencode }}&limit=1000
+    method: GET
+    return_content: true
+    headers:
+      Accept: application/json
+      Authorization: "APIToken {{ api_token }}"
+    validate_certs: true
+    status_code: 200
+  loop: "{{ custom_rules_test_definitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: check_mode_custom_rules_before
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Validate converged custom rules"
+  ansible.builtin.assert:
+    that:
+      - item.json.pagination.nextCursor == none
+      - item.json.data | length == 1
+      - item.json.data[0].name == item.item.name
+      - item.json.data[0].coolOffSettings.renotifyMinutes == 60
+      - item.json.data[0].status == 'Draft'
+    fail_msg: "Run converge to restore the custom rule with Draft status and a 60-minute cool-off."
+  loop: "{{ check_mode_custom_rules_before.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Custom rule creation"
+  sva.sentinelone.custom_rules:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "{{ item.name }}-check-mode"
+    event_query: "{{ item.event_query | default(omit) }}"
+    correlation_query: "{{ item.correlation_query | default(omit) }}"
+    status: Draft
+  check_mode: true
+  loop: "{{ custom_rules_test_definitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: check_mode_custom_rule_create
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Custom rule unchanged"
+  sva.sentinelone.custom_rules:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "{{ item.name }}"
+    event_query: "{{ item.event_query | default(omit) }}"
+    correlation_query: "{{ item.correlation_query | default(omit) }}"
+    description: Molecule custom rule test
+    status: Draft
+    cool_off_minutes: 60
+  check_mode: true
+  loop: "{{ custom_rules_test_definitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: check_mode_custom_rule_unchanged
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Custom rule cool-off removal"
+  sva.sentinelone.custom_rules:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "{{ item.name }}"
+    event_query: "{{ item.event_query | default(omit) }}"
+    correlation_query: "{{ item.correlation_query | default(omit) }}"
+    description: Molecule custom rule test
+    status: Draft
+  check_mode: true
+  loop: "{{ custom_rules_test_definitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: check_mode_custom_rule_update
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Custom rule deletion"
+  sva.sentinelone.custom_rules:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "{{ item.name }}"
+    state: absent
+  check_mode: true
+  loop: "{{ custom_rules_test_definitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: check_mode_custom_rule_delete
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Create temporary download directory"
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: sva-sentinelone-check-mode-
+  register: check_mode_download_dir
+
+- name: "Check mode: Site update"
+  sva.sentinelone.sites:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    name: "{{ site }}"
+    license_type: "{{ license_type }}"
+    total_agents: "{{ total_agents }}"
+    site_type: "{{ site_type }}"
+    description: "[Check mode] Must not be saved"
+  check_mode: true
+  register: check_mode_site
+
+- name: "Check mode: Site deletion"
+  sva.sentinelone.sites:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    name: "{{ site }}"
+    state: absent
+  check_mode: true
+  register: check_mode_site_delete
+
+- name: "Check mode: Policy update"
+  sva.sentinelone.policies:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    policy:
+      scanNewAgents: true
+  check_mode: true
+  register: check_mode_policy
+
+- name: "Check mode: Exclusion creation"
+  sva.sentinelone.path_exclusions:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    os_path: 'C:\temp\check-mode.exe'
+    description: "[Check mode] Must not be saved"
+    mode: interoperability_extended
+    os_type: windows
+  check_mode: true
+  register: check_mode_exclusion
+
+- name: "Check mode: Exclusion deletion"
+  sva.sentinelone.path_exclusions:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    state: absent
+    site_name: "{{ site }}"
+    os_path: 'C:\temp\test.exe'
+    os_type: windows
+  check_mode: true
+  register: check_mode_exclusion_delete
+
+- name: "Check mode: Filter creation"
+  sva.sentinelone.filters:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "Check mode filter"
+    filter_fields:
+      osTypes:
+        - windows
+  check_mode: true
+  register: check_mode_filter
+
+- name: "Check mode: Filter deletion"
+  sva.sentinelone.filters:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "Linux Hosts"
+    state: absent
+  check_mode: true
+  register: check_mode_filter_delete
+
+- name: "Check mode: Group creation"
+  sva.sentinelone.groups:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name:
+      - "Check mode group"
+  check_mode: true
+  register: check_mode_group
+
+- name: "Check mode: Group deletion"
+  sva.sentinelone.groups:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name:
+      - "Testgroup1"
+    state: absent
+  check_mode: true
+  register: check_mode_group_delete
+
+- name: "Check mode: Config override creation"
+  sva.sentinelone.config_overrides:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "[Check mode] Must not be saved"
+    os_type: windows
+    config_override:
+      powershellProtection: true
+  check_mode: true
+  register: check_mode_config_override
+
+- name: "Check mode: Config override pruning"
+  sva.sentinelone.config_overrides:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "[Converge] Test config override"
+    os_type: windows
+    state: prune
+  check_mode: true
+  register: check_mode_config_override_prune
+
+- name: "Check mode: Upgrade policy update"
+  sva.sentinelone.upgrade_policies:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    inherit_max_concurrent_downloads: true
+    timezone: "+02:00"
+    maintenance_windows:
+      monday:
+        - from: '08:00 am'
+          to: '04:00 pm'
+  check_mode: true
+  register: check_mode_upgrade_policy
+
+- name: "Check mode: Agent package information"
+  sva.sentinelone.agent_info:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    os_type: Linux
+    packet_format: deb
+  check_mode: true
+  register: check_mode_agent_info
+
+- name: "Check mode: Agent download"
+  sva.sentinelone.download_agent:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    os_type: Linux
+    packet_format: deb
+    download_dir: "{{ check_mode_download_dir.path }}"
+  check_mode: true
+  register: check_mode_agent_download
+
+- name: "Check mode: Assert planned changes"
+  vars:
+    custom_rule_planned_results: >-
+      {{ check_mode_custom_rule_create.results + check_mode_custom_rule_update.results + check_mode_custom_rule_delete.results }}
+  ansible.builtin.assert:
+    that:
+      - custom_rule_planned_results | length == (custom_rules_test_definitions | length) * 3
+      - custom_rule_planned_results | selectattr('changed', 'equalto', true) | list | length == custom_rule_planned_results | length
+      - >-
+        custom_rule_planned_results | map(attribute='message') | select('match', '^Would change: ') | list | length
+        == custom_rule_planned_results | length
+      - check_mode_custom_rule_unchanged.results | length == custom_rules_test_definitions | length
+      - check_mode_custom_rule_unchanged.results | selectattr('changed', 'equalto', false) | list | length == custom_rules_test_definitions | length
+      - >-
+        check_mode_custom_rule_unchanged.results | map(attribute='message') | select('match', '^No changes would be made') | list | length
+        == custom_rules_test_definitions | length
+      - check_mode_site.changed
+      - check_mode_site_delete.changed
+      - check_mode_policy.changed
+      - check_mode_exclusion.changed
+      - check_mode_exclusion_delete.changed
+      - check_mode_filter.changed
+      - check_mode_filter_delete.changed
+      - check_mode_group.changed
+      - check_mode_group_delete.changed
+      - check_mode_config_override.changed
+      - check_mode_config_override_prune.changed
+      - check_mode_upgrade_policy.changed
+      - not check_mode_agent_info.changed
+      - check_mode_agent_download.changed
+      - "check_mode_site.message is search('^Would change: ')"
+      - "check_mode_site_delete.message is search('^Would change: ')"
+      - "check_mode_policy.message | select('match', '^Would change: ') | list | length > 0"
+      - "check_mode_exclusion.message | select('match', '^Would change: ') | list | length > 0"
+      - "check_mode_exclusion_delete.message | select('match', '^Would change: ') | list | length > 0"
+      - "check_mode_filter.message is search('^Would change: ')"
+      - "check_mode_filter_delete.message is search('^Would change: ')"
+      - "check_mode_group.message | select('match', '^Would change: ') | list | length > 0"
+      - "check_mode_group_delete.message | select('match', '^Would change: ') | list | length > 0"
+      - "check_mode_config_override.message is search('^Would change: ')"
+      - "check_mode_config_override_prune.message is search('^Would change: ')"
+      - "check_mode_upgrade_policy.message | select('match', '^Would change: ') | list | length > 0"
+      - "check_mode_agent_info.message is search('^No changes would be made')"
+      - "check_mode_agent_download.message is search('^Would change: ')"
+    success_msg: "Check mode correctly reports planned changes for all SentinelOne modules."
+    fail_msg: "A module reported an unexpected change flag or message. Check the failed assertion and restore the converged test configuration."
+
+- name: "Check mode: Confirm agent download did not create files"
+  ansible.builtin.find:
+    paths: "{{ check_mode_download_dir.path }}"
+    file_type: file
+  register: check_mode_download_files
+
+- name: "Check mode: Assert agent download was not performed"
+  ansible.builtin.assert:
+    that:
+      - check_mode_download_files.files | length == 0
+
+- name: "Check mode: Remove temporary download directory"
+  ansible.builtin.file:
+    path: "{{ check_mode_download_dir.path }}"
+    state: absent
+
+- name: "Check mode: Get site after planned deletion and update"
+  ansible.builtin.uri:
+    url: "{{ console_url }}/web/api/v2.1/sites?name={{ site | urlencode }}&state=active"
+    method: GET
+    return_content: true
+    headers:
+      Accept: application/json
+      Authorization: "APIToken {{ api_token }}"
+    validate_certs: true
+    status_code: 200
+  register: check_mode_site_result
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Get filters after planned creation and deletion"
+  ansible.builtin.uri:
+    url: "{{ console_url }}/web/api/v2.1/filters?siteIds={{ check_mode_site_result.json.data.sites[0].id }}"
+    method: GET
+    return_content: true
+    headers:
+      Accept: application/json
+      Authorization: "APIToken {{ api_token }}"
+    validate_certs: true
+    status_code: 200
+  register: check_mode_filters_result
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Get groups after planned creation and deletion"
+  ansible.builtin.uri:
+    url: "{{ console_url }}/web/api/v2.1/groups?siteIds={{ check_mode_site_result.json.data.sites[0].id }}&types=dynamic,static"
+    method: GET
+    return_content: true
+    headers:
+      Accept: application/json
+      Authorization: "APIToken {{ api_token }}"
+    validate_certs: true
+    status_code: 200
+  register: check_mode_groups_result
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Get planned exclusion"
+  ansible.builtin.uri:
+    url: >-
+      {{ console_url ~ '/web/api/v2.1/exclusions?siteIds=' ~
+      check_mode_site_result.json.data.sites[0].id ~ '&type=path&value=' ~
+      ('C:\\temp\\check-mode.exe' | urlencode) }}
+    method: GET
+    return_content: true
+    headers:
+      Accept: application/json
+      Authorization: "APIToken {{ api_token }}"
+    validate_certs: true
+    status_code: 200
+  register: check_mode_exclusions_result
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Get planned config override"
+  ansible.builtin.uri:
+    url: >-
+      {{ console_url ~ '/web/api/v2.1/config-override?name__like=' ~
+      ('[Check mode] Must not be saved' | urlencode) ~ '&siteIds=' ~
+      check_mode_site_result.json.data.sites[0].id }}
+    method: GET
+    return_content: true
+    headers:
+      Accept: application/json
+      Authorization: "APIToken {{ api_token }}"
+    validate_certs: true
+    status_code: 200
+  register: check_mode_config_override_result
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Get custom rules after planned changes"
+  ansible.builtin.uri:
+    url: >-
+      {{ console_url }}/web/api/v2.1/cloud-detection/rules?scopes=site&siteIds={{
+      check_mode_custom_rule_site.json.data.sites[0].id
+      }}&name__contains={{ item.name | urlencode }}&limit=1000
+    method: GET
+    return_content: true
+    headers:
+      Accept: application/json
+      Authorization: "APIToken {{ api_token }}"
+    validate_certs: true
+    status_code: 200
+  loop: "{{ custom_rules_test_definitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: check_mode_custom_rules_after
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Check mode: Assert no API mutations were made"
+  ansible.builtin.assert:
+    that:
+      - check_mode_custom_rules_after.results | length == custom_rules_test_definitions | length
+      - >-
+        check_mode_custom_rules_after.results | map(attribute='json.pagination.nextCursor') | select('equalto', none) | list | length
+        == custom_rules_test_definitions | length
+      - >-
+        (check_mode_custom_rules_after.results | map(attribute='json.data') | list)
+        == (check_mode_custom_rules_before.results | map(attribute='json.data') | list)
+      - check_mode_site_result.json.data.sites | length == 1
+      - (check_mode_site_result.json.data.sites[0].description | default('')) != "[Check mode] Must not be saved"
+      - check_mode_filters_result.json.data | selectattr('name', 'equalto', 'Check mode filter') | list | length == 0
+      - check_mode_filters_result.json.data | selectattr('name', 'equalto', 'Linux Hosts') | list | length == 1
+      - check_mode_groups_result.json.data | selectattr('name', 'equalto', 'Check mode group') | list | length == 0
+      - check_mode_groups_result.json.data | selectattr('name', 'equalto', 'Testgroup1') | list | length == 1
+      - check_mode_exclusions_result.json.data | length == 0
+      - check_mode_config_override_result.json.data | length == 0
+    success_msg: "Check mode did not create, update, or delete SentinelOne API resources."
+    fail_msg: "Check mode changed an API resource or the API response is incomplete. Inspect the failed assertion and restore the test resources."

@@ -20,12 +20,13 @@ options:
       - "Insert your management console URL"
     type: str
     required: true
-  site:
+  site_name:
     description:
       - "Name of the site from which to download the agent"
       - "If omitted the scope will be on account level"
     type: str
     required: false
+    aliases: [site]
   token:
     description:
       - "SentinelOne API auth token to authenticate at the management API"
@@ -168,7 +169,7 @@ def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
         console_url=dict(type='str', required=True),
-        site=dict(type='str', required=False),
+        site_name=dict(type='str', required=False, aliases=['site']),
         token=dict(type='str', required=True, no_log=True),
         agent_version=dict(type='str', required=False, default='latest', choices=['latest', 'latest_ea', 'custom']),
         custom_version=dict(type='str', required=False),
@@ -183,7 +184,7 @@ def run_module():
         required_if=[
             ('agent_version', 'custom', ('custom_version',))
         ],
-        supports_check_mode=False
+        supports_check_mode=True
     )
 
     if not lib_imp_errors['has_lib']:
@@ -216,22 +217,26 @@ def run_module():
         if not dest_is_dir:
             if path.exists(download_dir):
                 module.fail_json(msg=f"{download_dir} is a file but should be a directory.")
-            else:
+            elif not module.check_mode:
                 makedirs(download_dir)
 
-        result = download_agent_obj.api_call(module, url, parse_response=False)
+        if module.check_mode:
+            changed = True
+            basic_message = f"Downloaded file {filename} to {download_dir}"
+        else:
+            result = download_agent_obj.api_call(module, url, parse_response=False)
 
-        with open(filepath, 'wb') as file:
-            file.write(result.read())
+            with open(filepath, 'wb') as file:
+                file.write(result.read())
 
-        # Check SHA1 checksum
-        sha1_file = module.sha1(filepath)
-        if sha1_file != sha1_expected:
-            remove(filepath)
-            module.fail_json(msg="Download failed. SHA1 checksum mismatch. Deleted broken file.")
+            # Check SHA1 checksum
+            sha1_file = module.sha1(filepath)
+            if sha1_file != sha1_expected:
+                remove(filepath)
+                module.fail_json(msg="Download failed. SHA1 checksum mismatch. Deleted broken file.")
 
-        changed = True
-        basic_message = f"Downloaded file {filename} to {download_dir}"
+            changed = True
+            basic_message = f"Downloaded file {filename} to {download_dir}"
     original_message = {'download_dir': download_dir, 'filename': filename, 'full_path': filepath}
 
     result = dict(
@@ -239,6 +244,7 @@ def run_module():
         original_message=original_message,
         message=basic_message
     )
+    result['message'] = download_agent_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results

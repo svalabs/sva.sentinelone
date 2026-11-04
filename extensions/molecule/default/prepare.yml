@@ -3,12 +3,63 @@
   hosts: all
   gather_facts: false
 
+  vars_files:
+    - ../vars/test_vars.yml
+    - ../vars/custom_rules.yml
+
   tasks:
     - name: "Prepare Rocky 8"
       when: inventory_hostname == "rocky-8"
       ansible.builtin.raw: dnf install -y python3.12
       changed_when: true
       become: true
+
+    - name: "Prepare: Custom rule lifecycle fixtures"
+      when: lookup('ansible.builtin.env', 'MOLECULE_SCENARIO_NAME') != 'no-api-access'
+      delegate_to: localhost
+      run_once: true
+      no_log: "{{ hide_sensitive | default(true) }}"
+      block:
+        - name: "Prepare: Create the test site for custom rule fixtures"
+          sva.sentinelone.sites:
+            console_url: "{{ console_url }}"
+            token: "{{ api_token }}"
+            site_name: "{{ site }}"
+            license_type: "{{ license_type }}"
+            total_agents: "{{ total_agents }}"
+            site_type: "{{ site_type }}"
+
+        - name: "Prepare: Create custom rules for update and deletion"
+          sva.sentinelone.custom_rules:
+            console_url: "{{ console_url }}"
+            token: "{{ api_token }}"
+            site_name: "{{ site }}"
+            name: "{{ item.0.name | replace('custom-rules', 'custom-rules-' ~ item.1) }}"
+            event_query: "{{ item.0.event_query | default(omit) }}"
+            correlation_query: "{{ item.0.correlation_query | default(omit) }}"
+            description: Molecule prepared custom rule
+            severity: Medium
+            status: Draft
+            cool_off_minutes: 60
+          loop: "{{ custom_rules_test_definitions | product(['update', 'delete']) | list }}"
+          loop_control:
+            label: "{{ item.0.name }} ({{ item.1 }})"
+
+        - name: "Prepare: Create custom rules for cool-off removal and default field reset"
+          sva.sentinelone.custom_rules:
+            console_url: "{{ console_url }}"
+            token: "{{ api_token }}"
+            site_name: "{{ site }}"
+            name: "{{ item.name | replace('custom-rules', 'custom-rules-reset') }}"
+            event_query: "{{ item.event_query | default(omit) }}"
+            correlation_query: "{{ item.correlation_query | default(omit) }}"
+            description: Molecule updated custom rule
+            severity: High
+            status: Disabled
+            cool_off_minutes: 5
+          loop: "{{ custom_rules_test_definitions }}"
+          loop_control:
+            label: "{{ item.name }}"
 
     # - name: "Prepare Windows"
     #   when: inventory_hostname | lower is match("windows-.*")

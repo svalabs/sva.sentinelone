@@ -2,6 +2,8 @@
 requires_ansible: '>=2.16.0'
 plugin_routing:
   modules:
+    star_rules:
+      redirect: sva.sentinelone.custom_rules
     sentinelone_agent_info:
       redirect: sva.sentinelone.agent_info
     sentinelone_config_overrides:

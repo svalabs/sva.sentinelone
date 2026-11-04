@@ -33,11 +33,12 @@ options:
     choices:
       - present
       - absent
-  name:
+  site_name:
     description:
       - "The name of the site"
     type: str
     required: true
+    aliases: [name]
   site_type:
     description:
       - "The type of the site"
@@ -97,7 +98,7 @@ EXAMPLES = r'''
   sva.sentinelone.sites:
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    name: "test"
+    site_name: "test"
     license_type: "control"
     expiration_date: "2022-06-01T12:00+01:00"
     description: "Testsite"
@@ -106,7 +107,7 @@ EXAMPLES = r'''
     state: "absent"
     console_url: "https://XXXXX.sentinelone.net"
     token: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    name: "test"
+    site_name: "test"
 '''
 
 RETURN = r'''
@@ -137,8 +138,6 @@ class SentineloneSite(SentineloneBase):
         :param module: Requires the AnsibleModule Object for parsing the parameters
         :type module: AnsibleModule
         """
-
-        module.params['site_name'] = module.params['name']
 
         # self.token, self.console_url, self.site_name, self.state, self.api_endpoint_*, self.group_names will be set in
         # super Class
@@ -316,7 +315,7 @@ def run_module():
         console_url=dict(type='str', required=True),
         token=dict(type='str', required=True, no_log=True),
         state=dict(type='str', required=False, default='present', choices=['present', 'absent']),
-        name=dict(type='str', required=True),
+        site_name=dict(type='str', required=True, aliases=['name']),
         site_type=dict(type='str', required=False, default='Paid', choices=['Trial', 'Paid']),
         license_type=dict(type='str', required=False, choices=['core', 'control', 'complete'], default='core'),
         total_agents=dict(type='int', required=False, default=-1),
@@ -326,7 +325,7 @@ def run_module():
 
     module = AnsibleModule(
         argument_spec=module_args,
-        supports_check_mode=False
+        supports_check_mode=True
     )
 
     if not lib_imp_errors['has_lib']:
@@ -357,19 +356,22 @@ def run_module():
                 # Update site if it is not up-to-date
                 diffs = {'changes': dict(diff), 'siteName': site_name}
                 basic_message = 'Site exists but is not up-to-date. Updating site.'
-                site_obj.update_site(desired_state_site, module)
+                if not module.check_mode:
+                    site_obj.update_site(desired_state_site, module)
         else:
             # Creates the site if it is missing
             basic_message = f'Site is missing. Adding site {site_name}'
             diffs = {'changes': basic_message}
-            site_obj.create_site(desired_state_site, module)
+            if not module.check_mode:
+                site_obj.create_site(desired_state_site, module)
     else:
         # Site should be deleted
         if site_id is not None:
             # Check if site exists
             basic_message = f'Site {site_name} exists. Deleting site'
             diffs = {'changes': basic_message}
-            site_obj.delete_site(module)
+            if not module.check_mode:
+                site_obj.delete_site(module)
 
     result = dict(
         changed=False,
@@ -381,6 +383,8 @@ def run_module():
     # So we can use it to update result['changes'] to True if necessary
     if diffs:
         result['changed'] = True
+
+    result['message'] = site_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results

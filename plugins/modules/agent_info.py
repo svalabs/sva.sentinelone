@@ -20,12 +20,13 @@ options:
       - "Insert your management console URL"
     type: str
     required: true
-  site:
+  site_name:
     description:
       - "Optional name of the site from where the agent package is located"
       - "If omitted the scope will be on account level"
     type: str
     required: false
+    aliases: [site]
   token:
     description:
       - "SentinelOne API auth token to authenticate at the management API"
@@ -144,7 +145,7 @@ def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
         console_url=dict(type='str', required=True),
-        site=dict(type='str', required=False),
+        site_name=dict(type='str', required=False, aliases=['site']),
         token=dict(type='str', required=True, no_log=True),
         agent_version=dict(type='str', required=False, default='latest', choices=['latest', 'latest_ea', 'custom']),
         custom_version=dict(type='str', required=False),
@@ -185,6 +186,7 @@ def run_module():
         original_message=original_message,
         message=basic_message
     )
+    result['message'] = agent_info_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results

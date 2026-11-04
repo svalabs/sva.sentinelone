@@ -3,10 +3,72 @@
   sva.sentinelone.sites:
     console_url: "{{ console_url }}"
     token: "{{ api_token }}"
-    name: "{{ site }}"
+    site_name: "{{ site }}"
     license_type: "{{ license_type }}"
     total_agents: "{{ total_agents }}"
     site_type: "{{ site_type }}"
+
+- name: "Converge: Load custom rule test definitions"
+  ansible.builtin.include_vars: ../../vars/custom_rules.yml
+
+- name: "Converge: Create custom rules using the star_rules alias"
+  sva.sentinelone.star_rules: # noqa: fqcn[canonical] -- Exercise the public module alias.
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "{{ item.name }}"
+    event_query: "{{ item.event_query | default(omit) }}"
+    correlation_query: "{{ item.correlation_query | default(omit) }}"
+    description: Molecule custom rule test
+    status: Draft
+    cool_off_minutes: 60
+  loop: "{{ custom_rules_test_definitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Converge: Update prepared custom rules"
+  sva.sentinelone.custom_rules:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "{{ item.name | replace('custom-rules', 'custom-rules-update') }}"
+    event_query: "{{ item.event_query | default(omit) }}"
+    correlation_query: "{{ item.correlation_query | default(omit) }}"
+    description: Molecule updated custom rule
+    severity: High
+    status: Disabled
+    cool_off_minutes: 5
+  loop: "{{ custom_rules_test_definitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Converge: Remove cool-off and restore default fields on prepared custom rules"
+  sva.sentinelone.custom_rules:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "{{ item.name | replace('custom-rules', 'custom-rules-reset') }}"
+    event_query: "{{ item.event_query | default(omit) }}"
+    correlation_query: "{{ item.correlation_query | default(omit) }}"
+    status: Draft
+  loop: "{{ custom_rules_test_definitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  no_log: "{{ hide_sensitive | default(true) }}"
+
+- name: "Converge: Delete prepared custom rules"
+  sva.sentinelone.custom_rules:
+    console_url: "{{ console_url }}"
+    token: "{{ api_token }}"
+    site_name: "{{ site }}"
+    name: "{{ item.name | replace('custom-rules', 'custom-rules-delete') }}"
+    state: absent
+  loop: "{{ custom_rules_test_definitions }}"
+  loop_control:
+    label: "{{ item.name }}"
+  no_log: "{{ hide_sensitive | default(true) }}"
 
 - name: "Converge: Update site policy"
   sva.sentinelone.policies:

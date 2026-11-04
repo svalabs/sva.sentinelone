@@ -15,7 +15,7 @@
           sva.sentinelone.sites:
             console_url: "{{ console_url }}"
             token: "{{ api_token }}"
-            name: "{{ site }}"
+            site_name: "{{ site }}"
             license_type: "{{ license_type }}"
             total_agents: "{{ total_agents }}"
             site_type: "{{ site_type }}"
