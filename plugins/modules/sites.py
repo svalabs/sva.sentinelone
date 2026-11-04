@@ -325,7 +325,7 @@ def run_module():
 
     module = AnsibleModule(
         argument_spec=module_args,
-        supports_check_mode=False
+        supports_check_mode=True
     )
 
     if not lib_imp_errors['has_lib']:
@@ -356,19 +356,22 @@ def run_module():
                 # Update site if it is not up-to-date
                 diffs = {'changes': dict(diff), 'siteName': site_name}
                 basic_message = 'Site exists but is not up-to-date. Updating site.'
-                site_obj.update_site(desired_state_site, module)
+                if not module.check_mode:
+                    site_obj.update_site(desired_state_site, module)
         else:
             # Creates the site if it is missing
             basic_message = f'Site is missing. Adding site {site_name}'
             diffs = {'changes': basic_message}
-            site_obj.create_site(desired_state_site, module)
+            if not module.check_mode:
+                site_obj.create_site(desired_state_site, module)
     else:
         # Site should be deleted
         if site_id is not None:
             # Check if site exists
             basic_message = f'Site {site_name} exists. Deleting site'
             diffs = {'changes': basic_message}
-            site_obj.delete_site(module)
+            if not module.check_mode:
+                site_obj.delete_site(module)
 
     result = dict(
         changed=False,
@@ -380,6 +383,8 @@ def run_module():
     # So we can use it to update result['changes'] to True if necessary
     if diffs:
         result['changed'] = True
+
+    result['message'] = site_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results

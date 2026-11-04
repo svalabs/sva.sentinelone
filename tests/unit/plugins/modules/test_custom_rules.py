@@ -276,12 +276,32 @@ def test_delete_and_repeated_absent_without_query(api, run_module):
 
 
 @pytest.mark.parametrize("operation", ["create", "update", "delete"])
-def test_check_mode_does_not_write(api, run_module, operation):
+@pytest.mark.parametrize("query", [{"event_query": QUERY}, {"correlation_query": CORRELATION}])
+def test_check_mode_does_not_write(api, run_module, operation, query):
     if operation != "create":
-        run_module(event_query=QUERY)
+        run_module(**query)
+    before = copy.deepcopy(api.rules)
     api.calls.clear()
-    params = {"state": "absent"} if operation == "delete" else {"event_query": QUERY, "severity": "High"}
-    assert run_module(_ansible_check_mode=True, **params)["changed"]
+    params = {"state": "absent"} if operation == "delete" else dict(query, severity="High")
+    result = run_module(_ansible_check_mode=True, **params)
+    assert result["changed"]
+    assert result["message"].startswith("Would change: ")
+    assert api.rules == before
+    assert not api.writes
+
+
+@pytest.mark.parametrize("query", [{"event_query": QUERY}, {"correlation_query": CORRELATION}])
+@pytest.mark.parametrize("exists", [False, True])
+def test_check_mode_no_changes_message(api, run_module, query, exists):
+    if exists:
+        run_module(**query)
+    before = copy.deepcopy(api.rules)
+    api.calls.clear()
+    params = query if exists else {"state": "absent"}
+    result = run_module(_ansible_check_mode=True, **params)
+    assert not result["changed"]
+    assert result["message"].startswith("No changes would be made")
+    assert api.rules == before
     assert not api.writes
 
 

@@ -478,7 +478,7 @@ def run_module():
             ('inherit_maintenance_windows', False, ('maintenance_windows',)),
             ('inherit_max_concurrent_downloads', False, ('max_concurrent_downloads',))
         ],
-        supports_check_mode=False
+        supports_check_mode=True
     )
 
     if not lib_imp_errors['has_lib']:
@@ -527,7 +527,8 @@ def run_module():
                 diffs.append({'changes': dict(diff), 'groupId': current_group_id})
                 basic_message.append(f"Updating upgrade policy for group {current_group_name}")
                 update_body = upgrade_policy_obj.get_update_body(desired_state_upgrade_policy, current_group_id)
-                upgrade_policy_obj.update_upgrade_policy(current_group_id, update_body, module)
+                if not module.check_mode:
+                    upgrade_policy_obj.update_upgrade_policy(current_group_id, update_body, module)
     else:
         # if scope is site level
         # check if site has the desired settings already
@@ -550,7 +551,8 @@ def run_module():
             diffs.append({'changes': dict(diff), 'SiteId': site_id})
             basic_message.append(f"Updating upgrade policy for site {site_name}")
             update_body = upgrade_policy_obj.get_update_body(desired_state_upgrade_policy, site_id)
-            upgrade_policy_obj.update_upgrade_policy(site_id, update_body, module)
+            if not module.check_mode:
+                upgrade_policy_obj.update_upgrade_policy(site_id, update_body, module)
 
     result = dict(
         changed=False,
@@ -562,6 +564,8 @@ def run_module():
     # So we can use it to update result['changes'] to True if necessary
     if diffs:
         result['changed'] = True
+
+    result['message'] = upgrade_policy_obj.format_check_mode_message(result['message'], result['changed'])
 
     # in the event of a successful module execution, you will want to
     # simple AnsibleModule.exit_json(), passing the key/value results
