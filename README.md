@@ -30,7 +30,7 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 
 ### sentinelone_client_legacy → install_agent
 
-> ⚠️ **Deprecated:** The role `sentinelone_client_legacy` is deprecated and will be removed in a future release. Please migrate to the `install_agent` role.
+> ⚠️ **Deprecated:** The role `sentinelone_client_legacy` is deprecated and will be removed in Q1 2027 in release 3.0.0. Please migrate to the `install_agent` role.
 
 The `install_agent` role now incorporates all functionality previously provided by `sentinelone_client_legacy`, including support for environments **without API access**. `install_agent` role now supports these two cases:
 - Download agent from provided download URL
