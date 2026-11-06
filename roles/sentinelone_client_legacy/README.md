@@ -1,6 +1,6 @@
 # sentinelone_client_legacy
 
-> **⚠️ DEPRECATED**: This role will be removed in Release 3.0.0.
+> **⚠️ DEPRECATED**: This role will be removed in Release 3.0.0. This releaase is planned for Q1 2027.
 > Please migrate to [`sva.sentinelone.install_agent`](../install_agent/README.md).
 
 

@@ -1,8 +1,0 @@
-minor_changes:
-  - star_rules - Add an alias for the custom_rules module.
-  - custom_rules - Add management of site-scoped custom detection rules, including event and correlation queries, idempotent updates, deletion and check mode.
-  - modules - Standardize the site parameter as site_name while retaining the former site/name parameters as compatibility aliases.
-known_issues:
-  - >-
-    custom_rules - Hidden rule logic is not supported because rules with hideLogic=true were not returned by the API in live testing.
-    Avoid names already used by hidden rules.

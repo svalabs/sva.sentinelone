@@ -13,7 +13,7 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 - **Modules**:
   - [agent_info](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/agent_info_module.html)
   - [config_overrides](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/config_overrides_module.html)
-  - [custom_rules](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/custom_rules.html)
+  - [custom_rules](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/custom_rules_module.html)
   - [download_agent](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/download_agent_module.html)
   - [filters](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/filters_module.html)
   - [groups](https://svalabs.github.io/sva.sentinelone/branch/main/collections/sva/sentinelone/groups_module.html)
@@ -30,7 +30,7 @@ It provides several modules which helps to configure and manage SentinelOne Mana
 
 ### sentinelone_client_legacy → install_agent
 
-> ⚠️ **Deprecated:** The role `sentinelone_client_legacy` is deprecated and will be removed in a future release. Please migrate to the `install_agent` role.
+> ⚠️ **Deprecated:** The role `sentinelone_client_legacy` is deprecated and will be removed in Q1 2027 in release 3.0.0. Please migrate to the `install_agent` role.
 
 The `install_agent` role now incorporates all functionality previously provided by `sentinelone_client_legacy`, including support for environments **without API access**. `install_agent` role now supports these two cases:
 - Download agent from provided download URL
@@ -53,14 +53,11 @@ This collection needs the following Python modules:
 ## Tested with Ansible and the following Python versions
 
 Tested Ansible versions:
-- 2.17
-- 2.18
 - 2.19
 - 2.20
 - 2.21
 
 Tested Python versions:
-- 3.10
 - 3.11
 - 3.12
 - 3.13

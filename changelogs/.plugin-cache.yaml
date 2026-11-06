@@ -29,6 +29,11 @@ plugins:
       name: config_overrides
       namespace: ''
       version_added: 1.0.0
+    custom_rules:
+      description: Manage SentinelOne custom detection rules
+      name: custom_rules
+      namespace: ''
+      version_added: 2.4.0
     download_agent:
       description: Download SentinelOne agent from Management Console
       name: download_agent
@@ -69,4 +74,4 @@ plugins:
   strategy: {}
   test: {}
   vars: {}
-version: 2.3.0
+version: 2.4.0

@@ -273,3 +273,47 @@ releases:
     fragments:
       - v2.3.0.yml
     release_date: '2026-08-24'
+  2.4.0:
+    changes:
+      bugfixes:
+        - path_exclusions - Return a message when exclusions are deleted with ``state=absent``.
+          Previously the ``message`` was empty in this case.
+        - sites - Fix serialization of the diff output so that changes are reported
+          as valid JSON.
+      deprecated_features:
+        - sentinelone_client_legacy role - The role is deprecated and will be removed
+          in release 3.0.0 (planned for Q1 2027). Use the install_agent role instead.
+      known_issues:
+        - custom_rules - Hidden rule logic is not supported because rules with hideLogic=true
+          were not returned by the API in live testing. Avoid names already used by
+          hidden rules.
+      minor_changes:
+        - Molecule - Migrate the Linux scenarios (default, multi-os, no-api-access)
+          from Vagrant to Lima using native Ansible tasks. The Windows scenario stays
+          on Vagrant/VirtualBox. Add check mode tests for modules and the install_agent
+          role.
+        - custom_rules - Add management of site-scoped custom detection rules, including
+          event and correlation queries, idempotent updates, deletion and check mode.
+        - install_agent role - Add check mode support for Linux and Windows, including
+          installations without API access. Set ``install_agent_check_mode`` when
+          enabling check mode only on an ``include_role`` task.
+        - install_agent role - On Linux, start the sentinelone service before registering
+          the agent and wait until the agent connectivity is on after registration.
+        - modules - Add consistent check mode support to agent_info, config_overrides,
+          custom_rules, download_agent, filters, groups, path_exclusions, policies,
+          sites and upgrade_policies. Check mode reports planned changes with "Would
+          change" / "No changes would be made" messages.
+        - modules - Standardize the site parameter as site_name while retaining the
+          former site/name parameters as compatibility aliases.
+        - star_rules - Add an alias for the custom_rules module.
+      release_summary: This release adds the new custom_rules module for SentinelOne
+        detection rules, consistent check mode support for all modules and the install_agent
+        role, and a more reliable Linux agent registration. The Linux Molecule scenarios
+        now run on Lima instead of Vagrant.
+    fragments:
+      - v2.4.0.yml
+    modules:
+      - description: Manage SentinelOne custom detection rules
+        name: custom_rules
+        namespace: ''
+    release_date: '2026-11-05'
