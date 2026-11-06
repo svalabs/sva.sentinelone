@@ -30,7 +30,17 @@
 
 - name: "Linux: Gather package facts"
   ansible.builtin.package_facts:
-  when: ansible_facts.packages is not defined and install_agent_custom_os_family == 'Linux'
+  when:
+    - ansible_facts.packages is not defined and install_agent_custom_os_family == 'Linux'
+    - not (install_agent_check_mode and ansible_facts.os_family == 'Suse')
+
+# package_facts needs the bindings that the dry run cannot install.
+- name: "Linux: Query SUSE packages without Python RPM bindings in check mode"  # noqa: command-instead-of-module
+  ansible.builtin.command: rpm -qa --queryformat '%{NAME}\n'
+  check_mode: false
+  changed_when: false
+  register: install_agent_suse_packages
+  when: install_agent_check_mode and ansible_facts.os_family == 'Suse'
 
 - name: "Windows: Check if SentinelOne is already installed"
   ansible.windows.win_service_info:
@@ -41,7 +51,15 @@
 - name: "Set fact: install_agent_agent_installed"
   ansible.builtin.set_fact:
     install_agent_agent_installed: "{{ true if ansible_facts.packages.sentinelagent is defined or ansible_facts.packages.SentinelAgent is defined
+      or 'sentinelagent' in install_agent_suse_packages.stdout_lines | default([])
+      or 'SentinelAgent' in install_agent_suse_packages.stdout_lines | default([])
       or install_agent_sentinelagent_service.exists | default(false) else false }}"
+
+- name: "Check mode: Report planned agent installation"
+  ansible.builtin.debug:
+    msg: "The SentinelOne agent would be installed and registered. Installation-dependent tasks are skipped in check mode."
+  changed_when: true
+  when: install_agent_check_mode and not install_agent_agent_installed
 
 - name: "Download agent to localhost from SentinelOne. Version: {{ install_agent_agent_version }}"
   sva.sentinelone.download_agent:
@@ -59,13 +77,13 @@
   throttle: 1
   tags:
     - download_client_from_sentinel_one
-  when: '(not install_agent_agent_installed) and (install_agent_custom_client_url | length == 0)'
+  when: '(not install_agent_check_mode) and (not install_agent_agent_installed) and (install_agent_custom_client_url | length == 0)'
 
 - name: "Download agent to localhost from custom source."
   become: false
   tags:
     - download_client_from_custom_url
-  when: '(not install_agent_agent_installed) and (install_agent_custom_client_url | length > 0)'
+  when: '(not install_agent_check_mode) and (not install_agent_agent_installed) and (install_agent_custom_client_url | length > 0)'
   block:
     - name: "Download custom installation package to localhost"
       ansible.builtin.get_url:
@@ -91,6 +109,7 @@
     - sentinelone_install_agent_get_registration_token
   block:
     - name: "Get siteid"
+      check_mode: false
       ansible.builtin.uri:
         url: "{{ install_agent_api_url }}sites?name={{ install_agent_site | urlencode }}&state=active"
         method: GET
@@ -112,6 +131,7 @@
         install_agent_siteid: "{{ install_agent_siteobj.json.data.sites[0].id }}"
 
     - name: "Get group id"
+      check_mode: false
       ansible.builtin.uri:
         url: "{{ install_agent_api_url }}groups?name={{ install_agent_group | urlencode }}&siteIds={{ install_agent_siteid }}"
         method: GET
@@ -140,6 +160,7 @@
           install_agent_group | length > 0 else 'sites/' ~ install_agent_siteid ~ '/token' }}"
 
     - name: "Get registration token"
+      check_mode: false
       ansible.builtin.uri:
         url: "{{ install_agent_api_url }}{{ install_agent_reg_token_uri }}"
         method: GET
@@ -165,7 +186,7 @@
     state: absent
   delegate_to: localhost
   become: false
-  when: not install_agent_agent_installed
+  when: not install_agent_check_mode and not install_agent_agent_installed
 
 - name: "Fail if new client does not appear in management console"
   tags:
@@ -186,4 +207,4 @@
   until: ((install_agent_registrationstatus.json.data | default([]) | length) > 0) and (install_agent_registrationstatus.status | default(0) == 200)
   retries: "{{ install_agent_check_console_retries }}"
   delay: "{{ install_agent_check_console_retry_delay }}"
-  when: install_agent_registration_token | length == 0
+  when: not install_agent_check_mode and install_agent_registration_token | length == 0

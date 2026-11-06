@@ -10,6 +10,13 @@ argument_specs:
     author:
       - Marco Wester
     options:
+      install_agent_check_mode:
+        type: "bool"
+        required: false
+        description:
+          - "Defaults to C(ansible_check_mode), which reflects the CLI check-mode flag."
+          - "Set to B(true) together with C(apply.check_mode=true) when invoking only this role in check mode."
+
       win_use_exe:
         type: "bool"
         required: false

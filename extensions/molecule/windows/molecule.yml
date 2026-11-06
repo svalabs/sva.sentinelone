@@ -13,6 +13,8 @@ platforms:
     box_architecture: "arm64"
     memory: 4096
     cpus: 4
+    config_options:
+      vm.boot_timeout: 1800
 
 provisioner:
   name: ansible

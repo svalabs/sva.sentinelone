@@ -15,5 +15,8 @@
           delegate_to: localhost
           run_once: true
 
+    - name: "Test S1 Agent installation role in check mode"
+      ansible.builtin.include_tasks: tasks/check_install_agent_role.yml
+
     - name: "Test S1 Agent installation role"
       ansible.builtin.include_tasks: tasks/test_install_agent_role.yml

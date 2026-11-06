@@ -574,6 +574,7 @@ def run_module():
             if not module.check_mode:
                 exclusion_obj.delete_exclusions(module)
             diffs.append({'changes': 'Deleted all exclusions in Scope'})
+            basic_message.append("Deleting all matching exclusions in scope.")
         else:
             basic_message.append("Nothing to change, exclusion does not exist")
 

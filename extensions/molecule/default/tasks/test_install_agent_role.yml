@@ -2,7 +2,10 @@
 - name: "Converge: Install agent on Linux"
   ansible.builtin.include_role:
     name: sva.sentinelone.install_agent
+    apply:
+      check_mode: "{{ install_agent_test_check_mode | default(ansible_check_mode) }}"
   vars:
+    install_agent_check_mode: "{{ install_agent_test_check_mode | default(ansible_check_mode) }}"
     check_console_retries: 18
     check_console_retry_delay: 20
   when: ansible_facts['system'] is defined and
@@ -11,7 +14,10 @@
 - name: "Converge: Install agent on Windows"
   ansible.builtin.include_role:
     name: sva.sentinelone.install_agent
+    apply:
+      check_mode: "{{ install_agent_test_check_mode | default(ansible_check_mode) }}"
   vars:
+    install_agent_check_mode: "{{ install_agent_test_check_mode | default(ansible_check_mode) }}"
     win_use_exe: "{{ true if ansible_facts['architecture2'] == 'arm64' else false }}"  # optional
     win_allow_reboot: true  # optional
   when: ansible_facts['os_family'] == "Windows"

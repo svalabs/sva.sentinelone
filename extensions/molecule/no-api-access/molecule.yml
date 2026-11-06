@@ -13,11 +13,16 @@ platforms:
     memory: 2
     cpus: 2
 
-  - name: rocky-8
-    lima_template: rocky-8
-    arch: x86_64
+  - name: ubuntu-2604
+    lima_template: ubuntu-26.04
     memory: 2
     cpus: 2
+
+  # - name: rocky-8
+  #   lima_template: rocky-8
+  #   arch: x86_64
+  #   memory: 2
+  #   cpus: 2
 
   - name: rocky-9
     lima_template: rocky-9
