@@ -258,6 +258,19 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-main--install_agent_check_mode"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-install-agent-check-mode"><strong>install_agent_check_mode</strong></p>
+<a class="ansibleOptionLink" href="#parameter-main--install_agent_check_mode" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Defaults to <code class="docutils literal notranslate"><span class="pre">ansible_check_mode</span></code>, which reflects the CLI check-mode flag.</p>
+<p>Set to <strong>true</strong> together with <code class="docutils literal notranslate"><span class="pre">apply.check_mode=true</span></code> when invoking only this role in check mode.</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-main--lx_force_new_token"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-lx-force-new-token"><strong>lx_force_new_token</strong></p>
 <a class="ansibleOptionLink" href="#parameter-main--lx_force_new_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
@@ -269,7 +282,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-main--registration_token"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-registration-token"><strong>registration_token</strong></p>
 <a class="ansibleOptionLink" href="#parameter-main--registration_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -277,7 +290,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <p>‘console_url’, ‘api_token’ and ‘site’ will be ignored if registration_token and custom_client_url are both set</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-main--site"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-site"><strong>site</strong></p>
 <a class="ansibleOptionLink" href="#parameter-main--site" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -285,7 +298,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <p>Required if registration_token and custom_client_url both are not provided</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-main--win_allow_reboot"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-win-allow-reboot"><strong>win_allow_reboot</strong></p>
 <a class="ansibleOptionLink" href="#parameter-main--win_allow_reboot" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
@@ -298,7 +311,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-main--win_msi_no_connection_from_installer_to_mgmt"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-win-msi-no-connection-from-installer-to-mgmt"><strong>win_msi_no_connection_from_installer_to_mgmt</strong></p>
 <a class="ansibleOptionLink" href="#parameter-main--win_msi_no_connection_from_installer_to_mgmt" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
@@ -311,7 +324,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-main--win_use_exe"></div><p class="ansible-option-title" id="ansible-collections-sva-sentinelone-install-agent-role-parameter-main-win-use-exe"><strong>win_use_exe</strong></p>
 <a class="ansibleOptionLink" href="#parameter-main--win_use_exe" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
